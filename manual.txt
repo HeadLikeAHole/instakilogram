@@ -1,0 +1,36 @@
+1) npm init - create a package.json file
+
+devDependencies:
+
+2) npm i -D @babel/core @babel/cli @babel/preset-env - babel packages
+
+3) npm i -D @babel/preset-react - react preset
+
+4) npm i -D babel-loader - allows transpiling JavaScript files using Babel and webpack
+
+5) npm i -D css-loader styles-loader - allows transpiling css files using webpack
+
+6) npm i -D babel-plugin-transform-class-properties - handles static class properties for es2015 annd es2016
+
+7) npm i -D webpack webpack-cli - webpack and webpack command line
+
+dependencies:
+
+8) npm i react react-dom prop-types
+
+9) create .babelrc file:
+{
+  "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "plugins": ["transform-class-properties"]
+}
+
+10) Create webpack.config1.js
+
+11) Add scripts to package.json:
+"scripts": {
+"dev": "webpack --mode development --watch",
+"build": "webpack --mode production"
+}
+(--watch updates frontend on page reload without need to constantly run dev or build command)
+
+12) add node_modules/ to .gitignore file
