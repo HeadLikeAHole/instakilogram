@@ -1,0 +1,53 @@
+.card-post {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+/*.dots:after {*/
+    /*!* "\2807" is a unicode character (3 vertical dots) *!*/
+    /*content: '\2807';*/
+    /*float: right;*/
+    /*margin-right: 0.8rem;*/
+    /*font-size: 1.5rem;*/
+/*}*/
+
+.dots {
+    display: inline!important;
+    float: right;
+    font-size: 2rem;
+    margin-top: -20px;
+}
+
+/* remove arrow after dropdown title */
+#collasible-nav-dropdown:after {
+    display: none;
+}
+
+.card-post-icons {
+    font-size: 1.8rem;
+    color: rgb(200, 200, 200);
+}
+
+.card-post-icons i {
+    margin-left: 0.8rem;
+}
+
+.post-description {
+    margin: 0.5rem 0.8rem;
+}
+
+@media (min-width: 768px) {
+    .card-post {
+        width: 600px;
+    }
+}
+@media (min-width: 992px) {
+    .card-post {
+        width: 600px;
+    }
+}
+@media (min-width: 1200px) {
+    .card-post {
+        width: 600px;
+    }
+}

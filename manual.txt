@@ -34,3 +34,6 @@ dependencies:
 (--watch updates frontend on page reload without need to constantly run dev or build command)
 
 12) add node_modules/ to .gitignore file
+
+13) npm i react-alert react-alert-template-basic react-transition-group - necessary
+dependencies to make alerts work

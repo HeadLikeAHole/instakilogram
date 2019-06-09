@@ -1,0 +1,16 @@
+* {
+    /* first three rules override browser defaults */
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    /* remove dotted outline around links */
+    outline: none;
+}
+
+body {
+  background-color: rgb(250, 250, 255);
+}
+
+.margin {
+    padding-top: 4rem;
+}

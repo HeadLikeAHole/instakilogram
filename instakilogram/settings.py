@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     # 3rd party packages
 
     'rest_framework',
+    # token based authentication for DRF
+    # after installation run "python manage.py migrate" and add knox urls patterns
+    'knox',
 
     # my apps
 
@@ -142,3 +145,11 @@ MEDIA_URL = '/media/'  # specifies url for the image folder
 
 # custom user model which makes email a unique and required field
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+
+# use knox authentication instead default one
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'knox.auth.TokenAuthentication',
+    ),
+}

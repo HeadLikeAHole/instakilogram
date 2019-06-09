@@ -16,9 +16,13 @@ class PostListCreateView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 
+    # add user object contained in request to post instance when creating it
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class PostDetailEditDelete(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
-    permission_classes = [IsOwnerOrReadOnly]
+    # permission_classes = [IsOwnerOrReadOnly]
 
