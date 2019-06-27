@@ -17,9 +17,9 @@ class Profile(models.Model):
     # settings.AUTH_USER_MODEL is custom user model
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     image = models.ImageField(default='profile_default.png', upload_to='profile_images')
-    info = models.TextField(max_length=300)
-    followers = models.ManyToManyField('self', symmetrical=False, related_name='following')
-    saved_posts = models.ManyToManyField(Post, related_name='saved_by')
+    info = models.TextField(max_length=300, blank=True)
+    followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
+    saved_posts = models.ManyToManyField(Post, related_name='saved_by', blank=True)
 
     def __str__(self):
         return f'{self.user.username}\'s profile'

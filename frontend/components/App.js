@@ -1,5 +1,9 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+// HashRouter (adds pound sign to url) is used instead of BrowserRouter because on page reload
+// browser will look for the page defined on the backend, which in our case defined on the frontend
+// To use BrowserRouter during production server needs some configuring
+import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 // make alerts available in the whole app
 // use alias because there is already a Provider component
@@ -10,8 +14,13 @@ import './app.css';
 import store from '../store';
 import Navigation from './layout/Navigation';
 import Alerts from './layout/Alerts';
-import Posts from './posts/Posts';
-import AddPostForm from './posts/AddPostForm';
+import PostList from './posts/PostList';
+import PostDetail from './posts/PostDetail'
+import AddPost from './posts/AddPost';
+import Login from './accounts/login';
+import Register from './accounts/register';
+import PrivateRoute from './accounts/PrivateRoute';
+import { loadUser } from '../actions/auth';
 
 
 const alertOptions = {
@@ -21,21 +30,32 @@ const alertOptions = {
 
 
 class App extends React.Component {
+  componentDidMount() {
+    store.dispatch(loadUser())
+  }
+
   render() {
     return (
       // Provider component makes store data available to all components inside it
       <Provider store={store}>
         {/* AlertProvider component makes alerts available to all components inside it */}
         <AlertProvider template={AlertTemplate} {...alertOptions}>
-          <Alerts />
-          <Navigation />
-          {/* bootstrap container */}
-          <Container>
-            <div className="margin">
-              <AddPostForm />
-              <Posts />
-            </div>
-          </Container>
+          <Router>
+            <Alerts />
+            <Navigation />
+            {/* bootstrap container */}
+            <Container>
+              <div className="top">
+                <Switch>
+                  <Route exact path="/" component={PostList} />
+                  <Route exact path="/posts/:id" component={PostDetail} />
+                  <PrivateRoute exact path="/add-post" component={AddPost} />
+                  <Route exact path="/login" component={Login} />
+                  <Route exact path="/register" component={Register} />
+                </Switch>
+              </div>
+            </Container>
+          </Router>
         </AlertProvider>
       </Provider>
     )

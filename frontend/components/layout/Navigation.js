@@ -7,43 +7,74 @@ import Image from 'react-bootstrap/Image';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-
+// integration between React Router and React Bootstrap
+// makes links behave like bootstrap links when wrapping them
+// ordinary Link component breaks bootstrap styling
+import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import './navigation.css';
+import { logout } from '../../actions/auth';
 
 
-const Navigation = ()=> {
+const Navigation = props => {
+  const { isAuthenticated, user } = props.auth;
+
+  const authenticatedLinks = (
+    <NavDropdown alignRight title={user && user.username} id="collasible-nav-dropdown" className="mr-1">
+      <LinkContainer to="/add-post"><NavDropdown.Item>Добавить фото</NavDropdown.Item></LinkContainer>
+      <LinkContainer to="/profile/"><NavDropdown.Item>Профиль</NavDropdown.Item></LinkContainer>
+      <NavDropdown.Item onClick={props.logout}>Выйти</NavDropdown.Item>
+    </NavDropdown>
+  );
+
+  const guestLink = <Link to="/login">Войти</Link>;
+
   return (
     <Navbar fixed="top" expand="lg" className="custom-nav">
+      {/* Container is used here to move all links closer together (white background spans whole page) */}
       <Container>
-        <Navbar.Brand href="#" className='logo'>
-          {/* "i" tag is a font awesome camera */}
-          Instakilogram <i className="fas fa-camera-retro"></i>
-        </Navbar.Brand>
+        {/* website logo */}
+        <LinkContainer to="/">
+          <Navbar.Brand href="#" className='logo'>
+            {/* "i" tag is a font awesome camera */}
+            Instakilogram <i className="fas fa-camera-retro"></i>
+          </Navbar.Brand>
+        </LinkContainer>
+
         {/* burgerize is the id of the element to collapse on shrinking */}
         <Navbar.Toggle aria-controls="burgerize" />
         <Navbar.Collapse id="burgerize" className="float-right">
-          <Nav className="m-auto">
+          <Nav className="mx-auto">
             <Form inline>
               <FormControl type="text" placeholder="Search" className="form-control-sm mr-sm-2 search-color" />
-              <Button variant="outline-dark" size="sm">Search</Button>
+              {/* class my-3 creates margin top and bottom equal to 3 */}
+              <Button variant="outline-dark" size="sm" className="my-3">Search</Button>
             </Form>
           </Nav>
-          <Nav>
-            <Image src="holder.js/171x180" roundedCircle />
-            <NavDropdown title="Igor" id="collasible-nav-dropdown" className="mr-1">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-            </NavDropdown>
+          <Nav className="float-lg-right">
+            {/* if user is logged-in display profile image */}
+            <Image src={user && user.profile.image} roundedCircle className="profile-img" />
+            {isAuthenticated ? authenticatedLinks : guestLink}
           </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
-    )
+  )
 };
 
 
-export default Navigation;
+Navigation.propTypes = {
+  auth: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired
+};
+
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+
+export default connect(mapStateToProps, { logout })(Navigation);

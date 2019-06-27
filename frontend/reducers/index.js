@@ -1,11 +1,16 @@
 import { combineReducers } from 'redux';
-import posts from './posts';
+
+import postList from './postList';
+import postDetail from './postDetail';
 import errors from './errors';
 import messages from './messages';
+import auth from './auth';
 
 
 export default combineReducers({
-  posts,
+  postList,
+  postDetail,
   errors,
-  messages
+  messages,
+  auth,
 })

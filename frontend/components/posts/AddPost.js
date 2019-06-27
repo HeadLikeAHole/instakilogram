@@ -5,25 +5,39 @@ import Button from 'react-bootstrap/Button';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { addPost } from '../../actions/posts';
+import { addPost } from '../../actions/postList';
 
 
-class AddPostForm extends React.Component {
-  state = {image: '', description: ''};
+class AddPost extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      image: '', description: ''
+    };
+    this.imageField = React.createRef();
+  }
 
   static propTypes = {
     addPost: PropTypes.func.isRequired
   };
 
-  handleChange = event => this.setState({
-    // "[event.target.name]" is "computed property name" syntax
-    [event.target.name]: event.target.value
-  });
+  handleChange = event => {
+    let value;
+    if (event.target.name === 'image') {
+      value = event.target.files[0];
+    } else {
+      value = event.target.value;
+    }
+    this.setState({[event.target.name]: value});
+  };
 
   handleSubmit = event => {
     event.preventDefault();
     this.props.addPost(this.state);
-    this.setState({image: '', description: ''})
+    this.setState({image: '', description: ''});
+    // since state's image property contains file object not file name
+    // use ref to remove image filename from file field on successful form submission
+    this.imageField.current.value = '';
   };
 
   render() {
@@ -34,10 +48,11 @@ class AddPostForm extends React.Component {
           <Form.Group>
             <Form.Label>Фото:</Form.Label>
             {/* image field */}
+            {/* "value = event.target.files[0]" doesn't work on file input field */}
             <Form.Control
               type="file"
               name="image"
-              value={this.state.image}
+              ref={this.imageField}
               onChange={this.handleChange}
             />
           </Form.Group>
@@ -63,4 +78,4 @@ class AddPostForm extends React.Component {
 }
 
 
-export default connect(null, { addPost })(AddPostForm);
+export default connect(null, { addPost })(AddPost);
