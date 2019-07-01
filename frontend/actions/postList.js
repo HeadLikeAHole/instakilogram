@@ -1,5 +1,6 @@
-import { LOAD_POST_LIST, ADD_POST, DELETE_POST } from './types';
+import {LOAD_POST_LIST, ADD_POST, DELETE_POST, LOGIN_FAIL} from './types';
 import { createMessage, returnErrors } from './messages';
+import { composeHeaders } from './auth';
 
 
 // fetch posts from the server and send them to posts reducer through dispatch function
@@ -12,27 +13,23 @@ export const loadPostList = () => dispatch => {  // dispatch action
 
 
 // add post to the server and send it to posts reducer through dispatch function
-export const addPost = post => (dispatch, getState) => {
+export const addPost = (post, history) => (dispatch, getState) => {
   // display error if one of the fields is empty
-  if (!post.image && !post.description) {
+  if (!post.imageFile && !post.description) {
     return dispatch(returnErrors('Добавьте фото и описание', 400));
-  } else if (post.image && !post.description) {
+  } else if (post.imageFile && !post.description) {
     return dispatch(returnErrors('Добавьте описание', 400));
-  } else if (!post.image && post.description) {
+  } else if (!post.imageFile && post.description) {
     return dispatch(returnErrors('Добавьте фото', 400));
   }
 
   const formData = new FormData();
   // populate form object
-  formData.append('image', post.image, post.image.name);
+  formData.append('image', post.imageFile, post.imageFile.name);
   formData.append('description', post.description);
-  const token = getState().auth.token;
-  const headers = {};
-  if (token) {
-    headers['Authorization'] = `Token ${token}`
-  }
-
-  fetch('/api/posts/', {method: 'POST', body: formData, headers: headers})
+  // second argument "false" in composeHeaders function specifies that headers shouldn't
+  // contain "'Content-Type': 'application/json'" key-value pair since posted data contains a file
+  fetch('api/posts/', {method: 'POST', body: formData, headers: composeHeaders(getState, false)})
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -45,17 +42,50 @@ export const addPost = post => (dispatch, getState) => {
       dispatch({
         type: ADD_POST,
         payload: data
-      })
+      });
+      // redirect to home page after successful post submission
+      history.push('/')
     }).catch(error => {
       const status = error.status;
-      error.text().then(text => dispatch(returnErrors(text, status)))
+      error.json().then(msg => dispatch(returnErrors(msg, status)));
+    })
+};
+
+
+// update post
+export const updatePost = (id, post, history) => (dispatch, getState) => {
+  // display error if one of the fields is empty
+  if (!post.description) {
+    return dispatch(returnErrors('Добавьте описание', 400));
+  }
+
+  const formData = new FormData();
+  // populate form object
+  formData.append('image', post.imageFile, post.imageFile.name);
+  formData.append('description', post.description);
+
+  fetch(`api/posts/${id}/`, {method: 'PUT', body: formData, headers: composeHeaders(getState, false)})
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+       throw response;
+      }
+    })
+    .then(() => {
+      dispatch(createMessage({postUpdated: 'Фото было обновленно'}));
+      // redirect to home page after successful post submission
+      history.push('/')
+    }).catch(error => {
+      const status = error.status;
+      error.json().then(msg => dispatch(returnErrors(msg, status)));
     })
 };
 
 
 // delete post from the server and send it to posts reducer through dispatch function
-export const deletePost = id => dispatch => {  // dispatch action
-  fetch(`/api/posts/${id}/`, {method: 'DELETE', headers : {'Content-Type': 'application/json'}})
+export const deletePost = id => (dispatch, getState) => {  // dispatch action
+  fetch(`/api/posts/${id}/`, {method: 'DELETE', headers: composeHeaders(getState)})
     .then(() => {
       // create message after deleting post from the server
       dispatch(createMessage({postDeleted: 'Фото было удалено'}));

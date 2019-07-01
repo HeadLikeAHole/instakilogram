@@ -1,5 +1,9 @@
 /* "p-d" stands for post detail */
 
+.p-d-container {
+
+}
+
 .p-d-profile-img {
     max-height: 40px;
     max-width: 40px;

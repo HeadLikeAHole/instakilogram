@@ -8,6 +8,7 @@ import { Redirect, Link } from 'react-router-dom';
 
 import { register } from '../../actions/auth';
 import { createMessage } from '../../actions/messages';
+import '../posts/post.css';
 
 
 class Register extends React.Component {
@@ -31,10 +32,11 @@ class Register extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     if (this.state.password !== this.state.password2) {
-      this.props.createMessage({ passwordsNotMatch: 'Пароли не совпадают' })
+      this.props.createMessage({ passwordsNotMatch: 'Пароли не совпадают' });
+    } else {
+      this.props.register(this.state);
+      this.setState({username: '', email: '', password: '', password2: ''})
     }
-    this.props.register(this.state);
-    this.setState({username: '', email: '', password: '', password2: ''})
   };
 
   render() {
@@ -45,8 +47,8 @@ class Register extends React.Component {
     }
 
     return (
-      <Card className="p-3 move-down">
-        <h2>Регистрация</h2>
+      <Card className="p-3 mx-auto move-down my-container">
+        <h2 className="text-center text-uppercase font-italic">Регистрация</h2>
         <Form onSubmit={this.handleSubmit}>
           <Form.Group>
             <Form.Label>Логин:</Form.Label>

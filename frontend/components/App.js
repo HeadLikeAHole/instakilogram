@@ -8,15 +8,16 @@ import Container from 'react-bootstrap/Container';
 // make alerts available in the whole app
 // use alias because there is already a Provider component
 import { Provider as AlertProvider } from 'react-alert';
-import AlertTemplate from 'react-alert-template-basic'
+import AlertTemplate from 'react-alert-template-basic';
 
 import './app.css';
 import store from '../store';
 import Navigation from './layout/Navigation';
 import Alerts from './layout/Alerts';
 import PostList from './posts/PostList';
-import PostDetail from './posts/PostDetail'
-import AddPost from './posts/AddPost';
+import PostDetail from './posts/PostDetail';
+import Profile from './accounts/Profile';
+import PostForm from './posts/PostForm';
 import Login from './accounts/login';
 import Register from './accounts/register';
 import PrivateRoute from './accounts/PrivateRoute';
@@ -49,7 +50,8 @@ class App extends React.Component {
                 <Switch>
                   <Route exact path="/" component={PostList} />
                   <Route exact path="/posts/:id" component={PostDetail} />
-                  <PrivateRoute exact path="/add-post" component={AddPost} />
+                  <Route exact path="/profile/:id" component={Profile} />
+                  <PrivateRoute exact path="/post-form" component={PostForm} />
                   <Route exact path="/login" component={Login} />
                   <Route exact path="/register" component={Register} />
                 </Switch>

@@ -2,7 +2,23 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
 
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
+from .serializers import UserSerializer, ProfileSerializer, RegisterSerializer, LoginSerializer
+from .models import Profile
+from posts.permissions import IsOwnerOrReadOnly
+
+
+class UserView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
+class ProfileView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+    permission_classes = [IsOwnerOrReadOnly]
 
 
 class RegisterView(generics.GenericAPIView):
@@ -38,11 +54,3 @@ class LoginView(generics.GenericAPIView):
             # AuthToken.objects.create returns a tuple(instance, token). So in order to get token use the index 1
             'token': AuthToken.objects.create(user)[1]
         })
-
-
-class UserView(generics.RetrieveAPIView):
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_object(self):
-        return self.request.user

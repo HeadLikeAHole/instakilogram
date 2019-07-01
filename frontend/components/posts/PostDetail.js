@@ -19,8 +19,7 @@ class PostDetail extends React.Component {
   }
 
   render() {
-    const { user } = this.props;
-    const { post } = this.props;
+    const { authUser, post } = this.props;
 
     let authorized = false;
 
@@ -32,9 +31,9 @@ class PostDetail extends React.Component {
       </NavDropdown>
     );
 
-    // check if post creator is current logged in user
-    if (user) {
-      if (post.user === user.id) {
+    // check if current logged in user is post author
+    if (authUser) {
+      if (authUser.id === post.user) {
         authorized = true
       }
     }
@@ -45,7 +44,7 @@ class PostDetail extends React.Component {
       <Row noGutters={true} className="mt-5 p-d-border">
         {/* post image */}
         <Col lg={7} className="align-self-center">
-          <Image src={post.image} fluid />
+          <Image src={post.image} className="w-100" />
         </Col>
         <Col className="bg-white">
           {/* post author */}
@@ -87,15 +86,15 @@ class PostDetail extends React.Component {
 
 
 PostDetail.propTypes = {
-  post: PropTypes.object.isRequired,
-  user: PropTypes.object
+  authUser: PropTypes.object,
+  post: PropTypes.object.isRequired
 };
 
 
 // make state available to PostDetail component though props
 const mapStateToProps = state => ({
-  post: state.postDetail,
-  user: state.auth.user
+  authUser: state.auth.user,
+  post: state.postDetail
 });
 
 

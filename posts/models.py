@@ -13,6 +13,9 @@ class Post(models.Model):
     published = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-published']
+
     def __str__(self):
         # truncate displayed description in admin site to 30 chars
         return truncatechars(self.description, 30)

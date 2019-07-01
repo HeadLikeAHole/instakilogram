@@ -8,6 +8,7 @@ import { Redirect, Link } from 'react-router-dom';
 
 import { login } from '../../actions/auth';
 import './accounts.css';
+import '../posts/post.css';
 
 
 class Login extends React.Component {
@@ -38,8 +39,8 @@ class Login extends React.Component {
     }
 
     return (
-      <Card className="p-3 move-down">
-        <h2>Вход на сайт</h2>
+      <Card className="p-3 mx-auto move-down my-container">
+        <h2 className="text-center text-uppercase font-italic">Вход на сайт</h2>
         <Form onSubmit={this.handleSubmit}>
           <Form.Group>
             <Form.Label>Логин:</Form.Label>

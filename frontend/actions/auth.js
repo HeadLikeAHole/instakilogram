@@ -5,13 +5,18 @@ import { returnErrors } from './messages';
 
 
 // helper function which composes headers
-export const composeHeaders = getState => {
+// by default it adds "'Content-Type': 'application/json'" to the header
+// if second argument is false it doesn't
+export const composeHeaders = (getState, json=true) => {
   // get token from state
   // getState() returns the current state tree of your application.
   // It is equal to the last value returned by the store's reducer
   // It's a redux function
+  const headers = {};
   const token = getState().auth.token;
-  const headers = {'Content-Type': 'application/json'};
+  if (json) {
+    headers['Content-Type'] = 'application/json'
+  }
   if (token) {
     headers['Authorization'] = `Token ${token}`
   }
@@ -66,7 +71,7 @@ export const register = ({ username, password, email }) => dispatch => {
       const status = error.status;
       error.json().then(msg => dispatch(returnErrors(msg, status)));
       dispatch({
-        type: LOGIN_FAIL
+        type: REGISTER_FAIL
       })
   })
 };
@@ -93,7 +98,7 @@ export const login = (username, password) => dispatch => {
       const status = error.status;
       error.json().then(msg => dispatch(returnErrors(msg, status)));
       dispatch({
-        type: REGISTER_FAIL
+        type: LOGIN_FAIL
       })
   })
 };

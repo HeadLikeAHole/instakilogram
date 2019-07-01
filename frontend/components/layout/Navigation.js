@@ -24,8 +24,8 @@ const Navigation = props => {
 
   const authenticatedLinks = (
     <NavDropdown alignRight title={user && user.username} id="collasible-nav-dropdown" className="mr-1">
-      <LinkContainer to="/add-post"><NavDropdown.Item>Добавить фото</NavDropdown.Item></LinkContainer>
-      <LinkContainer to="/profile/"><NavDropdown.Item>Профиль</NavDropdown.Item></LinkContainer>
+      <LinkContainer to="/post-form"><NavDropdown.Item>Добавить фото</NavDropdown.Item></LinkContainer>
+      <LinkContainer to={`/profile/${user && user.id}`}><NavDropdown.Item>Профиль</NavDropdown.Item></LinkContainer>
       <NavDropdown.Item onClick={props.logout}>Выйти</NavDropdown.Item>
     </NavDropdown>
   );
@@ -56,7 +56,7 @@ const Navigation = props => {
           </Nav>
           <Nav className="float-lg-right">
             {/* if user is logged-in display profile image */}
-            <Image src={user && user.profile.image} roundedCircle className="profile-img" />
+            <Image src={user && user.profile_image} roundedCircle className="profile-img" />
             {isAuthenticated ? authenticatedLinks : guestLink}
           </Nav>
         </Navbar.Collapse>
