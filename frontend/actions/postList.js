@@ -38,13 +38,13 @@ export const addPost = (post, history) => (dispatch, getState) => {
       }
     })
     .then(data => {
+      // redirect to home page after successful post submission
+      history.push('/');
       dispatch(createMessage({postAdded: 'Фото было добавлено'}));
       dispatch({
         type: ADD_POST,
         payload: data
       });
-      // redirect to home page after successful post submission
-      history.push('/')
     }).catch(error => {
       const status = error.status;
       error.json().then(msg => dispatch(returnErrors(msg, status)));
@@ -73,9 +73,9 @@ export const updatePost = (id, post, history) => (dispatch, getState) => {
       }
     })
     .then(() => {
-      dispatch(createMessage({postUpdated: 'Фото было обновленно'}));
-      // redirect to home page after successful post submission
-      history.push('/')
+      // redirect to post detail after successful post submission
+      history.push(`posts/${id}/`);
+      dispatch(createMessage({postUpdated: 'Фото было обновленно'}))
     }).catch(error => {
       const status = error.status;
       error.json().then(msg => dispatch(returnErrors(msg, status)));
@@ -84,9 +84,11 @@ export const updatePost = (id, post, history) => (dispatch, getState) => {
 
 
 // delete post from the server and send it to posts reducer through dispatch function
-export const deletePost = id => (dispatch, getState) => {  // dispatch action
+export const deletePost = (id, history) => (dispatch, getState) => {  // dispatch action
   fetch(`/api/posts/${id}/`, {method: 'DELETE', headers: composeHeaders(getState)})
     .then(() => {
+      // redirect to home page after successful post deletion
+      history.push('/');
       // create message after deleting post from the server
       dispatch(createMessage({postDeleted: 'Фото было удалено'}));
       dispatch({

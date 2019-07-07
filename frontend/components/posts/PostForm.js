@@ -43,6 +43,7 @@ class PostForm extends React.Component {
     } else {
       this.props.addPost(this.state, this.props.history);
     }
+
     this.setState({imageFile: '', imageUrl: '', description: ''});
     // since state's image property contains file object not file name
     // use ref to remove image filename from file field on successful form submission

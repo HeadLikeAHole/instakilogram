@@ -54,6 +54,10 @@
     text-decoration: none;
 }
 
+.post-image {
+    max-height: 200vh;
+}
+
 @media (min-width: 768px) {
     .my-container {
         width: 600px;

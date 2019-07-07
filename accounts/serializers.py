@@ -22,6 +22,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     following = serializers.SerializerMethodField()
     user_posts = serializers.SerializerMethodField()
+    user_saved_posts = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -34,6 +35,11 @@ class ProfileSerializer(serializers.ModelSerializer):
     # return all user's posts
     def get_user_posts(self, obj):
         query_set = obj.user.post_set.all()
+        return PostSerializer(query_set, many=True).data
+
+    # return all user's posts
+    def get_user_saved_posts(self, obj):
+        query_set = obj.saved_posts.all()
         return PostSerializer(query_set, many=True).data
 
 

@@ -17,6 +17,7 @@ import Alerts from './layout/Alerts';
 import PostList from './posts/PostList';
 import PostDetail from './posts/PostDetail';
 import Profile from './accounts/Profile';
+import ProfileEdit from './accounts/ProfileEdit';
 import PostForm from './posts/PostForm';
 import Login from './accounts/login';
 import Register from './accounts/register';
@@ -51,6 +52,7 @@ class App extends React.Component {
                   <Route exact path="/" component={PostList} />
                   <Route exact path="/posts/:id" component={PostDetail} />
                   <Route exact path="/profile/:id" component={Profile} />
+                  <Route exact path="/profile/:id/edit" component={ProfileEdit} />
                   <PrivateRoute exact path="/post-form" component={PostForm} />
                   <Route exact path="/login" component={Login} />
                   <Route exact path="/register" component={Register} />

@@ -1,7 +1,7 @@
 /* "p-d" stands for post detail */
 
-.p-d-container {
-
+.p-d-image {
+    max-height: 200vh;
 }
 
 .p-d-profile-img {

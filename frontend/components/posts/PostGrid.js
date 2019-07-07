@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Row from 'react-bootstrap/Row';
 
 import PostTile from './PostTile';
@@ -18,8 +19,13 @@ const PostGrid = props => {
 
 
 PostGrid.propTypes = {
-  posts: PropTypes.object.isRequired
+  posts: PropTypes.array.isRequired
 };
 
 
-export default PostGrid;
+const mapStateToProps = state => ({
+  posts: state.postSlider.posts,
+});
+
+
+export default connect(mapStateToProps)(PostGrid);

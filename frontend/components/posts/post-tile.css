@@ -1,0 +1,24 @@
+/* make post tile a responsive square  */
+.square {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 100%;
+}
+
+/* crop and center image */
+.square img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.landscape {
+    width: auto;
+    height: 100%;
+}
+
+.portrait {
+    width: 100%;
+    height: auto;
+}

@@ -2,36 +2,41 @@ import React from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
-import NavDropdown from "react-bootstrap/NavDropdown";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import './post-detail.css';
 import './post.css';
-
 import { loadPostDetail } from '../../actions/postDetail';
-import { deletePost } from '../../actions/postList';
+import PostEditDelete from './PostEditDelete';
 
 
 class PostDetail extends React.Component {
   componentDidMount() {
-    this.props.loadPostDetail(this.props.match.params.id);
+    // check where id comes from
+    // it's either from url if post is clicked in post list
+    // or from props which are supplied when post is clicked in profile page
+    let id;
+    if (this.props.match) {
+      id = this.props.match.params.id
+    } else {
+      id = this.props.post_id
+    }
+    this.props.loadPostDetail(id);
+  }
+
+  // update component when sliding posts in profile page
+  componentDidUpdate(prevProps) {
+    if (this.props.post_id !== prevProps.post_id) {
+      this.props.loadPostDetail(this.props.post_id);
+    }
   }
 
   render() {
     const { authUser, post } = this.props;
 
-    let authorized = false;
-
-    // dropdown menu with edit and delete links
-    const editDelete = (
-      <NavDropdown alignRight title="..." id="collasible-nav-dropdown" className="p-0 dots">
-        <NavDropdown.Item href="#action/3.1">Редактировать</NavDropdown.Item>
-        <NavDropdown.Item onClick={this.props.deletePost.bind(this, post.id)}>Удалить</NavDropdown.Item>
-      </NavDropdown>
-    );
-
     // check if current logged in user is post author
+    let authorized = false;
     if (authUser) {
       if (authUser.id === post.user) {
         authorized = true
@@ -41,10 +46,11 @@ class PostDetail extends React.Component {
     return (
       // "p-d" in class names stands for post detail
       // "noGutters={true}" removes the gutter spacing between Cols as well as any added negative margins
-      <Row noGutters={true} className="mt-5 p-d-border">
+      // display "p-d-border" class if post detail is accessed through post list and not profile page
+      <Row noGutters={true} className={`mt-5 ${this.props.post_id || "p-d-border"}`}>
         {/* post image */}
         <Col lg={7} className="align-self-center">
-          <Image src={post.image} className="w-100" />
+          <Image src={post.image} className="w-100 p-d-image" />
         </Col>
         <Col className="bg-white">
           {/* post author */}
@@ -52,7 +58,7 @@ class PostDetail extends React.Component {
             <Col>
               <Image src={post.profile_image} roundedCircle fluid className="mr-2 p-d-profile-img" />
               {post.username}
-              {authorized && editDelete}
+              {authorized && <PostEditDelete post={this.props.post} />}
             </Col>
           </Row>
           {/* post description */}
@@ -70,13 +76,9 @@ class PostDetail extends React.Component {
             <i className="far fa-bookmark my-icon"></i>
           </Row>
           {/* add comment field */}
-          <Row noGutters={true} className="px-3 py-2 align-content-center p-d-border-bottom">
-            <Col>
-              <textarea placeholder="Добавить комментарий..." className="w-100 p-d-textarea"></textarea>
-            </Col>
-            <Col xs={1}>
-              <a href="" className="nav-link">OK</a>
-            </Col>
+          <Row noGutters={true} className="px-3 py-2 justify-content-between align-content-center p-d-border-bottom">
+            <textarea placeholder="Добавить комментарий..." className="p-d-textarea"></textarea>
+            <a href="" className="pr-0 nav-link">OK</a>
           </Row>
         </Col>
       </Row>
@@ -87,15 +89,18 @@ class PostDetail extends React.Component {
 
 PostDetail.propTypes = {
   authUser: PropTypes.object,
-  post: PropTypes.object.isRequired
+  post: PropTypes.object.isRequired,
+  loadPostDetail: PropTypes.func.isRequired,
+  post_id: PropTypes.number
 };
 
 
 // make state available to PostDetail component though props
 const mapStateToProps = state => ({
   authUser: state.auth.user,
-  post: state.postDetail
+  post: state.postDetail,
+  post_id: state.postSlider.id
 });
 
 
-export default connect(mapStateToProps, { loadPostDetail, deletePost })(PostDetail);
+export default connect(mapStateToProps, { loadPostDetail })(PostDetail);

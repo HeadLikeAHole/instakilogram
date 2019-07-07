@@ -3,13 +3,13 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
-import NavDropdown from "react-bootstrap/NavDropdown";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { LinkContainer } from 'react-router-bootstrap';
+
 
 import './post.css';
+import PostEditDelete from './PostEditDelete';
 
 
 const Post = props => {
@@ -26,20 +26,6 @@ const Post = props => {
     }
   }
 
-  // dropdown menu with edit and delete links
-  const editDelete = (
-    <NavDropdown alignRight title="..." id="collasible-nav-dropdown" className="mr-1 dots">
-      {/* redirect to post form and send post data along */}
-      <LinkContainer to={{
-        pathname: "/post-form",
-        data: {post: {id: id, image: image, description: description}}
-      }}>
-        <NavDropdown.Item href="">Редактировать</NavDropdown.Item>
-      </LinkContainer>
-      <NavDropdown.Item onClick={props.deletePost.bind(this, id)}>Удалить</NavDropdown.Item>
-    </NavDropdown>
-  );
-
   return (
     <Card className="mx-auto my-5 my-container">
       <Card.Body className="p-3">
@@ -49,11 +35,11 @@ const Post = props => {
             <Link to={`/profile/${user}`}><Image src={profile_image} roundedCircle className="mr-2 post-profile-img" /></Link>
             <Link to={`/profile/${user}`} className="post-username-link">{username}</Link>
             {/* if user is owner of the post display dropdown menu */}
-            {authorized && editDelete}
+            {authorized && <PostEditDelete post={props.post} />}
           </Col>
         </Row>
       </Card.Body>
-      <Card.Img variant="top" src={image} />
+      <Card.Img variant="top" src={image} className="post-image" />
       <Card.Body className="p-3">
         <div className="my-1">
           <i className="far fa-heart my-icon"></i>
@@ -68,7 +54,8 @@ const Post = props => {
 
 
 Post.propTypes = {
-  authUser: PropTypes.object
+  authUser: PropTypes.object,
+  post: PropTypes.object.isRequired
 };
 
 

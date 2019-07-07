@@ -29,4 +29,10 @@ export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 
 export const REGISTER_FAIL = 'REGISTER_FAIL';
 
-export const LOAD_PROFILE ='LOAD_PROFILE';
+export const LOAD_PROFILE = 'LOAD_PROFILE';
+
+export const TOGGLE_MODAL = 'TOGGLE_MODAL';
+
+export const CURRENT_POST_ID = 'CURRENT_POST_ID';
+
+export const POSTS_TO_DISPLAY = 'POSTS_TO_DISPLAY';
