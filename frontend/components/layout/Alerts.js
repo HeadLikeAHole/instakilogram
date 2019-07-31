@@ -22,6 +22,7 @@ class Alerts extends React.Component {
       if (error.msg.username) alert.error(error.msg.username.join());
       if (error.msg.password) alert.error(error.msg.password.join());
       if (error.msg) alert.error(error.msg);
+      if (error.msg.text) alert.error(error.msg.text.join());
     }
 
     if (message !== prevProps.message) {
@@ -29,6 +30,7 @@ class Alerts extends React.Component {
       if (message.postUpdated) alert.success(message.postUpdated);
       if (message.postDeleted) alert.success(message.postDeleted);
       if (message.passwordsNotMatch) alert.error(message.passwordsNotMatch);
+      if (message.commentAdded) alert.success(message.commentAdded);
     }
   }
 

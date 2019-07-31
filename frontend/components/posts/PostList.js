@@ -31,11 +31,11 @@ class PostList extends React.Component {
 }
 
 
-// make state available to Posts component though props
+// make state available to PostList component though props
 const mapStateToProps = state => ({
   posts: state.postList
 });
 
 
-// connect React component to a Redux store
+// connect React component to Redux store
 export default connect(mapStateToProps, { loadPostList, deletePost })(PostList)

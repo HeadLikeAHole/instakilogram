@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Row from 'react-bootstrap/Col';
-import Image from 'react-bootstrap/Image';
-import { Link } from 'react-router-dom';
 
 import './post-hover.css';
 

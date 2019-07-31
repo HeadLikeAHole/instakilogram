@@ -47,6 +47,7 @@
 
 .post-username-link {
     color: black;
+    font-weight: 600;
 }
 
 .post-username-link:hover {

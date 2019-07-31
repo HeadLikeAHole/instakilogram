@@ -2,10 +2,10 @@ import { CREATE_MASSAGE, GET_ERRORS } from './types';
 
 
 export const createMessage = msg => (
-    {
-        type: CREATE_MASSAGE,
-        payload: msg
-    }
+  {
+    type: CREATE_MASSAGE,
+    payload: msg
+  }
 );
 
 

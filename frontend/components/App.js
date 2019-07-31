@@ -51,8 +51,8 @@ class App extends React.Component {
                 <Switch>
                   <Route exact path="/" component={PostList} />
                   <Route exact path="/posts/:id" component={PostDetail} />
+                  <Route exact path="/profile/edit" component={ProfileEdit} />
                   <Route exact path="/profile/:id" component={Profile} />
-                  <Route exact path="/profile/:id/edit" component={ProfileEdit} />
                   <PrivateRoute exact path="/post-form" component={PostForm} />
                   <Route exact path="/login" component={Login} />
                   <Route exact path="/register" component={Register} />

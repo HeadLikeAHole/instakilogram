@@ -36,3 +36,11 @@ export const TOGGLE_MODAL = 'TOGGLE_MODAL';
 export const CURRENT_POST_ID = 'CURRENT_POST_ID';
 
 export const POSTS_TO_DISPLAY = 'POSTS_TO_DISPLAY';
+
+export const LOAD_COMMENT_LIST = 'LOAD_COMMENT_LIST';
+
+export const ADD_COMMENT = 'ADD_COMMENT';
+
+export const ADD_REPLY = 'ADD_REPLY';
+
+export const REPLY_INFO = 'REPLY_INFO';

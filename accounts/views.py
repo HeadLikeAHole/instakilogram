@@ -18,7 +18,7 @@ class UserView(generics.RetrieveAPIView):
 class ProfileView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
-    permission_classes = [IsOwnerOrReadOnly]
+    # permission_classes = [IsOwnerOrReadOnly]
 
 
 class RegisterView(generics.GenericAPIView):

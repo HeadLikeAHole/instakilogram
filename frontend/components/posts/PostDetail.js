@@ -4,11 +4,14 @@ import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import './post-detail.css';
 import './post.css';
 import { loadPostDetail } from '../../actions/postDetail';
 import PostEditDelete from './PostEditDelete';
+import CommentList from '../comments/CommentList';
+import CommentForm from '../comments/CommentForm';
 
 
 class PostDetail extends React.Component {
@@ -47,7 +50,7 @@ class PostDetail extends React.Component {
       // "p-d" in class names stands for post detail
       // "noGutters={true}" removes the gutter spacing between Cols as well as any added negative margins
       // display "p-d-border" class if post detail is accessed through post list and not profile page
-      <Row noGutters={true} className={`mt-5 ${this.props.post_id || "p-d-border"}`}>
+      <Row noGutters={true} className={`mt-5 ${post.id || "p-d-border"}`}>
         {/* post image */}
         <Col lg={7} className="align-self-center">
           <Image src={post.image} className="w-100 p-d-image" />
@@ -56,9 +59,11 @@ class PostDetail extends React.Component {
           {/* post author */}
           <Row noGutters={true} className="p-3 align-items-center p-d-border-bottom">
             <Col>
-              <Image src={post.profile_image} roundedCircle fluid className="mr-2 p-d-profile-img" />
-              {post.username}
-              {authorized && <PostEditDelete post={this.props.post} />}
+              <Link to={`/profile/${post.user}`}>
+                <Image src={post.profile_image} roundedCircle fluid className="mr-2 p-d-profile-img" />
+              </Link>
+              <Link to={`/profile/${post.user}`} className="post-username-link">{post.username}</Link>
+              {authorized && <PostEditDelete post={post} />}
             </Col>
           </Row>
           {/* post description */}
@@ -66,19 +71,18 @@ class PostDetail extends React.Component {
             {post.description}
           </Row>
           {/* comments */}
-          <Row noGutters={true} className="p-3 p-d-border-bottom">
-            <textarea></textarea>
+          <Row noGutters={true} className="align-items-center p-d-border-bottom comments">
+            {post.id && <CommentList post_id={post.id} />}
           </Row>
           {/* icons */}
-          <Row noGutters={true} className="p-3 p-d-border-bottom">
+          <Row noGutters={true} className="p-3 align-content-center p-d-border-bottom">
             <i className="far fa-heart my-icon"></i>
             <i className="far fa-comment my-icon"></i>
             <i className="far fa-bookmark my-icon"></i>
           </Row>
           {/* add comment field */}
           <Row noGutters={true} className="px-3 py-2 justify-content-between align-content-center p-d-border-bottom">
-            <textarea placeholder="Добавить комментарий..." className="p-d-textarea"></textarea>
-            <a href="" className="pr-0 nav-link">OK</a>
+            {post.id && <CommentForm post_id={post.id} />}
           </Row>
         </Col>
       </Row>

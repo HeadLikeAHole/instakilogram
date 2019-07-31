@@ -51,7 +51,7 @@ class PostTile extends React.Component {
           onMouseLeave={this.handleHover}
           onClick={this.handleClick}
         >
-          <img src={this.props.post.image} className={`${this.state.mode}`} ref={this.imgElement}/>
+          <img src={this.props.post.image} className={`${this.state.mode}`} ref={this.imgElement} />
           {this.state.postHover && <PostHover />}
         </div>
       </Col>

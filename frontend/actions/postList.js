@@ -1,14 +1,26 @@
-import {LOAD_POST_LIST, ADD_POST, DELETE_POST, LOGIN_FAIL} from './types';
+import { LOAD_POST_LIST, ADD_POST, DELETE_POST, LOGIN_FAIL } from './types';
 import { createMessage, returnErrors } from './messages';
 import { composeHeaders } from './auth';
 
 
-// fetch posts from the server and send them to posts reducer through dispatch function
+// fetch posts from the server and send them to postList reducer through dispatch function
 export const loadPostList = () => dispatch => {  // dispatch action
-  fetch('/api/posts/').then(response => response.json()).then(data => dispatch({
-    type: LOAD_POST_LIST,
-    payload: data
-  })).catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
+  fetch('/api/posts/')
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+       throw response;
+      }
+    })
+    .then(data => dispatch({
+      type: LOAD_POST_LIST,
+      payload: data
+    })
+    ).catch(error => {
+      const status = error.status;
+      error.json().then(msg => dispatch(returnErrors(msg, status)));
+    })
 };
 
 
@@ -28,7 +40,7 @@ export const addPost = (post, history) => (dispatch, getState) => {
   formData.append('image', post.imageFile, post.imageFile.name);
   formData.append('description', post.description);
   // second argument "false" in composeHeaders function specifies that headers shouldn't
-  // contain "'Content-Type': 'application/json'" key-value pair since posted data contains a file
+  // contain "{'Content-Type': 'application/json'}" key-value pair since posted data contains a file
   fetch('api/posts/', {method: 'POST', body: formData, headers: composeHeaders(getState, false)})
     .then(response => {
       if (response.ok) {
@@ -63,7 +75,8 @@ export const updatePost = (id, post, history) => (dispatch, getState) => {
   // populate form object
   formData.append('image', post.imageFile, post.imageFile.name);
   formData.append('description', post.description);
-
+  // second argument "false" in composeHeaders function specifies that headers shouldn't
+  // contain "{'Content-Type': 'application/json'}" key-value pair since posted data contains a file
   fetch(`api/posts/${id}/`, {method: 'PUT', body: formData, headers: composeHeaders(getState, false)})
     .then(response => {
       if (response.ok) {

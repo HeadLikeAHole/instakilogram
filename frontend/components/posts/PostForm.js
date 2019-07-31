@@ -6,8 +6,8 @@ import Button from 'react-bootstrap/Button';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { addPost, updatePost } from '../../actions/postList';
 
+import { addPost, updatePost } from '../../actions/postList';
 import './post.css';
 
 
@@ -56,7 +56,7 @@ class PostForm extends React.Component {
       const { image, description } = this.props.location.data.post;
       // extract filename from url
       const fileName = image.split('/').pop();
-      // fetch image file
+      // fetch image file and set state
       fetch(image)
         .then(response => response.blob())
         .then(file => {

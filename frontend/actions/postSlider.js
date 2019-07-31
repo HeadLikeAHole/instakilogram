@@ -8,6 +8,7 @@ export const currentPostId = id => (
   }
 );
 
+// user posts or saved user posts are in the payload
 export const postsToDisplay = posts => (
   {
     type: POSTS_TO_DISPLAY,

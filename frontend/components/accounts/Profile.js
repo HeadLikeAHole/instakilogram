@@ -5,6 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
+import { Link } from 'react-router-dom';
 
 import { loadProfile } from '../../actions/profile';
 import { postsToDisplay } from '../../actions/postSlider';
@@ -63,7 +64,7 @@ class Profile extends React.Component {
             <Row className="mb-3 justify-content-around justify-content-sm-start">
               <span className="font-italic mr-2 p-p-username">{profile.user && profile.user.username}</span>
               {authorized ?
-                <Button variant="light" className="font-weight-bold">Edit Profile</Button> :
+                <Link to="/profile/edit"><Button variant="light" className="font-weight-bold">Edit Profile</Button></Link> :
                 <Button variant="light" className="font-weight-bold">Follow</Button>}
             </Row>
             <Row className="mb-3 justify-content-around justify-content-sm-start">
@@ -93,6 +94,7 @@ Profile.propTypes = {
   authUser: PropTypes.object,
   profile: PropTypes.object.isRequired,
   modalOpen: PropTypes.bool.isRequired,
+  loadProfile: PropTypes.func.isRequired,
   postsToDisplay: PropTypes.func.isRequired
 };
 
