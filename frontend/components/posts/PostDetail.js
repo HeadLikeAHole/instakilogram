@@ -36,7 +36,7 @@ class PostDetail extends React.Component {
   }
 
   render() {
-    const { authUser, post } = this.props;
+    const { authUser, post, match } = this.props;
 
     // check if current logged in user is post author
     let authorized = false;
@@ -72,7 +72,7 @@ class PostDetail extends React.Component {
           </Row>
           {/* comments */}
           <Row noGutters={true} className="align-items-center p-d-border-bottom comments">
-            {post.id && <CommentList post_id={post.id} />}
+            <CommentList post_id={match.params.id} />
           </Row>
           {/* icons */}
           <Row noGutters={true} className="p-3 align-content-center p-d-border-bottom">
@@ -82,7 +82,7 @@ class PostDetail extends React.Component {
           </Row>
           {/* add comment field */}
           <Row noGutters={true} className="px-3 py-2 justify-content-between align-content-center p-d-border-bottom">
-            {post.id && <CommentForm post_id={post.id} />}
+            <CommentForm post_id={match.params.id} />
           </Row>
         </Col>
       </Row>

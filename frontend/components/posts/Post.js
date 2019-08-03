@@ -17,12 +17,11 @@ const Post = props => {
   // user variable is post author's user's id
   const { id, username, profile_image, image, description, user } = props.post;
 
-  let authorized = false;
-
-  // check if post author is current logged in user
+  // check if current logged in user is posts owner
+  let isOwner = false;
   if (authUser) {
     if (authUser.id === user) {
-      authorized = true
+      isOwner = true
     }
   }
 
@@ -35,7 +34,7 @@ const Post = props => {
             <Link to={`/profile/${user}`}><Image src={profile_image} roundedCircle className="mr-2 post-profile-img" /></Link>
             <Link to={`/profile/${user}`} className="post-username-link">{username}</Link>
             {/* if user is owner of the post display dropdown menu */}
-            {authorized && <PostEditDelete post={props.post} />}
+            {isOwner && <PostEditDelete post={props.post} />}
           </Col>
         </Row>
       </Card.Body>

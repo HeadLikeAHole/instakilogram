@@ -53,3 +53,10 @@ class ReplyListCreateView(generics.ListCreateAPIView):
         post = Post.objects.get(pk=self.kwargs['pk'])
         parent = Comment.objects.get(pk=self.kwargs['id'])
         serializer.save(user=self.request.user, post=post, parent=parent)
+
+
+# comment and reply edit and delete view
+class CommentDetailEditDelete(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CommentSerializer
+    queryset = Comment.objects.all()
+    permission_classes = [IsOwnerOrReadOnly]

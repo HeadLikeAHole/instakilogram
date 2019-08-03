@@ -41,6 +41,9 @@ class Comment(models.Model):
     published = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-published']
+
     def __str__(self):
         # truncate displayed text in admin site to 30 chars
         return truncatechars(self.text, 30)

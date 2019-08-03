@@ -22,7 +22,7 @@ const PostEditDelete = props => {
       {/* redirect to post form and send post data along */}
       <LinkContainer to={{
         pathname: "/post-form",
-        data: {post: {id: id, image: image, description: description}}
+        data: {post: {id, image, description}}
       }}>
         <NavDropdown.Item>Редактировать</NavDropdown.Item>
       </LinkContainer>

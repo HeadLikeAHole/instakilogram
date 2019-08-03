@@ -43,4 +43,12 @@ export const ADD_COMMENT = 'ADD_COMMENT';
 
 export const ADD_REPLY = 'ADD_REPLY';
 
-export const REPLY_INFO = 'REPLY_INFO';
+export const EDIT_COMMENT = 'EDIT_COMMENT';
+
+export const EDIT_REPLY = 'EDIT_REPLY';
+
+export const DELETE_COMMENT = 'DELETE_COMMENT';
+
+export const DELETE_REPLY = 'DELETE_REPLY';
+
+export const ADD_COMMENT_FORM_INFO = 'ADD_COMMENT_FORM_INFO';

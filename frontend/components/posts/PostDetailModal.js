@@ -9,7 +9,7 @@ import './post-detail-modal.css';
 import { toggleModal } from '../../actions/modal';
 import { currentPostId } from '../../actions/postSlider';
 import PostDetail from './PostDetail';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 
 class PostDetailModal extends React.Component {

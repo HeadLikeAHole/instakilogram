@@ -11,56 +11,82 @@ import { connect } from 'react-redux';
 
 import './comment.css';
 import ReplyList from './ReplyList';
-import { addReplyInfo } from '../../actions/reply';
+import { addCommentFormInfo } from '../../actions/commentFormInfo';
+import CommentEditDelete from './CommentEditDelete';
 
 // choose Russian language in timestamp
 const formatter = buildFormatter(russianStrings);
 
-const Comment = props => {
-  const { comment } = props;
+class Comment extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {visible: false}
+  }
 
-  const handleReply = e => {
+  static propTypes = {
+    comment: PropTypes.object.isRequired,
+    addCommentFormInfo: PropTypes.func.isRequired
+  };
+
+  handleMouseEnter = () => this.setState({visible: !this.state.visible});
+
+  handleReply = e => {
     e.preventDefault();
+    const { comment } = this.props;
     let parent_id;
+    // check if it's a reply to a comment or to another reply
     if (comment.parent) {
       parent_id = comment.parent
     } else {
       parent_id = comment.id
     }
-    props.addReplyInfo({comment_id: comment.id, username: comment.username, parent_id: parent_id})
+    this.props.addCommentFormInfo({username: comment.username, parent_id: parent_id})
   };
 
-  return (
-    <React.Fragment>
-      <Col xs={2} className="px-3 py-2 text-center align-self-start">
-        <Link to={`/profile/${comment.user}`}>
-          <Image src={comment.profile_image} roundedCircle fluid className="p-d-profile-img" />
-        </Link>
-      </Col>
-      <Col xs={10} className="py-1">
-        <div>
-          <Link to={`/profile/${comment.user}`} className="mr-1 post-username-link">{comment.username}</Link>
-          <span className="text-break">{comment.text}</span>
-        </div>
-        <div className="my-2 text-muted comment-info">
-          <TimeAgo date={comment.published} formatter={formatter} />
-          <span className="mx-3">123 likes</span>
-          {/* reply link */}
-          <a href="" className="text-muted" onClick={handleReply}>Reply</a>
-        </div>
-        <Row noGutters={true}>
-          {comment.replies && <ReplyList replies={comment.replies} />}
-        </Row>
-      </Col>
-    </React.Fragment>
-  );
-};
+  render() {
+    const { authUser, comment } = this.props;
+
+    // check if current logged in user is comment owner
+    let isOwner = false;
+    if (authUser) {
+      if (authUser.id === comment.user) {
+        isOwner = true
+      }
+    }
+
+    return (
+      <React.Fragment>
+        <Col xs={2} className="px-3 py-2 text-center align-self-start">
+          <Link to={`/profile/${comment.user}`}>
+            <Image src={comment.profile_image} roundedCircle fluid className="p-d-profile-img" />
+          </Link>
+        </Col>
+        <Col xs={10} className="py-1" onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseEnter}>
+          <div>
+            <Link to={`/profile/${comment.user}`} className="mr-1 post-username-link">{comment.username}</Link>
+            <span className="text-break">{comment.text}</span>
+          </div>
+          <div className="my-2 text-muted comment-info">
+            <TimeAgo date={comment.published} formatter={formatter} />
+            <span className="mx-3">123 likes</span>
+            {/* reply link */}
+            <a href="" className="text-muted" onClick={this.handleReply}>Ответить</a>
+            <i className="far fa-heart comment-like"></i>
+            {isOwner && <CommentEditDelete comment={comment} visible={this.state.visible} />}
+          </div>
+          <Row noGutters={true}>
+            {comment.replies && <ReplyList replies={comment.replies} />}
+          </Row>
+        </Col>
+      </React.Fragment>
+    );
+  }
+}
 
 
-Comment.propTypes = {
-  comment: PropTypes.object.isRequired,
-  addReplyInfo: PropTypes.func.isRequired
-};
+const mapStateToProps = state => ({
+  authUser: state.auth.user
+});
 
 
-export default connect(null, { addReplyInfo })(Comment);
+export default connect(mapStateToProps, { addCommentFormInfo })(Comment);

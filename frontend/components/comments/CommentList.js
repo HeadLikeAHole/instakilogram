@@ -9,7 +9,7 @@ import { loadCommentList } from '../../actions/commentList';
 class CommentList extends React.Component {
   // check if the right type of props is provided
   static propTypes = {
-    post_id: PropTypes.number.isRequired,
+    post_id: PropTypes.string.isRequired,
     loadCommentList: PropTypes.func.isRequired,
     comments: PropTypes.array.isRequired,
   };
