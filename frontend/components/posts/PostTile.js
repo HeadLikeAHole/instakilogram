@@ -17,6 +17,12 @@ class PostTile extends React.Component {
     this.imgElement = React.createRef();
   }
 
+  static propTypes = {
+    post: PropTypes.object.isRequired,
+    currentPostId: PropTypes.func.isRequired,
+    toggleModal: PropTypes.func.isRequired
+  };
+
   // find out what mode the image in (landscape or portrait)
   // to apply appropriate css class
   landscapeOrPortrait = () => {
@@ -58,13 +64,6 @@ class PostTile extends React.Component {
     );
   }
 }
-
-
-PostTile.propTypes = {
-  post: PropTypes.object.isRequired,
-  currentPostId: PropTypes.func.isRequired,
-  toggleModal: PropTypes.func.isRequired
-};
 
 
 export default connect(null, { currentPostId, toggleModal })(PostTile);

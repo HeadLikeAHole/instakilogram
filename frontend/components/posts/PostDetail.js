@@ -12,6 +12,7 @@ import { loadPostDetail } from '../../actions/postDetail';
 import PostEditDelete from './PostEditDelete';
 import CommentList from '../comments/CommentList';
 import CommentForm from '../comments/CommentForm';
+import PostLike from './PostLike';
 
 
 class PostDetail extends React.Component {
@@ -35,14 +36,27 @@ class PostDetail extends React.Component {
     }
   }
 
-  render() {
-    const { authUser, post, match } = this.props;
+  // remove post detail from the state so the right comments are loaded when navigating to another post detail
+  // since new post detail doesn't have enough time to load and comments use id of previous post
+  componentWillUnmount() {
+    this.props.loadPostDetail()
+  }
 
-    // check if current logged in user is post author
-    let authorized = false;
+  render() {
+    const { authUser, post } = this.props;
+    const { id, username, profile_image, image, description, user, likes } = this.props.post;
+
+    // check if current logged in user is posts owner
+    let isOwner = false;
+    let isLiked = false;
     if (authUser) {
-      if (authUser.id === post.user) {
-        authorized = true
+      if (authUser.id === user) {
+        isOwner = true
+      }
+      if (likes) {
+        if (likes.includes(authUser.id)) {
+          isLiked = true
+        }
       }
     }
 
@@ -50,39 +64,39 @@ class PostDetail extends React.Component {
       // "p-d" in class names stands for post detail
       // "noGutters={true}" removes the gutter spacing between Cols as well as any added negative margins
       // display "p-d-border" class if post detail is accessed through post list and not profile page
-      <Row noGutters={true} className={`mt-5 ${post.id || "p-d-border"}`}>
+      <Row noGutters={true} className={`mt-5 ${id || "p-d-border"}`}>
         {/* post image */}
         <Col lg={7} className="align-self-center">
-          <Image src={post.image} className="w-100 p-d-image" />
+          <Image src={image} className="w-100 p-d-image" />
         </Col>
         <Col className="bg-white">
           {/* post author */}
           <Row noGutters={true} className="p-3 align-items-center p-d-border-bottom">
             <Col>
-              <Link to={`/profile/${post.user}`}>
-                <Image src={post.profile_image} roundedCircle fluid className="mr-2 p-d-profile-img" />
+              <Link to={`/profile/${user}`}>
+                <Image src={profile_image} roundedCircle fluid className="mr-2 p-d-profile-img" />
               </Link>
-              <Link to={`/profile/${post.user}`} className="post-username-link">{post.username}</Link>
-              {authorized && <PostEditDelete post={post} />}
+              <Link to={`/profile/${user}`} className="post-username-link">{username}</Link>
+              {isOwner && <PostEditDelete post={post} />}
             </Col>
           </Row>
           {/* post description */}
           <Row noGutters={true} className="p-3 p-d-border-bottom">
-            {post.description}
+            {description}
           </Row>
           {/* comments */}
           <Row noGutters={true} className="align-items-center p-d-border-bottom comments">
-            <CommentList post_id={match.params.id} />
+            {id && <CommentList post_id={id} />}
           </Row>
           {/* icons */}
           <Row noGutters={true} className="p-3 align-content-center p-d-border-bottom">
-            <i className="far fa-heart my-icon"></i>
+            {id && <PostLike post_id={id} isLiked={isLiked} detail={true} />}
             <i className="far fa-comment my-icon"></i>
             <i className="far fa-bookmark my-icon"></i>
           </Row>
           {/* add comment field */}
           <Row noGutters={true} className="px-3 py-2 justify-content-between align-content-center p-d-border-bottom">
-            <CommentForm post_id={match.params.id} />
+            {id && <CommentForm post_id={id} />}
           </Row>
         </Col>
       </Row>

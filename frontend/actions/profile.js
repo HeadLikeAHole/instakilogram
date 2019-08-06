@@ -1,12 +1,13 @@
-import { LOAD_PROFILE } from './types';
+import { PROFILE_LOADING, PROFILE_LOADED } from './types';
 import { createMessage, returnErrors } from './messages';
 import { composeHeaders } from './auth';
 
 
 // load profile from the server and send it to profile reducer through dispatch function
 export const loadProfile = id => dispatch => {  // dispatch action
+  dispatch({ type: PROFILE_LOADING });
   fetch(`/api/accounts/profile/${id}`).then(response => response.json()).then(data => dispatch({
-    type: LOAD_PROFILE,
+    type: PROFILE_LOADED,
     payload: data
   })).catch(error => {
       const status = error.status;

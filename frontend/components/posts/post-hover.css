@@ -16,3 +16,7 @@
     /* move down to the center */
     padding-top: 50%;
 }
+
+.hover:hover {
+    cursor: pointer;
+}

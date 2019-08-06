@@ -28,6 +28,7 @@ class CommentListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         # self.kwargs['pk'] extracts post id from url
         post_id = self.kwargs['pk']
+        # filter out replies
         query_set = Comment.objects.filter(post=post_id, parent=None)
         return query_set
 
@@ -60,3 +61,33 @@ class CommentDetailEditDelete(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
     permission_classes = [IsOwnerOrReadOnly]
+
+
+class PostLike(generics.RetrieveAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def get(self, request, *args, **kwargs):
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        user = self.request.user
+
+        if user in post.likes.all():
+            post.likes.remove(user)
+        else:
+            post.likes.add(user)
+        return self.retrieve(request, *args, **kwargs)
+
+
+class CommentLike(generics.RetrieveAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def get(self, request, *args, **kwargs):
+        comment = Comment.objects.get(pk=self.kwargs['pk'])
+        user = self.request.user
+
+        if user in comment.likes.all():
+            comment.likes.remove(user)
+        else:
+            comment.likes.add(user)
+        return self.retrieve(request, *args, **kwargs)

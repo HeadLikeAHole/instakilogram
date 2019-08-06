@@ -45,24 +45,24 @@ class ProfileEdit extends React.Component {
 
   fillForm = () => {
     this.props.loadProfile(this.props.authUser.id);
-    const { profile } = this.props;
-    if (profile && profile.user) {
+    const { isLoading, profileData } = this.props.profile;
+    if (!isLoading) {
       // extract filename from url
-      const fileName = profile.image.split('/').pop();
+      const fileName = profileData.image.split('/').pop();
       // fetch image file
-      fetch(profile.image)
+      fetch(profileData.image)
         .then(response => response.blob())
         .then(file => {
           const imageFile = new File([file], fileName);
           // fill fields with existing user profile data
           this.setState({
-            username: profile.user.username,
-            email: profile.user.email,
-            first_name: profile.user.first_name,
-            last_name: profile.user.last_name,
+            username: profileData.user.username,
+            email: profileData.user.email,
+            first_name: profileData.user.first_name,
+            last_name: profileData.user.last_name,
             imageFile: imageFile,
-            imageUrl: profile.image,
-            info: profile.info})
+            imageUrl: profileData.image,
+            info: profileData.info})
         });
     }
   };
@@ -140,6 +140,7 @@ class ProfileEdit extends React.Component {
     )
   }
 }
+
 
 const mapStateToProps = state => ({
   authUser: state.auth.user,

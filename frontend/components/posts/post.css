@@ -33,12 +33,23 @@
     font-size: 1.8rem;
     margin-right: 0.5rem;
     color: rgb(200, 200, 200);
+    transition: color 0.3s;
 }
 
 .my-icon:hover {
     color: rgb(50, 50, 50);
     cursor: pointer;
 }
+
+.liked {
+    color: rgb(255, 50, 30);
+    transition: color 0.3s;
+}
+
+.liked:hover {
+    color: rgb(220, 30, 30);
+}
+
 
 .post-profile-img {
     max-height: 40px;

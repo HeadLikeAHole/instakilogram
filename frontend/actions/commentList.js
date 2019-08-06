@@ -1,4 +1,13 @@
-import {LOAD_COMMENT_LIST, ADD_COMMENT, ADD_REPLY, EDIT_COMMENT, EDIT_REPLY, DELETE_COMMENT, DELETE_REPLY} from './types';
+import {
+  LOAD_COMMENT_LIST,
+  ADD_COMMENT,
+  ADD_REPLY,
+  UPDATE_COMMENT,
+  UPDATE_REPLY,
+  DELETE_COMMENT,
+  DELETE_REPLY,
+  UPDATE_POST_DETAIL, UPDATE_POST
+} from './types';
 import { createMessage, returnErrors } from './messages';
 import { composeHeaders } from './auth';
 
@@ -91,12 +100,12 @@ export const editComment = (text, comment_id, parent_id) => (dispatch, getState)
       // if there is parent_id then reply is edited otherwise comment
       if (parent_id) {
         dispatch({
-          type: EDIT_REPLY,
+          type: UPDATE_REPLY,
           payload: data
         });
       } else {
         dispatch({
-          type: EDIT_COMMENT,
+          type: UPDATE_COMMENT,
           payload: data
         });
       }
@@ -131,3 +140,24 @@ export const deleteComment = (comment_id, parent_id) => (dispatch, getState) => 
     })
 };
 
+
+export const likeComment = (id, reply) => (dispatch, getState) => {
+  fetch(`api/posts/comment/${id}/like/`, {headers: composeHeaders(getState)})
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+       throw response;
+      }
+    })
+    .then(comment => {
+      if (reply) {
+        dispatch({type: UPDATE_REPLY, payload: comment})
+      } else {
+        dispatch({type: UPDATE_COMMENT, payload: comment})
+      }
+    }).catch(error => {
+      const status = error.status;
+      error.json().then(msg => dispatch(returnErrors(msg, status)));
+    })
+};

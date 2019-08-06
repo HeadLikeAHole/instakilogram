@@ -9,13 +9,20 @@ import { loadCommentList } from '../../actions/commentList';
 class CommentList extends React.Component {
   // check if the right type of props is provided
   static propTypes = {
-    post_id: PropTypes.string.isRequired,
+    post_id: PropTypes.number.isRequired,
     loadCommentList: PropTypes.func.isRequired,
     comments: PropTypes.array.isRequired,
   };
 
   componentDidMount() {
-    this.props.loadCommentList(this.props.post_id)
+    this.props.loadCommentList(this.props.post_id);
+  }
+
+  // update component when sliding posts in profile page
+  componentDidUpdate(prevProps) {
+    if (this.props.post_id !== prevProps.post_id) {
+      this.props.loadCommentList(this.props.post_id);
+    }
   }
 
   render() {

@@ -5,3 +5,9 @@
 .comment-info a:hover {
     text-decoration: none;
 }
+
+.comment-like {
+    float: right;
+    margin-right: 1rem;
+    margin-top: 0.4rem;
+}

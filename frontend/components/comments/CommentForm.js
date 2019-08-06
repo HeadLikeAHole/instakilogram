@@ -18,7 +18,6 @@ class CommentForm extends React.Component {
     addComment: PropTypes.func.isRequired,
     addReply: PropTypes.func.isRequired,
     editComment: PropTypes.func.isRequired,
-    editReply: PropTypes.func.isRequired,
     addCommentFormInfo: PropTypes.func.isRequired
   };
 

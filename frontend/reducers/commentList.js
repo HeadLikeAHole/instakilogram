@@ -1,4 +1,4 @@
-import {LOAD_COMMENT_LIST, ADD_COMMENT, ADD_REPLY, EDIT_COMMENT, EDIT_REPLY, DELETE_COMMENT, DELETE_REPLY} from '../actions/types';
+import {LOAD_COMMENT_LIST, ADD_COMMENT, ADD_REPLY, UPDATE_COMMENT, UPDATE_REPLY, DELETE_COMMENT, DELETE_REPLY} from '../actions/types';
 
 
 // comments reducer which modifies the state depending on action type
@@ -19,7 +19,7 @@ export default function (state = [], action) {
           return element
         }
       });
-    case EDIT_COMMENT:
+    case UPDATE_COMMENT:
       const commentIndex = state.findIndex(comment => comment.id === action.payload.id);
 
       return state.map((element, index) => {
@@ -29,7 +29,7 @@ export default function (state = [], action) {
           return element
         }
       });
-    case EDIT_REPLY:
+    case UPDATE_REPLY:
       // 2 is added to the variable name since you cannot redeclare constants
       // find comment index
       const parentIndex2 = state.findIndex(comment => comment.id === action.payload.parent);

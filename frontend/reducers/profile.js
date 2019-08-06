@@ -1,10 +1,18 @@
-import { LOAD_PROFILE } from '../actions/types';
+import { PROFILE_LOADING, PROFILE_LOADED } from '../actions/types';
 
 
-export default function (state = {}, action) {
+const initialState = {
+  isLoading: false,
+  profileData: {}
+};
+
+
+export default function (state = initialState, action) {
   switch (action.type) {
-    case LOAD_PROFILE:
-      return action.payload;
+    case PROFILE_LOADING:
+      return {...state, isLoading: true};
+    case PROFILE_LOADED:
+      return {...state, isLoading: false, profileData: action.payload};
     default:
       return state
   }

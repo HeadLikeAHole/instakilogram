@@ -10,18 +10,25 @@ import { Link } from 'react-router-dom';
 
 import './post.css';
 import PostEditDelete from './PostEditDelete';
+import PostLike from './PostLike';
 
 
 const Post = props => {
-  const { authUser } = props;
+  const { authUser, post } = props;
   // user variable is post author's user's id
-  const { id, username, profile_image, image, description, user } = props.post;
+  const { id, username, profile_image, image, description, user, likes } = props.post;
 
   // check if current logged in user is posts owner
   let isOwner = false;
+  let isLiked = false;
   if (authUser) {
     if (authUser.id === user) {
       isOwner = true
+    }
+    if (likes) {
+      if (likes.includes(authUser.id)) {
+        isLiked = true
+      }
     }
   }
 
@@ -34,14 +41,14 @@ const Post = props => {
             <Link to={`/profile/${user}`}><Image src={profile_image} roundedCircle className="mr-2 post-profile-img" /></Link>
             <Link to={`/profile/${user}`} className="post-username-link">{username}</Link>
             {/* if user is owner of the post display dropdown menu */}
-            {isOwner && <PostEditDelete post={props.post} />}
+            {isOwner && <PostEditDelete post={post} />}
           </Col>
         </Row>
       </Card.Body>
       <Card.Img variant="top" src={image} className="post-image" />
       <Card.Body className="p-3">
         <div className="my-1">
-          <i className="far fa-heart my-icon"></i>
+          {id && <PostLike post_id={id} isLiked={isLiked} />}
           <Link to={`/posts/${id}`}><i className="far fa-comment my-icon"></i></Link>
           <i className="far fa-bookmark my-icon"></i>
         </div>

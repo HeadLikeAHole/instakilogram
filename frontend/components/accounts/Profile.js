@@ -102,7 +102,7 @@ Profile.propTypes = {
 // make state available to Profile component though props
 const mapStateToProps = state => ({
   authUser: state.auth.user,
-  profile: state.profile,
+  profile: state.profile.profileData,
   modalOpen: state.modal.modalOpen
 });
 

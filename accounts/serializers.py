@@ -16,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'profile_image')
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'profile_image')
         extra_kwargs = {
             'username': {
                 'validators': [UnicodeUsernameValidator()],
@@ -44,7 +44,11 @@ class ProfileSerializer(serializers.ModelSerializer):
     # return all user's posts
     def get_user_posts(self, obj):
         query_set = obj.user.post_set.all()
-        return PostSerializer(query_set, many=True).data
+        # send request object to post serializer so current logged in user object can be accessed there
+        # to check if post was liked by him
+        # (transferred this feature to front end, on backend it doesn't work for some reason)
+        request = self.context['request']
+        return PostSerializer(query_set, many=True, context={'request': request}).data
 
     # return all user's posts
     def get_user_saved_posts(self, obj):

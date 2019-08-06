@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { addCommentFormInfo } from '../../actions/commentFormInfo';
-import { deleteComment, deleteReply } from '../../actions/commentList';
+import { deleteComment } from '../../actions/commentList';
 import './comment-edit-delete.css';
 
 
@@ -32,11 +32,10 @@ const CommentEditDelete = props => {
 
 CommentEditDelete.propTypes = {
   comment: PropTypes.object.isRequired,
-  visible: PropTypes.object.isRequired,
+  visible: PropTypes.bool.isRequired,
   addCommentFormInfo: PropTypes.func.isRequired,
-  deleteComment: PropTypes.func.isRequired,
-  deleteReply: PropTypes.func.isRequired,
+  deleteComment: PropTypes.func.isRequired
 };
 
 
-export default connect(null, { addCommentFormInfo, deleteComment, deleteReply })(CommentEditDelete);
+export default connect(null, { addCommentFormInfo, deleteComment })(CommentEditDelete);

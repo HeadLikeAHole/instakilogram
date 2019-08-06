@@ -13,6 +13,7 @@ import './comment.css';
 import ReplyList from './ReplyList';
 import { addCommentFormInfo } from '../../actions/commentFormInfo';
 import CommentEditDelete from './CommentEditDelete';
+import CommentLike from './CommentLike';
 
 // choose Russian language in timestamp
 const formatter = buildFormatter(russianStrings);
@@ -48,9 +49,15 @@ class Comment extends React.Component {
 
     // check if current logged in user is comment owner
     let isOwner = false;
+    let isLiked = false;
     if (authUser) {
       if (authUser.id === comment.user) {
         isOwner = true
+      }
+      if (comment.likes) {
+        if (comment.likes.includes(authUser.id)) {
+          isLiked = true
+        }
       }
     }
 
@@ -71,7 +78,8 @@ class Comment extends React.Component {
             <span className="mx-3">123 likes</span>
             {/* reply link */}
             <a href="" className="text-muted" onClick={this.handleReply}>Ответить</a>
-            <i className="far fa-heart comment-like"></i>
+            {/* heart icon (like button) */}
+            {comment.id && <CommentLike comment_id={comment.id} isLiked={isLiked} reply={!!comment.parent} />}
             {isOwner && <CommentEditDelete comment={comment} visible={this.state.visible} />}
           </div>
           <Row noGutters={true}>

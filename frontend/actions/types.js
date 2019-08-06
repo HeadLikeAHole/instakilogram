@@ -7,6 +7,10 @@ export const LOAD_POST_DETAIL = 'LOAD_POST_DETAIL';
 
 export const ADD_POST = 'ADD_POST';
 
+export const UPDATE_POST = 'UPDATE_POST';
+
+export const UPDATE_POST_DETAIL = 'UPDATE_POST_DETAIL';
+
 export const DELETE_POST = 'DELETE_POST';
 
 export const GET_ERRORS = 'GET_ERRORS';
@@ -29,7 +33,9 @@ export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 
 export const REGISTER_FAIL = 'REGISTER_FAIL';
 
-export const LOAD_PROFILE = 'LOAD_PROFILE';
+export const PROFILE_LOADING = 'PROFILE_LOADING';
+
+export const PROFILE_LOADED = 'PROFILE_LOADED';
 
 export const TOGGLE_MODAL = 'TOGGLE_MODAL';
 
@@ -43,9 +49,9 @@ export const ADD_COMMENT = 'ADD_COMMENT';
 
 export const ADD_REPLY = 'ADD_REPLY';
 
-export const EDIT_COMMENT = 'EDIT_COMMENT';
+export const UPDATE_COMMENT = 'UPDATE_COMMENT';
 
-export const EDIT_REPLY = 'EDIT_REPLY';
+export const UPDATE_REPLY = 'UPDATE_REPLY';
 
 export const DELETE_COMMENT = 'DELETE_COMMENT';
 

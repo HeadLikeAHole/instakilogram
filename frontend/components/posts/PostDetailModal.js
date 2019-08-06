@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
+import PropTypes from 'prop-types';
 
 import './post-detail-modal.css';
 import { toggleModal } from '../../actions/modal';
 import { currentPostId } from '../../actions/postSlider';
 import PostDetail from './PostDetail';
-import PropTypes from 'prop-types';
 
 
 class PostDetailModal extends React.Component {

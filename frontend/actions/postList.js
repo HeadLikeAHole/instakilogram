@@ -1,4 +1,4 @@
-import { LOAD_POST_LIST, ADD_POST, DELETE_POST, LOGIN_FAIL } from './types';
+import { LOAD_POST_LIST, ADD_POST, UPDATE_POST, UPDATE_POST_DETAIL, DELETE_POST, LOGIN_FAIL } from './types';
 import { createMessage, returnErrors } from './messages';
 import { composeHeaders } from './auth';
 
@@ -109,4 +109,28 @@ export const deletePost = (id, history) => (dispatch, getState) => {  // dispatc
         payload: id
       })
     }).catch(err => console.log(err))
+};
+
+
+export const likePost = (id, detail) => (dispatch, getState) => {
+  fetch(`api/posts/${id}/like/`, {headers: composeHeaders(getState)})
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+       throw response;
+      }
+    })
+    .then(post => {
+      // if post is liked in post detail page then detail argument is supplied to likePost function
+      // and UPDATE_POST_DETAIL action is set off otherwise UPDATE_POST
+      if (detail) {
+        dispatch({type: UPDATE_POST_DETAIL, payload: post})
+      } else {
+        dispatch({type: UPDATE_POST, payload: post})
+      }
+    }).catch(error => {
+      const status = error.status;
+      error.json().then(msg => dispatch(returnErrors(msg, status)));
+    })
 };
