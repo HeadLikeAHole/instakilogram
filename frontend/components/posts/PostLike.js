@@ -16,14 +16,15 @@ class PostLike extends React.Component {
 
   static propTypes = {
     likePost: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
     post_id: PropTypes.number.isRequired,
     isLiked: PropTypes.bool.isRequired,
-    isAuthenticated: PropTypes.bool.isRequired
+    postDetail: PropTypes.bool.isRequired
   };
 
   handleLike = () => {
     if (this.props.isAuthenticated) {
-      this.props.likePost(this.props.post_id, this.props.detail)
+      this.props.likePost(this.props.post_id, this.props.postDetail)
     } else {
       this.setState({ redirect: true })
     }
@@ -32,9 +33,9 @@ class PostLike extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {/* if user is not authenticated on heart icon click he redirected to login page*/}
+        {/* if user is not authenticated on heart icon click he is redirected to login page*/}
         {!this.state.redirect ?
-          // if post has been liked heart icon turns solid red if clicked again it turns back to outlined gray
+          // if post has been liked then heart icon turns solid red if clicked again it turns back to outlined gray
           <i className={`${this.props.isLiked ? 'fas liked' : 'far'} fa-heart my-icon`} onClick={this.handleLike}></i> :
           <Redirect to="/login" />}
       </React.Fragment>

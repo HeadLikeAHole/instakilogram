@@ -19,7 +19,7 @@ class Profile(models.Model):
     image = models.ImageField(default='profile_default.png', upload_to='profile_images')
     info = models.TextField(max_length=300, blank=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
-    saved_posts = models.ManyToManyField(Post, related_name='saved_by', blank=True)
+    saved_posts = models.ManyToManyField(Post, related_name='saved_by', through='PostSave', blank=True)
 
     def __str__(self):
         return f'{self.user.username}\'s profile'
@@ -33,3 +33,10 @@ class Profile(models.Model):
             output_size = (300, 300)
             img.thumbnail(output_size)
             img.save(self.image.path)
+
+
+# this model is created for ordering purpose (Profile.objects.order_by('postsave')
+# without it saved posts are ordered by post's 'published' field and not by order in which they were saved
+class PostSave(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)

@@ -29,7 +29,7 @@ class Comment extends React.Component {
     addCommentFormInfo: PropTypes.func.isRequired
   };
 
-  handleMouseEnter = () => this.setState({visible: !this.state.visible});
+  handleHover = () => this.setState({visible: !this.state.visible});
 
   handleReply = e => {
     e.preventDefault();
@@ -68,12 +68,12 @@ class Comment extends React.Component {
             <Image src={comment.profile_image} roundedCircle fluid className="p-d-profile-img" />
           </Link>
         </Col>
-        <Col xs={10} className="py-1" onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseEnter}>
+        <Col xs={10} className="py-1">
           <div>
             <Link to={`/profile/${comment.user}`} className="mr-1 post-username-link">{comment.username}</Link>
             <span className="text-break">{comment.text}</span>
           </div>
-          <div className="my-2 text-muted comment-info">
+          <div className="my-2 text-muted comment-info" onMouseEnter={this.handleHover} onMouseLeave={this.handleHover}>
             <TimeAgo date={comment.published} formatter={formatter} />
             <span className="mx-3">123 likes</span>
             {/* reply link */}

@@ -1,5 +1,13 @@
 import {
-  USER_LOADING, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS, REGISTER_SUCCESS, REGISTER_FAIL
+  USER_LOADING,
+  USER_LOADED,
+  AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT_SUCCESS,
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  USER_SAVE_POST
 } from '../actions/types';
 import { returnErrors } from './messages';
 
@@ -112,4 +120,28 @@ export const logout = () => (dispatch, getState) => {
     .catch(error => {
       console.log(error);
   })
+};
+
+
+// save post
+export const savePost = (profile_id, post_id) => (dispatch, getState) => {
+  fetch(`api/accounts/profile/${profile_id}/post-save/${post_id}/`, {headers: composeHeaders(getState)})
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+       throw response;
+      }
+    })
+    .then(profile => {
+      // send only ids to reducer
+      const savedPostsIds = [];
+      profile.saved_posts.forEach(post => {
+        savedPostsIds.push(post.id)
+      });
+      dispatch({type: USER_SAVE_POST, payload: savedPostsIds})
+    }).catch(error => {
+      const status = error.status;
+      error.json().then(msg => dispatch(returnErrors(msg, status)));
+    })
 };

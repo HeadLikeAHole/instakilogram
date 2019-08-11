@@ -13,10 +13,11 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     profile_image = serializers.CharField(source='profile.image.url', read_only=True)
+    saved_posts = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'profile_image')
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'profile_image', 'saved_posts')
         extra_kwargs = {
             'username': {
                 'validators': [UnicodeUsernameValidator()],
@@ -26,12 +27,21 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
 
+    # return user's saved posts
+    def get_saved_posts(self, obj):
+        # extract saved posts ids from queryset and send the list of ids instead of whole posts
+        query_set = obj.profile.saved_posts.order_by('postsave')
+        saved_posts_ids = []
+        for post in query_set:
+            saved_posts_ids.append(post.id)
+        return saved_posts_ids
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     following = serializers.SerializerMethodField()
     user_posts = serializers.SerializerMethodField()
-    user_saved_posts = serializers.SerializerMethodField()
+    saved_posts = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -50,9 +60,9 @@ class ProfileSerializer(serializers.ModelSerializer):
         request = self.context['request']
         return PostSerializer(query_set, many=True, context={'request': request}).data
 
-    # return all user's posts
-    def get_user_saved_posts(self, obj):
-        query_set = obj.saved_posts.all()
+    # return user's saved posts
+    def get_saved_posts(self, obj):
+        query_set = obj.saved_posts.order_by('postsave')
         return PostSerializer(query_set, many=True).data
 
     def update(self, instance, validated_data):
@@ -63,7 +73,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         instance.user.first_name = validated_data.get('first_name', instance.user.first_name)
         instance.user.last_name = validated_data.get('last_name', instance.user.last_name)
         instance.save()
-        print(validated_data)
         return instance
 
 

@@ -30,7 +30,7 @@
 }
 
 .my-icon {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
     margin-right: 0.5rem;
     color: rgb(200, 200, 200);
     transition: color 0.3s;
@@ -50,6 +50,14 @@
     color: rgb(220, 30, 30);
 }
 
+.saved {
+    color: rgba(0, 0, 0, 0.8);
+    transition: color 0.3s;
+}
+
+.saved:hover {
+    color: rgba(0, 0, 0, 1);
+}
 
 .post-profile-img {
     max-height: 40px;

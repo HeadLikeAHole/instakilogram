@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from knox import views as knox_views
 
 from . import views
@@ -11,4 +11,6 @@ urlpatterns = [
     path('logout/', knox_views.LogoutView.as_view(), name='logout'),
     path('user/', views.UserView.as_view(), name='user'),
     path('profile/<int:pk>/', views.ProfileView.as_view(), name='profile'),
+    # without profile pk in url PostSave view can't find and send necessary profile object in response
+    path('profile/<int:pk>/post-save/<int:id>/', views.PostSave.as_view(), name='post_save'),
 ]

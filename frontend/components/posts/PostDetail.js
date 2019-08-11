@@ -13,6 +13,7 @@ import PostEditDelete from './PostEditDelete';
 import CommentList from '../comments/CommentList';
 import CommentForm from '../comments/CommentForm';
 import PostLike from './PostLike';
+import PostSave from './PostSave';
 
 
 class PostDetail extends React.Component {
@@ -46,9 +47,10 @@ class PostDetail extends React.Component {
     const { authUser, post } = this.props;
     const { id, username, profile_image, image, description, user, likes } = this.props.post;
 
-    // check if current logged in user is posts owner
+    // check if current logged in user is post owner, has liked post, has saved post
     let isOwner = false;
     let isLiked = false;
+    let isSaved = false;
     if (authUser) {
       if (authUser.id === user) {
         isOwner = true
@@ -57,6 +59,9 @@ class PostDetail extends React.Component {
         if (likes.includes(authUser.id)) {
           isLiked = true
         }
+      }
+      if (authUser.saved_posts.includes(id)) {
+        isSaved = true;
       }
     }
 
@@ -90,9 +95,9 @@ class PostDetail extends React.Component {
           </Row>
           {/* icons */}
           <Row noGutters={true} className="p-3 align-content-center p-d-border-bottom">
-            {id && <PostLike post_id={id} isLiked={isLiked} detail={true} />}
+            {id && <PostLike post_id={id} isLiked={isLiked} postDetail={true} />}
             <i className="far fa-comment my-icon"></i>
-            <i className="far fa-bookmark my-icon"></i>
+            {id && <PostSave profile_id={authUser.id} post_id={id} isSaved={isSaved} />}
           </Row>
           {/* add comment field */}
           <Row noGutters={true} className="px-3 py-2 justify-content-between align-content-center p-d-border-bottom">

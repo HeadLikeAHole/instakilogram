@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import './post.css';
 import PostEditDelete from './PostEditDelete';
 import PostLike from './PostLike';
+import PostSave from './PostSave';
 
 
 const Post = props => {
@@ -18,9 +19,10 @@ const Post = props => {
   // user variable is post author's user's id
   const { id, username, profile_image, image, description, user, likes } = props.post;
 
-  // check if current logged in user is posts owner
+  // check if current logged in user is post owner, has liked post, has saved post
   let isOwner = false;
   let isLiked = false;
+  let isSaved = false;
   if (authUser) {
     if (authUser.id === user) {
       isOwner = true
@@ -29,6 +31,9 @@ const Post = props => {
       if (likes.includes(authUser.id)) {
         isLiked = true
       }
+    }
+    if (authUser.saved_posts.includes(id)) {
+      isSaved = true;
     }
   }
 
@@ -48,9 +53,10 @@ const Post = props => {
       <Card.Img variant="top" src={image} className="post-image" />
       <Card.Body className="p-3">
         <div className="my-1">
-          {id && <PostLike post_id={id} isLiked={isLiked} />}
+          {id && <PostLike post_id={id} isLiked={isLiked} postDetail={false} />}
           <Link to={`/posts/${id}`}><i className="far fa-comment my-icon"></i></Link>
-          <i className="far fa-bookmark my-icon"></i>
+          {/* user id and profile id are the same number */}
+          {authUser && id && <PostSave profile_id={authUser.id} post_id={id} isSaved={isSaved} />}
         </div>
         {description}
       </Card.Body>

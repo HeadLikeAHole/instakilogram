@@ -22,7 +22,9 @@ class PostDetailModal extends React.Component {
     // We need to check that our current is actually filled in with a DOM element.
     // Then using the DOM method contains we ask our container if we have the event.target
     // which is the DOM element that was clicked.
-    if (this.slide.current && !this.slide.current.contains(event.target)) {
+    // !event.target.closest('.delete-modal') checks if delete modal is clicked
+    // if it's clicked then post detail modal doesn't close delete modal
+    if (this.slide.current && !this.slide.current.contains(event.target) && !event.target.closest('.delete-modal')) {
       this.props.toggleModal()
     }
   };
@@ -32,7 +34,7 @@ class PostDetailModal extends React.Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside)
+    document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
   slidePost = num => {

@@ -50,8 +50,8 @@ class Profile extends React.Component {
         selectedPosts = profile.user_posts
       }
     } else {
-      if (profile.user_saved_posts) {
-        selectedPosts = profile.user_saved_posts
+      if (profile.saved_posts) {
+        selectedPosts = profile.saved_posts
       }
     }
     this.props.postsToDisplay(selectedPosts);
@@ -102,7 +102,7 @@ Profile.propTypes = {
 // make state available to Profile component though props
 const mapStateToProps = state => ({
   authUser: state.auth.user,
-  profile: state.profile.profileData,
+  profile: state.profile,
   modalOpen: state.modal.modalOpen
 });
 

@@ -43,33 +43,29 @@ class ProfileEdit extends React.Component {
     this.props.updateProfile(this.props.profile.id, this.state, this.props.history)
   };
 
-  fillForm = () => {
-    this.props.loadProfile(this.props.authUser.id);
-    const { isLoading, profileData } = this.props.profile;
-    if (!isLoading) {
-      // extract filename from url
-      const fileName = profileData.image.split('/').pop();
-      // fetch image file
-      fetch(profileData.image)
-        .then(response => response.blob())
-        .then(file => {
-          const imageFile = new File([file], fileName);
-          // fill fields with existing user profile data
-          this.setState({
-            username: profileData.user.username,
-            email: profileData.user.email,
-            first_name: profileData.user.first_name,
-            last_name: profileData.user.last_name,
-            imageFile: imageFile,
-            imageUrl: profileData.image,
-            info: profileData.info})
-        });
-    }
+  prefillForm = profile => {
+    // extract filename from url
+    const fileName = profile.image.split('/').pop();
+    // fetch image file
+    fetch(profile.image)
+      .then(response => response.blob())
+      .then(file => {
+        const imageFile = new File([file], fileName);
+        // fill fields with existing user profile data
+        this.setState({
+          username: profile.user.username,
+          email: profile.user.email,
+          first_name: profile.user.first_name,
+          last_name: profile.user.last_name,
+          imageFile: imageFile,
+          imageUrl: profile.image,
+          info: profile.info})
+      });
   };
 
   componentDidMount() {
     if (this.props.authUser) {
-      this.fillForm()
+      this.props.loadProfile(this.props.authUser.id, this.prefillForm);
     }
   }
 
@@ -78,7 +74,7 @@ class ProfileEdit extends React.Component {
   // and this.props.loadProfile() is executed with this.props.authUser.id argument which equals null
   componentDidUpdate(prevProps) {
     if (this.props.authUser !== prevProps.authUser) {
-      this.fillForm()
+      this.props.loadProfile(this.props.authUser.id, this.prefillForm);
     }
   }
 

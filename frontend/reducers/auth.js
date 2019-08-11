@@ -1,5 +1,13 @@
 import {
-  USER_LOADING, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS, REGISTER_SUCCESS, REGISTER_FAIL
+  USER_LOADING,
+  USER_LOADED,
+  AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT_SUCCESS,
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  USER_SAVE_POST
 } from '../actions/types';
 
 
@@ -49,6 +57,8 @@ export default function (state = initialState, action) {
           isAuthenticated: false,
           user: null
       };
+    case USER_SAVE_POST:
+      return {...state, user: {...state.user, saved_posts: action.payload}};
     default:
       return state
   }

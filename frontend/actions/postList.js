@@ -1,4 +1,12 @@
-import { LOAD_POST_LIST, ADD_POST, UPDATE_POST, UPDATE_POST_DETAIL, DELETE_POST, LOGIN_FAIL } from './types';
+import {
+  LOAD_POST_LIST,
+  ADD_POST,
+  UPDATE_POST,
+  UPDATE_POST_DETAIL,
+  DELETE_POST,
+  UPDATE_PROFILE_POSTS,
+  LOGIN_FAIL
+} from './types';
 import { createMessage, returnErrors } from './messages';
 import { composeHeaders } from './auth';
 
@@ -97,11 +105,21 @@ export const updatePost = (id, post, history) => (dispatch, getState) => {
 
 
 // delete post from the server and send it to posts reducer through dispatch function
-export const deletePost = (id, history) => (dispatch, getState) => {  // dispatch action
+export const deletePost = (id, arg) => (dispatch, getState) => {  // dispatch action
   fetch(`/api/posts/${id}/`, {method: 'DELETE', headers: composeHeaders(getState)})
     .then(() => {
-      // redirect to home page after successful post deletion
-      history.push('/');
+      // if argument is toggleModal function then call it to close modal
+      // otherwise use history object to redirect to home page
+      if (typeof arg === "function") {
+        // update user's post in profile page when post is deleted in post detail modal
+        dispatch({
+          type: UPDATE_PROFILE_POSTS,
+          payload: id
+        });
+        arg();
+      } else {
+        arg.push('/');
+      }
       // create message after deleting post from the server
       dispatch(createMessage({postDeleted: 'Фото было удалено'}));
       dispatch({
@@ -112,7 +130,7 @@ export const deletePost = (id, history) => (dispatch, getState) => {  // dispatc
 };
 
 
-export const likePost = (id, detail) => (dispatch, getState) => {
+export const likePost = (id, postDetail) => (dispatch, getState) => {
   fetch(`api/posts/${id}/like/`, {headers: composeHeaders(getState)})
     .then(response => {
       if (response.ok) {
@@ -122,9 +140,11 @@ export const likePost = (id, detail) => (dispatch, getState) => {
       }
     })
     .then(post => {
-      // if post is liked in post detail page then detail argument is supplied to likePost function
-      // and UPDATE_POST_DETAIL action is set off otherwise UPDATE_POST
-      if (detail) {
+      // if post is liked in home page (post list) then postDetail argument supplied to likePost function
+      // should be set to false so UPDATE_POST action is dispatched
+      // if post is liked in post detail page then postDetail argument supplied to likePost function
+      // should be set to true so UPDATE_POST_DETAIL action is dispatched
+      if (postDetail) {
         dispatch({type: UPDATE_POST_DETAIL, payload: post})
       } else {
         dispatch({type: UPDATE_POST, payload: post})
