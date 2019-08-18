@@ -1,11 +1,15 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
+from django.contrib.auth import get_user_model
 
-from .serializers import UserSerializer, ProfileSerializer, RegisterSerializer, LoginSerializer
+from .serializers import UserSerializer, UserUpdateSerializer, ProfileSerializer, ProfileUpdateSerializer, RegisterSerializer, LoginSerializer
 from .models import Profile
 from posts.models import Post
 from posts.permissions import IsOwnerOrReadOnly
+
+
+User = get_user_model()
 
 
 class UserView(generics.RetrieveAPIView):
@@ -16,10 +20,20 @@ class UserView(generics.RetrieveAPIView):
         return self.request.user
 
 
-class ProfileView(generics.RetrieveUpdateDestroyAPIView):
+class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserUpdateSerializer
+    queryset = User.objects.all()
+
+
+class ProfileView(generics.RetrieveAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
     permission_classes = [IsOwnerOrReadOnly]
+
+
+class ProfileUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ProfileUpdateSerializer
+    queryset = Profile.objects.all()
 
 
 class RegisterView(generics.GenericAPIView):
@@ -57,7 +71,7 @@ class LoginView(generics.GenericAPIView):
         })
 
 
-class PostSave(generics.RetrieveAPIView):
+class PostSaveView(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 

@@ -16,20 +16,28 @@ import PostDetailModal from '../posts/PostDetailModal';
 
 class Profile extends React.Component {
   state = {
-    userPosts: true, activeLink: true
+    savedPosts: ''
   };
 
   // select between user's post and user's saved posts
   selectLink = link => {
     if (link === 'posts') {
-      this.setState({userPosts: true, activeLink: true})
+      localStorage.removeItem('savedPosts');
+      this.setState({savedPosts: localStorage.getItem('savedPosts')})
     } else {
-      this.setState({userPosts: false, activeLink: false})
+      localStorage.setItem('savedPosts', 'true');
+      this.setState({savedPosts: localStorage.getItem('savedPosts')})
     }
   };
 
+  // localStorage is used for "сохранено" link persistence on page refresh
   componentDidMount() {
     this.props.loadProfile(this.props.match.params.id);
+    this.setState({savedPosts: localStorage.getItem('savedPosts')})
+  }
+
+  componentWillUnmount() {
+    localStorage.removeItem('savedPosts');
   }
 
   render() {
@@ -45,7 +53,7 @@ class Profile extends React.Component {
 
     // check which posts to display, user posts or saved posts
     let selectedPosts;
-    if (this.state.userPosts) {
+    if (!this.state.savedPosts) {
       if (profile.user_posts) {
         selectedPosts = profile.user_posts
       }
@@ -78,8 +86,10 @@ class Profile extends React.Component {
         </Row>
         <hr className="mb-0" />
         <Row className="mb-3 text-uppercase justify-content-center p-p-links">
-          <span className={`mr-5 py-2 ${this.state.activeLink && 'active-link'}`} onClick={() => this.selectLink('posts')}>posts</span>
-          {authorized && <span className={`py-2 ${this.state.activeLink || 'active-link'}`} onClick={() => this.selectLink('saved')}>saved</span>}
+          {/* if userPosts is true then "публикации" link has css class "active-link" and therefore is underlined otherwise
+          "сохранено" link has css class "active-link" and is underlined */}
+          <span className={`mr-5 py-2 ${this.state.savedPosts || 'active-link'}`} onClick={() => this.selectLink('posts')}>публикации</span>
+          {authorized && <span className={`py-2 ${this.state.savedPosts && 'active-link'}`} onClick={() => this.selectLink('saved')}>сохранено</span>}
         </Row>
         {/* user posts or saved posts */}
         {selectedPosts && <PostGrid />}

@@ -44,8 +44,8 @@ class PostEditDelete extends React.Component {
         <NavDropdown alignRight title="..." id="collasible-nav-dropdown" className="dots">
           {/* redirect to post form and send post data along */}
           <LinkContainer to={{
-            pathname: "/post-form",
-            data: {post: {id, image, description}}
+            pathname: "/post-edit",
+            post: {id, image, description}
           }}>
             <NavDropdown.Item>Редактировать</NavDropdown.Item>
           </LinkContainer>

@@ -14,6 +14,7 @@ import ReplyList from './ReplyList';
 import { addCommentFormInfo } from '../../actions/commentFormInfo';
 import CommentEditDelete from './CommentEditDelete';
 import CommentLike from './CommentLike';
+import { pluralize } from '../../helperFunctions';
 
 // choose Russian language in timestamp
 const formatter = buildFormatter(russianStrings);
@@ -21,7 +22,10 @@ const formatter = buildFormatter(russianStrings);
 class Comment extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {visible: false}
+    this.state = {
+      editDeleteVisible: false,
+      showReplies: true
+    }
   }
 
   static propTypes = {
@@ -29,7 +33,10 @@ class Comment extends React.Component {
     addCommentFormInfo: PropTypes.func.isRequired
   };
 
-  handleHover = () => this.setState({visible: !this.state.visible});
+  // make 3 dots visible on hover
+  handleHover = () => this.setState({editDeleteVisible: !this.state.editDeleteVisible});
+
+  handleShowHideReplies = () => this.setState({showReplies: !this.state.showReplies});
 
   handleReply = e => {
     e.preventDefault();
@@ -61,6 +68,13 @@ class Comment extends React.Component {
       }
     }
 
+    let replyShowHide;
+    if (this.state.showReplies) {
+      replyShowHide = `----- Показать ${comment.replies_count} ${pluralize('reply', comment.replies_count)}`
+    } else {
+      replyShowHide = '----- Скрыть ответы'
+    }
+
     return (
       <React.Fragment>
         <Col xs={2} className="px-3 py-2 text-center align-self-start">
@@ -69,21 +83,27 @@ class Comment extends React.Component {
           </Link>
         </Col>
         <Col xs={10} className="py-1">
+          {/* comment's user avatar */}
           <div>
             <Link to={`/profile/${comment.user}`} className="mr-1 post-username-link">{comment.username}</Link>
             <span className="text-break">{comment.text}</span>
           </div>
           <div className="my-2 text-muted comment-info" onMouseEnter={this.handleHover} onMouseLeave={this.handleHover}>
             <TimeAgo date={comment.published} formatter={formatter} />
-            <span className="mx-3">123 likes</span>
+            <span className="mx-3">{comment.likes_count} {pluralize('like', comment.likes_count)}</span>
             {/* reply link */}
             <a href="" className="text-muted" onClick={this.handleReply}>Ответить</a>
             {/* heart icon (like button) */}
             {comment.id && <CommentLike comment_id={comment.id} isLiked={isLiked} reply={!!comment.parent} />}
-            {isOwner && <CommentEditDelete comment={comment} visible={this.state.visible} />}
+            {isOwner && <CommentEditDelete comment={comment} visible={this.state.editDeleteVisible} />}
+          </div>
+          <div className="mb-1">
+            <span className="replyShowHide" onClick={this.handleShowHideReplies}>
+              {comment.replies_count ? replyShowHide : ''}
+            </span>
           </div>
           <Row noGutters={true}>
-            {comment.replies && <ReplyList replies={comment.replies} />}
+            {comment.replies && !this.state.showReplies && <ReplyList comment={comment} />}
           </Row>
         </Col>
       </React.Fragment>

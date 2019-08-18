@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from rest_framework import serializers
 
 from .models import Post, Comment
@@ -29,9 +30,14 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['user', 'post', 'parent', 'likes']
 
+    # paginated replies
     def get_replies(self, obj):
         if not obj.parent:
-            return ReplySerializer(obj.replies.all(), many=True).data
+            reply_list = obj.replies.all()
+            paginator = Paginator(reply_list, 5)
+            page = self.context['request'].query_params.get('page') or 1
+            replies = paginator.get_page(page)
+            return ReplySerializer(replies, many=True).data
         return None
 
     def get_replies_count(self, obj):
@@ -44,7 +50,6 @@ class CommentSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     profile_image = serializers.CharField(source='user.profile.image.url', read_only=True)
-    comments = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     likes_count = serializers.SerializerMethodField()
 
@@ -52,11 +57,6 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = '__all__'
         read_only_fields = ['user', 'likes']
-
-    def get_comments(self, obj):
-        query_set = Comment.objects.filter(post=obj, parent=None)
-        comments = CommentSerializer(query_set, many=True).data
-        return comments
 
     def get_comments_count(self, obj):
         return obj.comment_set.count()

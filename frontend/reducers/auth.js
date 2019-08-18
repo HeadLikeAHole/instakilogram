@@ -7,7 +7,8 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
-  USER_SAVE_POST
+  USER_SAVE_POST,
+  USER_UPDATE
 } from '../actions/types';
 
 
@@ -59,6 +60,8 @@ export default function (state = initialState, action) {
       };
     case USER_SAVE_POST:
       return {...state, user: {...state.user, saved_posts: action.payload}};
+    case USER_UPDATE:
+      return {...state, user: {...state.user, ...action.payload}};
     default:
       return state
   }

@@ -7,11 +7,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import { addPost, updatePost } from '../../actions/postList';
+import { updatePost } from '../../actions/postList';
 import './post.css';
 
 
-class PostForm extends React.Component {
+class PostEditForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,7 +21,6 @@ class PostForm extends React.Component {
   }
 
   static propTypes = {
-    addPost: PropTypes.func.isRequired,
     updatePost: PropTypes.func.isRequired
   };
 
@@ -37,46 +36,47 @@ class PostForm extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    if (this.props.location.data) {
-      // send post id, post state and history method to update function
-      this.props.updatePost(this.props.location.data.post.id, this.state, this.props.history);
-    } else {
-      this.props.addPost(this.state, this.props.history);
-    }
-
+    this.props.updatePost(JSON.parse(localStorage.getItem('post')).id, this.state, this.props.history);
     this.setState({imageFile: '', imageUrl: '', description: ''});
     // since state's image property contains file object not file name
     // use ref to remove image filename from file field on successful form submission
     this.imageField.current.value = '';
   };
 
+  prefillForm = () => {
+    const retrievedPost = JSON.parse(localStorage.getItem('post'));
+    const { image, description } = retrievedPost;
+    // extract filename from url
+    const fileName = image.split('/').pop();
+    // fetch image file and set state
+    fetch(image)
+      .then(response => response.blob())
+      .then(file => {
+        const imageFile = new File([file], fileName);
+        this.setState({imageFile: imageFile, imageUrl: image, description: description})
+      });
+  };
+
   componentDidMount() {
     // check if post data was sent through <Link> element
-    if (this.props.location.data) {
-      const { image, description } = this.props.location.data.post;
-      // extract filename from url
-      const fileName = image.split('/').pop();
-      // fetch image file and set state
-      fetch(image)
-        .then(response => response.blob())
-        .then(file => {
-          const imageFile = new File([file], fileName);
-          this.setState({imageFile: imageFile, imageUrl: image, description: description})
-        });
+    if (this.props.location.post) {
+      // save post to local storage so field data persist on page refresh
+      const post = this.props.location.post;
+      localStorage.setItem('post', JSON.stringify(post));
+      this.prefillForm()
+    } else {
+      this.prefillForm()
     }
   }
 
-  render() {
-    let header;
-    if (this.props.location.data) {
-      header = "Редактировать фото";
-    } else {
-      header = "Добавить новое фото";
-    }
+  componentWillUnmount() {
+    localStorage.removeItem('post')
+  }
 
+  render() {
     return (
       <Card className="p-3 mx-auto mt-5 my-container">
-        <h2 className="text-center text-uppercase font-italic">{header}</h2>
+        <h2 className="text-center text-uppercase font-italic">Редактировать фото</h2>
         {/* preview image */}
         <Image src={this.state.imageUrl} rounded className="my-2 w-100" />
         <Form onSubmit={this.handleSubmit}>
@@ -114,4 +114,4 @@ class PostForm extends React.Component {
 }
 
 
-export default connect(null, { addPost, updatePost })(PostForm);
+export default connect(null, { updatePost })(PostEditForm);

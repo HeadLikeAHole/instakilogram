@@ -25,7 +25,19 @@
     margin-top: 0.4rem;
 }
 
-/*.comments {*/
-    /*max-height: 500px;*/
-    /*overflow: scroll;*/
-/*}*/
+/* comments-parent and comments-child classes are for hiding scrollbar */
+.comments-parent {
+    width: 100%;
+    height: 25rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.comments-child {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: -17px;
+    overflow-y: scroll;
+}

@@ -1,20 +1,28 @@
 import {
-  LOAD_COMMENT_LIST,
+  COMMENT_LIST_LOADING,
+  COMMENT_LIST_LOADED,
+  COMMENT_LIST_MORE_LOADED,
+  COMMENT_LIST_ERROR,
+  REPLIES_LIST_LOADING,
+  REPLIES_LIST_LOADED,
+  REPLIES_LIST_ERROR,
   ADD_COMMENT,
   ADD_REPLY,
   UPDATE_COMMENT,
   UPDATE_REPLY,
   DELETE_COMMENT,
   DELETE_REPLY,
-  UPDATE_POST_DETAIL, UPDATE_POST
+  REMOVE_COMMENT_FORM_INFO
 } from './types';
 import { createMessage, returnErrors } from './messages';
 import { composeHeaders } from './auth';
 
 
 // fetch comments from the server and send them to commentList reducer through dispatch function
-export const loadCommentList = post_id => dispatch => {  // dispatch action
-  fetch(`/api/posts/${post_id}/comments/`)
+export const loadCommentList = (post_id, next) => dispatch => {
+  dispatch({type: COMMENT_LIST_LOADING});
+  // if "next" url is passed to this function then load it otherwise just load /api/posts/${post_id}/comments/ url
+  fetch(`${next ? next : `/api/posts/${post_id}/comments/`}`)
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -22,13 +30,42 @@ export const loadCommentList = post_id => dispatch => {  // dispatch action
        throw response;
       }
     })
-    .then(data => dispatch({
-      type: LOAD_COMMENT_LIST,
-      payload: data
-    })
-    ).catch(error => {
+    .then(data => {
+      // if next load more comments if no next just load initial comments
+      let type;
+      if (next) {
+        type = COMMENT_LIST_MORE_LOADED
+      } else {
+        type = COMMENT_LIST_LOADED
+      }
+      dispatch({type: type, payload: data})
+    }).catch(error => {
       const status = error.status;
-      error.json().then(msg => dispatch(returnErrors(msg, status)));
+      error.json().then(msg => {
+        dispatch(returnErrors(msg, status));
+        dispatch({type: COMMENT_LIST_ERROR});
+      });
+    })
+};
+
+
+export const loadMoreReplies = (comment_id, pageNumber) => dispatch => {
+  dispatch({type: REPLIES_LIST_LOADING});
+  fetch(`/api/posts/comment/${comment_id}/?page=${pageNumber}`)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+       throw response;
+      }
+    })
+    .then(data => dispatch({type: REPLIES_LIST_LOADED, payload: data}))
+    .catch(error => {
+      const status = error.status;
+      error.json().then(msg => {
+        dispatch(returnErrors(msg, status));
+        dispatch({type: REPLIES_LIST_ERROR});
+      });
     })
 };
 
@@ -86,7 +123,7 @@ export const addReply = (text, post_id, parent_id, addReplyInfo) => (dispatch, g
 // edit comment or reply
 export const editComment = (text, comment_id, parent_id) => (dispatch, getState) => {
   const body = JSON.stringify({ text });
-
+  dispatch({type: REMOVE_COMMENT_FORM_INFO});
   fetch(`api/posts/comment/${comment_id}/`, {method: 'PUT', body: body, headers: composeHeaders(getState)})
     .then(response => {
       if (response.ok) {
@@ -141,6 +178,7 @@ export const deleteComment = (comment_id, parent_id) => (dispatch, getState) => 
 };
 
 
+// like comment or reply
 export const likeComment = (id, reply) => (dispatch, getState) => {
   fetch(`api/posts/comment/${id}/like/`, {headers: composeHeaders(getState)})
     .then(response => {

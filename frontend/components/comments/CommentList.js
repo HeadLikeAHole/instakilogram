@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Row from 'react-bootstrap/Row';
+import Spinner from 'react-bootstrap/Spinner'
 
 import Comment from './Comment';
 import { loadCommentList } from '../../actions/commentList';
@@ -11,8 +13,10 @@ class CommentList extends React.Component {
   static propTypes = {
     post_id: PropTypes.number.isRequired,
     loadCommentList: PropTypes.func.isRequired,
-    comments: PropTypes.array.isRequired,
+    commentList: PropTypes.object.isRequired,
   };
+
+  handleLoadMore = () => this.props.loadCommentList(this.props.post_id, this.props.commentList.next);
 
   componentDidMount() {
     this.props.loadCommentList(this.props.post_id);
@@ -26,13 +30,21 @@ class CommentList extends React.Component {
   }
 
   render() {
+    const { commentsLoading, next, comments } = this.props.commentList;
+    let plus = true;
+    if (commentsLoading || !next) {
+      plus = false
+    }
+
     return (
-      <React.Fragment>
+      <Row noGutters={true} className={`pt-1 ${commentsLoading || 'align-items-center'} p-d-border-bottom comments-child`}>
         {/* loop through comments */}
-        {this.props.comments.map(
+        {comments.map(
           comment => <Comment key={comment.id} comment={comment} />
         )}
-      </React.Fragment>
+        {commentsLoading && <div className="w-100 text-center"><Spinner animation="grow" className="comment-spinner" /></div>}
+        {plus && <div className="w-100"><i className="fas fa-plus my-plus" onClick={this.handleLoadMore}></i></div>}
+      </Row>
     )
   }
 }
@@ -40,7 +52,7 @@ class CommentList extends React.Component {
 
 // make state available to CommentList component though props
 const mapStateToProps = state => ({
-  comments: state.commentList
+  commentList: state.commentList
 });
 
 

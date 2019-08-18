@@ -51,16 +51,16 @@ class PostDetail extends React.Component {
     let isOwner = false;
     let isLiked = false;
     let isSaved = false;
-    if (authUser) {
-      if (authUser.id === user) {
+    if (!authUser.isLoading) {
+      if (authUser.user.id === user) {
         isOwner = true
       }
       if (likes) {
-        if (likes.includes(authUser.id)) {
+        if (likes.includes(authUser.user.id)) {
           isLiked = true
         }
       }
-      if (authUser.saved_posts.includes(id)) {
+      if (authUser.user.saved_posts.includes(id)) {
         isSaved = true;
       }
     }
@@ -90,14 +90,14 @@ class PostDetail extends React.Component {
             {description}
           </Row>
           {/* comments */}
-          <Row noGutters={true} className="align-items-center p-d-border-bottom comments">
+          <div className="comments-parent">
             {id && <CommentList post_id={id} />}
-          </Row>
+          </div>
           {/* icons */}
           <Row noGutters={true} className="p-3 align-content-center p-d-border-bottom">
             {id && <PostLike post_id={id} isLiked={isLiked} postDetail={true} />}
             <i className="far fa-comment my-icon"></i>
-            {id && <PostSave profile_id={authUser.id} post_id={id} isSaved={isSaved} />}
+            {!authUser.isLoading && id && <PostSave profile_id={authUser.user.id} post_id={id} isSaved={isSaved} />}
           </Row>
           {/* add comment field */}
           <Row noGutters={true} className="px-3 py-2 justify-content-between align-content-center p-d-border-bottom">
@@ -120,7 +120,7 @@ PostDetail.propTypes = {
 
 // make state available to PostDetail component though props
 const mapStateToProps = state => ({
-  authUser: state.auth.user,
+  authUser: state.auth,
   post: state.postDetail,
   post_id: state.postSlider.id
 });

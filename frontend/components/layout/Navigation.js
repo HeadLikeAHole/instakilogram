@@ -20,11 +20,15 @@ import { logout } from '../../actions/auth';
 
 
 const Navigation = props => {
+  const scrollToTop = () => window.scrollTo(0, 0);
+
   const { isAuthenticated, user } = props.auth;
 
   const authenticatedLinks = (
     <NavDropdown alignRight title={user && user.username} id="collasible-nav-dropdown" className="mr-1">
-      <LinkContainer to="/post-form"><NavDropdown.Item>Добавить фото</NavDropdown.Item></LinkContainer>
+      <LinkContainer to="/post-add">
+        <NavDropdown.Item>Добавить фото</NavDropdown.Item>
+      </LinkContainer>
       <LinkContainer to={`/profile/${user && user.id}`}><NavDropdown.Item>Профиль</NavDropdown.Item></LinkContainer>
       <NavDropdown.Item onClick={props.logout}>Выйти</NavDropdown.Item>
     </NavDropdown>
@@ -37,7 +41,7 @@ const Navigation = props => {
       {/* Container is used here to move all links closer together (white background spans whole page) */}
       <Container>
         {/* website logo */}
-        <LinkContainer to="/">
+        <LinkContainer to="/" onClick={scrollToTop}>
           <Navbar.Brand href="#" className='logo'>
             {/* "i" tag is a font awesome camera */}
             Instakilogram <i className="fas fa-camera-retro"></i>

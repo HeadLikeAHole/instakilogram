@@ -1,19 +1,22 @@
 import {
-  LOAD_POST_LIST,
-  ADD_POST,
+  POST_LIST_LOADING,
+  POST_LIST_LOADED,
+  POST_LIST_MORE_LOADED,
+  POST_LIST_ERROR,
   UPDATE_POST,
   UPDATE_POST_DETAIL,
-  DELETE_POST,
   UPDATE_PROFILE_POSTS,
-  LOGIN_FAIL
+  DELETE_POST
 } from './types';
 import { createMessage, returnErrors } from './messages';
 import { composeHeaders } from './auth';
 
 
 // fetch posts from the server and send them to postList reducer through dispatch function
-export const loadPostList = () => dispatch => {  // dispatch action
-  fetch('/api/posts/')
+export const loadPostList = next => dispatch => {
+  dispatch({ type: POST_LIST_LOADING });
+  // if "next" url is passed to this function then load it otherwise just load '/api/posts/'
+  fetch(`${next ? next : '/api/posts/'}`)
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -21,18 +24,26 @@ export const loadPostList = () => dispatch => {  // dispatch action
        throw response;
       }
     })
-    .then(data => dispatch({
-      type: LOAD_POST_LIST,
-      payload: data
-    })
-    ).catch(error => {
+    .then(data => {
+      // if next load more posts if no next just load initial posts
+      let type;
+      if (next) {
+        type = POST_LIST_MORE_LOADED
+      } else {
+        type = POST_LIST_LOADED
+      }
+      dispatch({type: type, payload: data})
+    }).catch(error => {
       const status = error.status;
-      error.json().then(msg => dispatch(returnErrors(msg, status)));
+      error.json().then(msg => {
+        dispatch(returnErrors(msg, status));
+        dispatch({ type: POST_LIST_ERROR });
+      });
     })
 };
 
 
-// add post to the server and send it to posts reducer through dispatch function
+// add post to the server and redirect to home page
 export const addPost = (post, history) => (dispatch, getState) => {
   // display error if one of the fields is empty
   if (!post.imageFile && !post.description) {
@@ -57,14 +68,10 @@ export const addPost = (post, history) => (dispatch, getState) => {
        throw response;
       }
     })
-    .then(data => {
+    .then(() => {
       // redirect to home page after successful post submission
       history.push('/');
       dispatch(createMessage({postAdded: 'Фото было добавлено'}));
-      dispatch({
-        type: ADD_POST,
-        payload: data
-      });
     }).catch(error => {
       const status = error.status;
       error.json().then(msg => dispatch(returnErrors(msg, status)));

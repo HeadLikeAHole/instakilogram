@@ -1,29 +1,63 @@
 from rest_framework import generics
+from rest_framework import pagination
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer, ReplySerializer
 from .permissions import IsOwnerOrReadOnly
 
 
+class PostListPagination(pagination.PageNumberPagination):
+    page_size = 2
+
+    # change default "results" key to "posts" key for convenience
+    def get_paginated_response(self, data):
+        context = {
+            'count': self.page.paginator.count,
+            'next': self.get_next_link(),
+            'previous': self.get_previous_link(),
+            'posts': data
+        }
+        return Response(context)
+
+
 # create post list and post create api view
 class PostListCreateView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    pagination_class = PostListPagination
 
     # add user object contained in request to post instance when creating it
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
-class PostDetailEditDelete(generics.RetrieveUpdateDestroyAPIView):
+class PostDetailEditDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     permission_classes = [IsOwnerOrReadOnly]
 
 
+class CommentListPagination(pagination.PageNumberPagination):
+    page_size = 10
+
+    # change default "results" key to "comments" key for convenience
+    def get_paginated_response(self, data):
+        context = {
+            'count': self.page.paginator.count,
+            'next': self.get_next_link(),
+            'previous': self.get_previous_link(),
+            'comments': data
+        }
+        return Response(context)
+
+
 # create comment list and comment create api view
 class CommentListCreateView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
+    pagination_class = CommentListPagination
 
     def get_queryset(self):
         # self.kwargs['pk'] extracts post id from url
@@ -38,16 +72,9 @@ class CommentListCreateView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user, post=post)
 
 
-# create reply list and reply create api view
-class ReplyListCreateView(generics.ListCreateAPIView):
+# create reply api view
+class ReplyCreateView(generics.CreateAPIView):
     serializer_class = ReplySerializer
-
-    def get_queryset(self):
-        # self.kwargs['id'] extracts post id from url
-        post_id = self.kwargs['pk']
-        parent_id = self.kwargs['id']
-        query_set = Comment.objects.filter(post=post_id, parent=parent_id)
-        return query_set
 
     # add user, post and parent objects to comment instance when creating it
     def perform_create(self, serializer):
@@ -57,13 +84,13 @@ class ReplyListCreateView(generics.ListCreateAPIView):
 
 
 # comment and reply edit and delete view
-class CommentDetailEditDelete(generics.RetrieveUpdateDestroyAPIView):
+class CommentDetailEditDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
     permission_classes = [IsOwnerOrReadOnly]
 
 
-class PostLike(generics.RetrieveAPIView):
+class PostLikeView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
@@ -78,7 +105,7 @@ class PostLike(generics.RetrieveAPIView):
         return self.retrieve(request, *args, **kwargs)
 
 
-class CommentLike(generics.RetrieveAPIView):
+class CommentLikeView(generics.RetrieveAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 

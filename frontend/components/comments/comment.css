@@ -6,8 +6,37 @@
     text-decoration: none;
 }
 
+.replyShowHide {
+    font-size: 0.9rem;
+}
+
+.replyShowHide {
+    cursor: pointer;
+}
+
 .comment-like {
     float: right;
-    margin-right: 1rem;
+    margin-right: 2rem;
     margin-top: 0.4rem;
+}
+
+.my-plus {
+    display: block;
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1.2rem;
+}
+
+.my-plus:hover {
+    cursor: pointer;
+}
+
+.comment-spinner {
+    margin-top: 0.2rem;
+    margin-bottom: 1.2rem;
+}
+
+.load-more:hover {
+    cursor: pointer;
 }
