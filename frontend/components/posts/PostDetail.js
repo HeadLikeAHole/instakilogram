@@ -5,6 +5,9 @@ import Image from 'react-bootstrap/Image';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import TimeAgo from 'react-timeago';
+import russianStrings from 'react-timeago/lib/language-strings/ru';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 
 import './post-detail.css';
 import './post.css';
@@ -12,11 +15,31 @@ import { loadPostDetail } from '../../actions/postDetail';
 import PostEditDelete from './PostEditDelete';
 import CommentList from '../comments/CommentList';
 import CommentForm from '../comments/CommentForm';
-import PostLike from './PostLike';
-import PostSave from './PostSave';
+import PostLikeIcon from './PostLikeIcon';
+import PostSaveIcon from './PostSaveIcon';
+import { pluralize } from '../../helperFunctions';
+import UserListModal from '../common/UserListModal';
+
+
+// select Russian language in timestamp
+const formatter = buildFormatter(russianStrings);
 
 
 class PostDetail extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {showUserListModal: false}
+  }
+
+  static propTypes = {
+    authUser: PropTypes.object,
+    post: PropTypes.object.isRequired,
+    loadPostDetail: PropTypes.func.isRequired,
+    post_id: PropTypes.number
+  };
+
+  toggleModal = () => this.setState({showUserListModal: !this.state.showUserListModal});
+
   componentDidMount() {
     // check where id comes from
     // it's either from url if post is clicked in post list
@@ -45,23 +68,13 @@ class PostDetail extends React.Component {
 
   render() {
     const { authUser, post } = this.props;
-    const { id, username, profile_image, image, description, user, likes } = this.props.post;
+    const { id, username, profile_image, user, image, description, comments_count, likes, likes_count } = this.props.post;
 
-    // check if current logged in user is post owner, has liked post, has saved post
+    // check if current logged in user is post owner
     let isOwner = false;
-    let isLiked = false;
-    let isSaved = false;
-    if (!authUser.isLoading) {
-      if (authUser.user.id === user) {
+    if (Object.keys(authUser).length > 0) {
+      if (authUser.id === user) {
         isOwner = true
-      }
-      if (likes) {
-        if (likes.includes(authUser.user.id)) {
-          isLiked = true
-        }
-      }
-      if (authUser.user.saved_posts.includes(id)) {
-        isSaved = true;
       }
     }
 
@@ -94,33 +107,42 @@ class PostDetail extends React.Component {
             {id && <CommentList post_id={id} />}
           </div>
           {/* icons */}
-          <Row noGutters={true} className="p-3 align-content-center p-d-border-bottom">
-            {id && <PostLike post_id={id} isLiked={isLiked} postDetail={true} />}
-            <i className="far fa-comment my-icon"></i>
-            {!authUser.isLoading && id && <PostSave profile_id={authUser.user.id} post_id={id} isSaved={isSaved} />}
+          <Row noGutters={true} className="p-3 justify-content-between align-content-center p-d-border-bottom">
+            <div>
+              {id && <PostLikeIcon post_id={id} likes={likes} postDetail={true} />}
+              <i className="far fa-comment my-icon"></i>
+              {id && <PostSaveIcon post_id={id} />}
+            </div>
+            <div className="float-right time-ago">
+              <TimeAgo date={post.published} formatter={formatter} />
+            </div>
+            <div className="w-100 my-1 likes-count">
+              <span className="cursor-pointer" onClick={this.toggleModal}>{likes_count} {pluralize('like', likes_count)}</span>
+            </div>
+            <div className="">
+              {comments_count} {pluralize('comment', comments_count)}
+            </div>
           </Row>
           {/* add comment field */}
           <Row noGutters={true} className="px-3 py-2 justify-content-between align-content-center p-d-border-bottom">
             {id && <CommentForm post_id={id} />}
           </Row>
         </Col>
+        <UserListModal
+          show={this.state.showUserListModal}
+          title='публикацию лайкнули'
+          toggleModal={this.toggleModal}
+          id={id}
+        />
       </Row>
     );
   }
 }
 
 
-PostDetail.propTypes = {
-  authUser: PropTypes.object,
-  post: PropTypes.object.isRequired,
-  loadPostDetail: PropTypes.func.isRequired,
-  post_id: PropTypes.number
-};
-
-
 // make state available to PostDetail component though props
 const mapStateToProps = state => ({
-  authUser: state.auth,
+  authUser: state.auth.user,
   post: state.postDetail,
   post_id: state.postSlider.id
 });

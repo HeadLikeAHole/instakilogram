@@ -7,7 +7,9 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
-  USER_SAVE_POST
+  USER_SAVE_POST,
+  USER_FOLLOW,
+  UPDATE_PROFILE
 } from '../actions/types';
 import { returnErrors } from './messages';
 
@@ -140,6 +142,41 @@ export const savePost = (profile_id, post_id) => (dispatch, getState) => {
         savedPostsIds.push(post.id)
       });
       dispatch({type: USER_SAVE_POST, payload: savedPostsIds})
+    }).catch(error => {
+      const status = error.status;
+      error.json().then(msg => dispatch(returnErrors(msg, status)));
+    })
+};
+
+
+export const follow = (authUser_id, profile_id, page) => (dispatch, getState) => {
+  fetch(`api/accounts/user/${authUser_id}/follow/${profile_id}/`, {headers: composeHeaders(getState)})
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+       throw response;
+      }
+    })
+    .then(data => dispatch({type: USER_FOLLOW, payload: data.following}))
+    .then(() => {
+      if (page) {
+        let url;
+        if (page === 'profile') {
+          url = `api/accounts/profile/${profile_id}/`
+        } else {
+          url = `api/accounts/profile/${authUser_id}/`
+        }
+        fetch(url, {headers: composeHeaders(getState)})
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+           throw response;
+          }
+        })
+        .then(profile => dispatch({type: UPDATE_PROFILE, payload: profile}))
+      }
     }).catch(error => {
       const status = error.status;
       error.json().then(msg => dispatch(returnErrors(msg, status)));

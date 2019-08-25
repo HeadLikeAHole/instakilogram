@@ -53,9 +53,9 @@ const Navigation = props => {
         <Navbar.Collapse id="burgerize" className="float-right">
           <Nav className="mx-auto">
             <Form inline>
-              <FormControl type="text" placeholder="Search" className="form-control-sm mr-sm-2 search-color" />
+              <FormControl type="text" placeholder="Поиск" className="form-control-sm mr-sm-2 search-color" />
               {/* class my-3 creates margin top and bottom equal to 3 */}
-              <Button variant="outline-dark" size="sm" className="my-3">Search</Button>
+              <Button variant="outline-dark" size="sm" className="my-3">Поиск</Button>
             </Form>
           </Nav>
           <Nav className="float-lg-right">

@@ -37,6 +37,10 @@
     margin-bottom: 1.2rem;
 }
 
+.load-more {
+    font-size: 0.9rem;
+}
+
 .load-more:hover {
     cursor: pointer;
 }

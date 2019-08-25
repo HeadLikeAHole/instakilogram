@@ -1,7 +1,11 @@
 from django.core.paginator import Paginator
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from .models import Post, Comment
+
+
+User = get_user_model()
 
 
 class ReplySerializer(serializers.ModelSerializer):
@@ -63,3 +67,21 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_likes_count(self, obj):
         return obj.likes.count()
+
+
+# post/comment liker
+class LikerSerializer(serializers.ModelSerializer):
+    image = serializers.CharField(source='profile.image.url', read_only=True)
+    followers = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'image', 'followers')
+
+    def get_followers(self, obj):
+        # extract ids of profiles from queryset and serialize the list of ids instead of whole profile objects
+        query_set = obj.profile.followers.all()
+        profile_ids = []
+        for profile in query_set:
+            profile_ids.append(profile.id)
+        return profile_ids

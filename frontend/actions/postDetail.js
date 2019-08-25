@@ -1,6 +1,5 @@
-import {LOAD_POST_DETAIL, UPDATE_POST} from './types';
+import { LOAD_POST_DETAIL} from './types';
 import { returnErrors } from './messages';
-import {composeHeaders} from "./auth";
 
 
 // load post detail from the server and send it to post detail reducer through dispatch function

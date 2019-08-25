@@ -1,9 +1,18 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
+from rest_framework import pagination
 from knox.models import AuthToken
 from django.contrib.auth import get_user_model
 
-from .serializers import UserSerializer, UserUpdateSerializer, ProfileSerializer, ProfileUpdateSerializer, RegisterSerializer, LoginSerializer
+from .serializers import (
+    UserSerializer,
+    UserUpdateSerializer,
+    ProfileSerializer,
+    ProfileUpdateSerializer,
+    RegisterSerializer,
+    LoginSerializer,
+    FollowerSerializer
+)
 from .models import Profile
 from posts.models import Post
 from posts.permissions import IsOwnerOrReadOnly
@@ -84,3 +93,52 @@ class PostSaveView(generics.RetrieveAPIView):
         else:
             profile.saved_posts.add(post)
         return self.retrieve(request, *args, **kwargs)
+
+
+class FollowerListPagination(pagination.PageNumberPagination):
+    page_size = 10
+
+    def get_paginated_response(self, data):
+        context = {
+            'count': self.page.paginator.count,
+            'next': self.get_next_link(),
+            'previous': self.get_previous_link(),
+            'users': data
+        }
+        return Response(context)
+
+
+class FollowView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get(self, request, *args, **kwargs):
+        # get current logged in user's profile
+        user = User.objects.get(pk=self.kwargs['pk']).profile
+        # get profile to follow
+        profile = Profile.objects.get(pk=self.kwargs['id'])
+
+        if user in profile.followers.all():
+            profile.followers.remove(user)
+        else:
+            profile.followers.add(user)
+        return self.retrieve(request, *args, **kwargs)
+
+
+class FollowersView(generics.ListAPIView):
+    serializer_class = FollowerSerializer
+    pagination_class = FollowerListPagination
+
+    def get_queryset(self):
+        profile = Profile.objects.get(pk=self.kwargs['pk'])
+        return profile.followers.all()
+
+
+class FollowingView(generics.ListAPIView):
+    # the same serializer class is used here as in FollowersView
+    serializer_class = FollowerSerializer
+    pagination_class = FollowerListPagination
+
+    def get_queryset(self):
+        profile = Profile.objects.get(pk=self.kwargs['pk'])
+        return profile.following.all()

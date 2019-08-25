@@ -10,6 +10,7 @@ import errors from './errors';
 import messages from './messages';
 import modal from './modal';
 import postSlider from './postSlider';
+import userList from './userList';
 
 
 export default combineReducers({
@@ -22,5 +23,6 @@ export default combineReducers({
   errors,
   messages,
   modal,
-  postSlider
+  postSlider,
+  userList
 })

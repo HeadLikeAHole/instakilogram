@@ -4,8 +4,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .models import Post, Comment
-from .serializers import PostSerializer, CommentSerializer, ReplySerializer
+from .serializers import PostSerializer, CommentSerializer, ReplySerializer, LikerSerializer
 from .permissions import IsOwnerOrReadOnly
+from accounts.views import FollowerListPagination
 
 
 class PostListPagination(pagination.PageNumberPagination):
@@ -118,3 +119,21 @@ class CommentLikeView(generics.RetrieveAPIView):
         else:
             comment.likes.add(user)
         return self.retrieve(request, *args, **kwargs)
+
+
+class PostLikeListView(generics.ListAPIView):
+    serializer_class = LikerSerializer
+    pagination_class = FollowerListPagination
+
+    def get_queryset(self):
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        return post.likes.all()
+
+
+class CommentLikeListView(generics.ListAPIView):
+    serializer_class = LikerSerializer
+    pagination_class = FollowerListPagination
+
+    def get_queryset(self):
+        comment = Comment.objects.get(pk=self.kwargs['pk'])
+        return comment.likes.all()

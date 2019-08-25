@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { likePost } from '../../actions/postList';
 
 
-class PostLike extends React.Component {
+class PostLikeIcon extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,14 +16,14 @@ class PostLike extends React.Component {
 
   static propTypes = {
     likePost: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool.isRequired,
+    authUser: PropTypes.object.isRequired,
     post_id: PropTypes.number.isRequired,
-    isLiked: PropTypes.bool.isRequired,
+    likes: PropTypes.array.isRequired,
     postDetail: PropTypes.bool.isRequired
   };
 
   handleLike = () => {
-    if (this.props.isAuthenticated) {
+    if (this.props.authUser.isAuthenticated) {
       this.props.likePost(this.props.post_id, this.props.postDetail)
     } else {
       this.setState({ redirect: true })
@@ -31,12 +31,21 @@ class PostLike extends React.Component {
   };
 
   render() {
+    const { authUser, likes } = this.props;
+
+    let isLiked = false;
+    if (Object.keys(authUser.user).length > 0) {
+      if (likes.includes(authUser.user.id)) {
+        isLiked = true;
+      }
+    }
+
     return (
       <React.Fragment>
         {/* if user is not authenticated on heart icon click he is redirected to login page*/}
         {!this.state.redirect ?
           // if post has been liked then heart icon turns solid red if clicked again it turns back to outlined gray
-          <i className={`${this.props.isLiked ? 'fas liked' : 'far'} fa-heart my-icon`} onClick={this.handleLike}></i> :
+          <i className={`${isLiked ? 'fas liked' : 'far'} fa-heart my-icon`} onClick={this.handleLike}></i> :
           <Redirect to="/login" />}
       </React.Fragment>
     )
@@ -45,8 +54,8 @@ class PostLike extends React.Component {
 
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+  authUser: state.auth
 });
 
 
-export default connect(mapStateToProps, { likePost })(PostLike);
+export default connect(mapStateToProps, { likePost })(PostLikeIcon);

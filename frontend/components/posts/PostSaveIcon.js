@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { savePost } from '../../actions/auth';
 
 
-class PostSave extends React.Component {
+class PostSaveIcon extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,28 +16,35 @@ class PostSave extends React.Component {
 
   static propTypes = {
     savePost: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool.isRequired,
-    profile_id: PropTypes.number.isRequired,
-    post_id: PropTypes.number.isRequired,
-    isSaved: PropTypes.bool.isRequired,
+    authUser: PropTypes.object.isRequired,
+    post_id: PropTypes.number.isRequired
   };
 
   handleSave = () => {
-    const { isAuthenticated, profile_id, post_id } = this.props;
-    if (isAuthenticated) {
-      this.props.savePost(profile_id, post_id)
+    const { authUser, post_id } = this.props;
+    if (authUser.isAuthenticated) {
+      this.props.savePost(authUser.user.id, post_id)
     } else {
       this.setState({ redirect: true })
     }
   };
 
   render() {
+    const { authUser, post_id } = this.props;
+
+    let isSaved = false;
+    if (authUser && Object.keys(authUser.user).length > 0) {
+      if (authUser.user.saved_posts.includes(post_id)) {
+        isSaved = true;
+      }
+    }
+
     return (
       <React.Fragment>
         {/* if user is not authenticated on bookmark icon click he is redirected to login page*/}
         {!this.state.redirect ?
           // if post has been saved then bookmark icon turns solid if clicked again it turns back to outlined gray
-          <i className={`${this.props.isSaved ? 'fas saved' : 'far'} fa-bookmark my-icon`} onClick={this.handleSave}></i> :
+          <i className={`${isSaved ? 'fas saved' : 'far'} fa-bookmark my-icon`} onClick={this.handleSave}></i> :
           <Redirect to="/login" />}
       </React.Fragment>
     )
@@ -46,8 +53,8 @@ class PostSave extends React.Component {
 
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+  authUser: state.auth
 });
 
 
-export default connect(mapStateToProps, { savePost })(PostSave);
+export default connect(mapStateToProps, { savePost })(PostSaveIcon);

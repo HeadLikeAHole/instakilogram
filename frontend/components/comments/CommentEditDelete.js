@@ -24,7 +24,7 @@ class CommentEditDelete extends React.Component {
     deleteComment: PropTypes.func.isRequired
   };
 
-  handleToggleModal = () => this.setState({show: !this.state.show});
+  toggleModal = () => this.setState({show: !this.state.show});
 
   handleEdit = () => {
     this.props.addCommentFormInfo({
@@ -42,15 +42,15 @@ class CommentEditDelete extends React.Component {
       <>
         <NavDropdown alignRight title="..." id="collasible-nav-dropdown" className={`small-dots ${this.props.visible && 'visible'}`}>
           <NavDropdown.Item onClick={this.handleEdit}>Редактировать</NavDropdown.Item>
-          <NavDropdown.Item onClick={this.handleToggleModal}>Удалить</NavDropdown.Item>
+          <NavDropdown.Item onClick={this.toggleModal}>Удалить</NavDropdown.Item>
         </NavDropdown>
 
-        <Modal show={this.state.show} onHide={this.handleToggleModal} className="delete-modal">
+        <Modal show={this.state.show} onHide={this.toggleModal} className="delete-modal">
           <Modal.Header closeButton>
             <Modal.Title>Вы уверенны?</Modal.Title>
           </Modal.Header>
           <Modal.Footer>
-            <Button variant="outline-dark" onClick={this.handleToggleModal}>
+            <Button variant="outline-dark" onClick={this.toggleModal}>
               Отмена
             </Button>
             <Button variant="outline-dark" onClick={this.handleDelete}>

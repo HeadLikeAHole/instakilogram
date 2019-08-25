@@ -15,8 +15,9 @@ import { addCommentFormInfo } from '../../actions/commentFormInfo';
 import CommentEditDelete from './CommentEditDelete';
 import CommentLike from './CommentLike';
 import { pluralize } from '../../helperFunctions';
+import UserListModal from "../common/UserListModal";
 
-// choose Russian language in timestamp
+// select Russian language in timestamp
 const formatter = buildFormatter(russianStrings);
 
 class Comment extends React.Component {
@@ -24,7 +25,8 @@ class Comment extends React.Component {
     super(props);
     this.state = {
       editDeleteVisible: false,
-      showReplies: true
+      showReplies: true,
+      showUserListModal: false
     }
   }
 
@@ -50,6 +52,8 @@ class Comment extends React.Component {
     }
     this.props.addCommentFormInfo({username: comment.username, parent_id: parent_id})
   };
+
+  toggleModal = () => this.setState({showUserListModal: !this.state.showUserListModal});
 
   render() {
     const { authUser, comment } = this.props;
@@ -90,7 +94,7 @@ class Comment extends React.Component {
           </div>
           <div className="my-2 text-muted comment-info" onMouseEnter={this.handleHover} onMouseLeave={this.handleHover}>
             <TimeAgo date={comment.published} formatter={formatter} />
-            <span className="mx-3">{comment.likes_count} {pluralize('like', comment.likes_count)}</span>
+            <span className="mx-3 cursor-pointer" onClick={this.toggleModal}>{comment.likes_count} {pluralize('like', comment.likes_count)}</span>
             {/* reply link */}
             <a href="" className="text-muted" onClick={this.handleReply}>Ответить</a>
             {/* heart icon (like button) */}
@@ -106,6 +110,12 @@ class Comment extends React.Component {
             {comment.replies && !this.state.showReplies && <ReplyList comment={comment} />}
           </Row>
         </Col>
+        <UserListModal
+          show={this.state.showUserListModal}
+          title='комментарий лайкнули'
+          toggleModal={this.toggleModal}
+          id={comment.id}
+        />
       </React.Fragment>
     );
   }

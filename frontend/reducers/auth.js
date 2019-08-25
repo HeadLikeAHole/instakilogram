@@ -8,6 +8,7 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   USER_SAVE_POST,
+  USER_FOLLOW,
   USER_UPDATE
 } from '../actions/types';
 
@@ -20,7 +21,7 @@ const initialState = {
   // https://stackoverflow.com/questions/49091416/refresh-on-protected-routes-react-router-with-firebase-auth
   isLoading: true,
   isAuthenticated: false,
-  user: null
+  user: {}
 };
 
 
@@ -56,10 +57,13 @@ export default function (state = initialState, action) {
         ...state,
           isLoading: false,
           isAuthenticated: false,
-          user: null
+          user: {}
       };
     case USER_SAVE_POST:
       return {...state, user: {...state.user, saved_posts: action.payload}};
+    case USER_FOLLOW:
+      return {...state, user: {...state.user, following: action.payload}};
+    // update authenticated user after profile edit (change username or avatar without page reload)
     case USER_UPDATE:
       return {...state, user: {...state.user, ...action.payload}};
     default:

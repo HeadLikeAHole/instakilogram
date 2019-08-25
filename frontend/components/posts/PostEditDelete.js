@@ -26,7 +26,7 @@ class PostEditDelete extends React.Component {
     toggleModal: PropTypes.func.isRequired
   };
 
-  handleToggleModal = () => this.setState({show: !this.state.show});
+  toggleModal = () => this.setState({show: !this.state.show});
 
   handleDelete = () => {
     if (this.props.location.pathname.includes('profile')) {
@@ -49,16 +49,16 @@ class PostEditDelete extends React.Component {
           }}>
             <NavDropdown.Item>Редактировать</NavDropdown.Item>
           </LinkContainer>
-          <NavDropdown.Item onClick={this.handleToggleModal}>Удалить</NavDropdown.Item>
+          <NavDropdown.Item onClick={this.toggleModal}>Удалить</NavDropdown.Item>
         </NavDropdown>
 
         {/* className="delete-modal" is used PostDetailModal */}
-        <Modal show={this.state.show} onHide={this.handleToggleModal} className="delete-modal">
+        <Modal show={this.state.show} onHide={this.toggleModal} className="delete-modal">
           <Modal.Header closeButton>
             <Modal.Title>Вы уверенны?</Modal.Title>
           </Modal.Header>
           <Modal.Footer>
-            <Button variant="outline-dark" onClick={this.handleToggleModal}>
+            <Button variant="outline-dark" onClick={this.toggleModal}>
               Отмена
             </Button>
             <Button variant="outline-dark" onClick={this.handleDelete}>

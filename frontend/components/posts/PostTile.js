@@ -49,6 +49,7 @@ class PostTile extends React.Component {
   }
 
   render() {
+    const { likes_count, comments_count } = this.props.post
     return (
       <Col sm={6} md={4} className="my-3">
         <div
@@ -58,7 +59,7 @@ class PostTile extends React.Component {
           onClick={this.handleClick}
         >
           <img src={this.props.post.image} className={`${this.state.mode}`} ref={this.imgElement} />
-          {this.state.postHover && <PostHover />}
+          {this.state.postHover && <PostHover likes_count={likes_count} comments_count={comments_count} />}
         </div>
       </Col>
     );

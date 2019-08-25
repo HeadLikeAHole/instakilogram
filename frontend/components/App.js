@@ -12,8 +12,8 @@ import AlertTemplate from 'react-alert-template-basic';
 
 import './app.css';
 import store from '../store';
-import Navigation from './layout/Navigation';
-import Alerts from './layout/Alerts';
+import Navigation from './common/Navigation';
+import Alerts from './common/Alerts';
 import PostList from './posts/PostList';
 import PostDetail from './posts/PostDetail';
 import Profile from './accounts/Profile';

@@ -10,19 +10,20 @@ const PostHover = props => {
   return (
     <Row className="hover">
       <div>
-        <i className="fas fa-heart"></i> 150k
+        <i className="fas fa-heart"></i> {props.likes_count}
       </div>
       <div>
-        <i className="fas fa-comment"></i> 758
+        <i className="fas fa-comment"></i> {props.comments_count}
       </div>
     </Row>
   );
 };
 
 
-// PostHover.propTypes = {
-//   post: PropTypes.object.isRequired
-// };
+PostHover.propTypes = {
+  likes_count: PropTypes.number.isRequired,
+  comments_count: PropTypes.number.isRequired
+};
 
 
 export default PostHover;

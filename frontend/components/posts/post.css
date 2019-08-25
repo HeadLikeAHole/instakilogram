@@ -78,6 +78,22 @@
     max-height: 200vh;
 }
 
+.likes-count {
+    font-weight: 600;
+}
+
+.comments-count a {
+    color: rgb(150, 150, 150);
+}
+
+.comments-count a:hover {
+    text-decoration: none;
+}
+
+.time-ago {
+    color: rgb(150, 150, 150);
+}
+
 @media (min-width: 768px) {
     .my-container {
         width: 600px;
