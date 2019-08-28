@@ -9,7 +9,7 @@ class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='post_images')
     description = models.TextField(max_length=150)
-    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='post_likes', blank=True)
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='post_likes', through='PostLike', blank=True)
     published = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -37,7 +37,12 @@ class Comment(models.Model):
     text = models.TextField(max_length=500)
     # create relationship to parent comment making this comment a reply to it
     parent = models.ForeignKey('self', related_name='replies', on_delete=models.CASCADE, blank=True, null=True)
-    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='comment_likes', blank=True)
+    likes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='comment_likes',
+        through='CommentLike',
+        blank=True
+    )
     published = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -47,3 +52,15 @@ class Comment(models.Model):
     def __str__(self):
         # truncate displayed text in admin site to 30 chars
         return truncatechars(self.text, 30)
+
+
+# this model is created for ordering of m2m relationship (post.likes.order_by('-postlike'))
+class PostLike(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+
+# this model is created for ordering of m2m relationship (comment.likes.order_by('-commentlike'))
+class CommentLike(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)

@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner'
 
 import Comment from './Comment';
-import { loadCommentList } from '../../actions/commentList';
+import { loadCommentList, removeCommentList } from '../../actions/commentList';
 
 
 class CommentList extends React.Component {
@@ -13,6 +13,7 @@ class CommentList extends React.Component {
   static propTypes = {
     post_id: PropTypes.number.isRequired,
     loadCommentList: PropTypes.func.isRequired,
+    removeCommentList: PropTypes.func.isRequired,
     commentList: PropTypes.object.isRequired,
   };
 
@@ -25,6 +26,9 @@ class CommentList extends React.Component {
   // update component when sliding posts in profile page
   componentDidUpdate(prevProps) {
     if (this.props.post_id !== prevProps.post_id) {
+      // remove previous comment list from state when sliding posts in profile page so it's not visible
+      // while next one is loading
+      this.props.removeCommentList();
       this.props.loadCommentList(this.props.post_id);
     }
   }
@@ -37,7 +41,7 @@ class CommentList extends React.Component {
     }
 
     return (
-      <Row noGutters={true} className={`pt-1 ${commentsLoading || 'align-items-center'} p-d-border-bottom comments-child`}>
+      <Row noGutters={true} className={`pt-1 ${commentsLoading && 'align-items-center'} p-d-border-bottom comments-child`}>
         {/* loop through comments */}
         {comments.map(
           comment => <Comment key={comment.id} comment={comment} />
@@ -57,4 +61,4 @@ const mapStateToProps = state => ({
 
 
 // connect React component to Redux store
-export default connect(mapStateToProps, { loadCommentList })(CommentList)
+export default connect(mapStateToProps, { loadCommentList, removeCommentList })(CommentList)

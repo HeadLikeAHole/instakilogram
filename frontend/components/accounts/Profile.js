@@ -8,12 +8,12 @@ import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 
 import { loadProfile } from '../../actions/profile';
-import { postsToDisplay } from '../../actions/postSlider';
 import './profile.css';
 import PostGrid from '../posts/PostGrid';
 import PostDetailModal from '../posts/PostDetailModal';
 import { pluralize } from '../../helperFunctions';
 import UserListModal from '../common/UserListModal';
+import { removeProfile } from '../../actions/profile';
 import { removeUserList } from '../../actions/userList';
 import FollowButton from '../common/FollowButton';
 
@@ -33,7 +33,7 @@ class Profile extends React.Component {
     profile: PropTypes.object.isRequired,
     modalOpen: PropTypes.bool.isRequired,
     loadProfile: PropTypes.func.isRequired,
-    postsToDisplay: PropTypes.func.isRequired,
+    removeProfile: PropTypes.func.isRequired,
     removeUserList: PropTypes.func.isRequired
   };
 
@@ -56,8 +56,19 @@ class Profile extends React.Component {
     this.setState({savedPosts: localStorage.getItem('savedPosts')})
   }
 
+  // change profiles when navigating from someone's profile to own profile
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      this.props.loadProfile(this.props.match.params.id);
+    }
+  }
+
   componentWillUnmount() {
     localStorage.removeItem('savedPosts');
+    // removeProfile function removes profile object from the redux store
+    this.props.removeProfile();
+    // remove userList object from the redux store so when user goes to another page without closing user list modal
+    // in profile page and clicks on another user list modal old list isn't displayed
     this.props.removeUserList();
   }
 
@@ -80,19 +91,6 @@ class Profile extends React.Component {
       followButton = <FollowButton profile_id={profile.id} page='profile' />
     }
 
-    // check which posts to display, user posts or saved posts
-    let selectedPosts;
-    if (!this.state.savedPosts) {
-      if (profile.user_posts) {
-        selectedPosts = profile.user_posts
-      }
-    } else {
-      if (profile.saved_posts) {
-        selectedPosts = profile.saved_posts
-      }
-    }
-    this.props.postsToDisplay(selectedPosts);
-
     return (
       <React.Fragment>
         <Row noGutters={true} className="mx-2 my-3 my-sm-5">
@@ -105,7 +103,7 @@ class Profile extends React.Component {
                 followButton}
             </Row>
             <Row className="mb-3 justify-content-around justify-content-sm-start">
-              <span className="mr-5"><span className="font-weight-bold">{profile.user_posts && profile.user_posts.length}</span> posts</span>
+              <span className="mr-5"><span className="font-weight-bold">{profile.user_posts && profile.user_posts.length}</span> {pluralize('post', profile.user_posts && profile.user_posts.length)}</span>
               {/* "подписчики" are "followers" */}
               <span className="mr-5 cursor-pointer" onClick={() => this.toggleModal('подписчики')}><span className="font-weight-bold">{profile.id && profile.followers_count}</span> {pluralize('follower', profile.followers_count)}</span>
               <span className="cursor-pointer" onClick={() => this.toggleModal('подписки')}><span className="font-weight-bold">{profile.id && profile.following_count}</span> {pluralize('following', profile.following_count)}</span>
@@ -122,17 +120,15 @@ class Profile extends React.Component {
           {authorized && <span className={`py-2 ${this.state.savedPosts && 'active-link'}`} onClick={() => this.selectLink('saved')}>сохранено</span>}
         </Row>
         {/* user posts or saved posts */}
-        {selectedPosts && <PostGrid />}
+        <PostGrid profile_id={parseInt(this.props.match.params.id, 10)} savedPosts={this.state.savedPosts} />
         {this.props.modalOpen && <PostDetailModal />}
-        {this.props.profile.id &&
-          <UserListModal
-            show={this.state.showUserListModal}
-            title={this.state.title}
-            toggleModal={this.toggleModal}
-            id={profile.id}
-            page={page}
-          />
-        }
+        <UserListModal
+          show={this.state.showUserListModal}
+          title={this.state.title}
+          toggleModal={this.toggleModal}
+          id={parseInt(this.props.match.params.id, 10)}
+          page={page}
+        />
       </React.Fragment>
     )
   }
@@ -147,4 +143,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps, { loadProfile, postsToDisplay, removeUserList })(Profile);
+export default connect(mapStateToProps, { loadProfile, removeUserList, removeProfile })(Profile);

@@ -2,6 +2,7 @@ from rest_framework import generics
 from rest_framework import pagination
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from django.contrib.auth import get_user_model
 
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer, ReplySerializer, LikerSerializer
@@ -9,8 +10,11 @@ from .permissions import IsOwnerOrReadOnly
 from accounts.views import FollowerListPagination
 
 
+User = get_user_model()
+
+
 class PostListPagination(pagination.PageNumberPagination):
-    page_size = 2
+    page_size = 10
 
     # change default "results" key to "posts" key for convenience
     def get_paginated_response(self, data):
@@ -127,7 +131,8 @@ class PostLikeListView(generics.ListAPIView):
 
     def get_queryset(self):
         post = Post.objects.get(pk=self.kwargs['pk'])
-        return post.likes.all()
+        # "postlike" is the through model PostLike
+        return post.likes.order_by('-postlike')
 
 
 class CommentLikeListView(generics.ListAPIView):
@@ -136,4 +141,33 @@ class CommentLikeListView(generics.ListAPIView):
 
     def get_queryset(self):
         comment = Comment.objects.get(pk=self.kwargs['pk'])
-        return comment.likes.all()
+        # "commentlike" is the through model CommentLike
+        return comment.likes.order_by('-commentlike')
+
+
+class PostListSliderPagination(pagination.PageNumberPagination):
+    page_size = 6
+
+    def get_paginated_response(self, data):
+        context = {
+            'count': self.page.paginator.count,
+            'next': self.get_next_link(),
+            'previous': self.get_previous_link(),
+            'posts': data
+        }
+        return Response(context)
+
+
+# post list in profile page which is user's post or saved posts
+class PostSlider(generics.ListAPIView):
+    serializer_class = PostSerializer
+    pagination_class = PostListSliderPagination
+
+    def get_queryset(self):
+        user_id = self.request.query_params.get('user_id')
+        saved_posts = self.request.query_params.get('saved_posts')
+        if saved_posts == 'true':
+            posts = User.objects.get(id=user_id).profile.saved_posts.all()
+        else:
+            posts = Post.objects.filter(user__id=user_id)
+        return posts

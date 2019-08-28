@@ -3,6 +3,7 @@ import {
   COMMENT_LIST_LOADED,
   COMMENT_LIST_MORE_LOADED,
   COMMENT_LIST_ERROR,
+  REMOVE_COMMENT_LIST,
   REPLIES_LIST_LOADING,
   REPLIES_LIST_LOADED,
   REPLIES_LIST_ERROR,
@@ -12,7 +13,9 @@ import {
   UPDATE_REPLY,
   DELETE_COMMENT,
   DELETE_REPLY,
-  REMOVE_COMMENT_FORM_INFO
+  REMOVE_COMMENT_FORM_INFO,
+  POST_DETAIL_COMMENT_COUNT_ADD,
+  POST_DETAIL_COMMENT_COUNT_SUBTRACT
 } from './types';
 import { createMessage, returnErrors } from './messages';
 import { composeHeaders } from './auth';
@@ -87,6 +90,7 @@ export const addComment = (text, post_id) => (dispatch, getState) => {
         type: ADD_COMMENT,
         payload: data
       });
+      dispatch({type: POST_DETAIL_COMMENT_COUNT_ADD})
     }).catch(error => {
       const status = error.status;
       error.json().then(msg => dispatch(returnErrors(msg, status)));
@@ -111,6 +115,7 @@ export const addReply = (text, post_id, parent_id, addReplyInfo) => (dispatch, g
         type: ADD_REPLY,
         payload: data
       });
+      dispatch({type: POST_DETAIL_COMMENT_COUNT_ADD})
       // reset state after successful reply submission
       addReplyInfo({})
     }).catch(error => {
@@ -171,6 +176,7 @@ export const deleteComment = (comment_id, parent_id) => (dispatch, getState) => 
           payload: comment_id
         });
       }
+      dispatch({type: POST_DETAIL_COMMENT_COUNT_SUBTRACT})
     }).catch(error => {
       const status = error.status;
       error.json().then(msg => dispatch(returnErrors(msg, status)));
@@ -199,3 +205,10 @@ export const likeComment = (id, reply) => (dispatch, getState) => {
       error.json().then(msg => dispatch(returnErrors(msg, status)));
     })
 };
+
+
+export const removeCommentList = () => (
+  {
+    type: REMOVE_COMMENT_LIST
+  }
+);

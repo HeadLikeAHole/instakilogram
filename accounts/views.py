@@ -131,7 +131,7 @@ class FollowersView(generics.ListAPIView):
 
     def get_queryset(self):
         profile = Profile.objects.get(pk=self.kwargs['pk'])
-        return profile.followers.all()
+        return profile.followers.order_by('-from_profile__id')
 
 
 class FollowingView(generics.ListAPIView):
@@ -141,4 +141,5 @@ class FollowingView(generics.ListAPIView):
 
     def get_queryset(self):
         profile = Profile.objects.get(pk=self.kwargs['pk'])
-        return profile.following.all()
+        # "-to_profile__id" is a field on the through model ProfileFollow
+        return profile.following.order_by('-to_profile__id')

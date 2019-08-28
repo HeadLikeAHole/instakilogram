@@ -1,4 +1,4 @@
-import { LOAD_PROFILE, UPDATE_PROFILE, UPDATE_PROFILE_POSTS } from '../actions/types';
+import { LOAD_PROFILE, UPDATE_PROFILE, UPDATE_PROFILE_POSTS, REMOVE_PROFILE } from '../actions/types';
 
 
 export default function (state = {}, action) {
@@ -13,6 +13,8 @@ export default function (state = {}, action) {
       const postIndex = state.user_posts.findIndex(post => post.id === action.payload);
       const newUserPosts = state.user_posts.filter((element, index) => index !== postIndex);
       return {...state, user_posts: newUserPosts};
+    case REMOVE_PROFILE:
+      return {};
     default:
       return state
   }

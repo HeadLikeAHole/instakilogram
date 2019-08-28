@@ -1,4 +1,4 @@
-import { LOAD_PROFILE, USER_UPDATE } from './types';
+import { LOAD_PROFILE, USER_UPDATE, REMOVE_PROFILE } from './types';
 import { createMessage, returnErrors } from './messages';
 import { composeHeaders } from './auth';
 
@@ -59,3 +59,10 @@ export const updateProfile = (id, profile, history) => (dispatch, getState) => {
       dispatch(createMessage({postUpdated: 'Профиль был обновлен'}))
     }).catch(error => console.log(error))
 };
+
+
+export const removeProfile = () => (
+  {
+    type: REMOVE_PROFILE
+  }
+);

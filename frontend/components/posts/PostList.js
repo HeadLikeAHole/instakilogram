@@ -20,8 +20,7 @@ class PostList extends React.Component {
     const { isLoading, next } = this.props.postList;
       if (isLoading || !next) return;
       if (
-        document.documentElement.scrollHeight -
-          document.documentElement.scrollTop ===
+        document.documentElement.scrollHeight - document.documentElement.scrollTop ===
         document.documentElement.clientHeight
       ) {
         this.props.loadPostList(next);

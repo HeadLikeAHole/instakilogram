@@ -88,6 +88,8 @@ WSGI_APPLICATION = 'instakilogram.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 # postgres database requires "psycopg2" package to be installed
+# with current accounts and posts models initial "python manage.py migrate" command might throws an error
+# in this case migration should be started with "python manage.py makemigrations accounts"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

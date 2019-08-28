@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
+import Spinner from 'react-bootstrap/Spinner'
 
 import UserList from './UserList';
 import { loadUserList, removeUserList } from '../../actions/userList';
@@ -17,12 +18,12 @@ class UserListModal extends React.Component {
 
   static propTypes = {
     show: PropTypes.bool.isRequired,
-    toggleModal: PropTypes.func.isRequired,
     title: PropTypes.string,
+    toggleModal: PropTypes.func.isRequired,
     id: PropTypes.number.isRequired,
+    page: PropTypes.string,
     loadUserList: PropTypes.func.isRequired,
     userList: PropTypes.object.isRequired,
-    page: PropTypes.string
   };
 
   // infinite scroll inside modal
@@ -48,15 +49,17 @@ class UserListModal extends React.Component {
   }
 
   render() {
-    const { show, toggleModal, title, userList } = this.props;
+    const { show, title, toggleModal, page } = this.props;
+    const { isLoading, users } = this.props.userList;
 
     return (
-      <Modal centered show={show} onHide={toggleModal}>
+      <Modal centered show={show} onHide={toggleModal} className="user-list-modal"> {/* className="user-list-modal" is used in PostDetailModal */}
         <Modal.Header closeButton>
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="user-modal" onScroll={this.handleScroll} ref={this.userModal}>
-          <UserList users={userList.users} page={this.props.page} />
+          <UserList users={users} page={page} />
+          {isLoading && <div className="w-100 text-center"><Spinner animation="grow" className="comment-spinner" /></div>}
         </Modal.Body>
       </Modal>
     )
@@ -67,7 +70,6 @@ class UserListModal extends React.Component {
 const mapStateToProps = state => ({
   userList: state.userList
 });
-
 
 
 export default connect(mapStateToProps, { loadUserList, removeUserList })(UserListModal);

@@ -24,7 +24,7 @@ class PostDetailModal extends React.Component {
     // which is the DOM element that was clicked.
     // !event.target.closest('.delete-modal') checks if delete modal is clicked
     // if it's clicked then post detail modal doesn't close delete modal
-    if (this.slide.current && !this.slide.current.contains(event.target) && !event.target.closest('.delete-modal')) {
+    if (this.slide.current && !this.slide.current.contains(event.target) && !event.target.closest('.delete-modal') && !event.target.closest('.user-list-modal')) {
       this.props.toggleModal()
     }
   };

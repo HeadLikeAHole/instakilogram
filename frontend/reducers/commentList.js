@@ -3,6 +3,7 @@ import {
   COMMENT_LIST_LOADED,
   COMMENT_LIST_MORE_LOADED,
   COMMENT_LIST_ERROR,
+  REMOVE_COMMENT_LIST,
   REPLIES_LIST_LOADING,
   REPLIES_LIST_LOADED,
   REPLIES_LIST_ERROR,
@@ -124,6 +125,8 @@ export default function (state = initialState, action) {
       return {...state, commentsLoading: false};
     case REPLIES_LIST_ERROR:
       return {...state, repliesLoading: false};
+    case REMOVE_COMMENT_LIST:
+      return initialState;
     default:
       return state
   }

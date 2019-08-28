@@ -18,7 +18,9 @@ class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     image = models.ImageField(default='profile_default.png', upload_to='profile_images')
     info = models.TextField(max_length=300, blank=True)
-    followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
+    followers = models.ManyToManyField(
+        'self', symmetrical=False, related_name='following', through='ProfileFollow', blank=True
+    )
     saved_posts = models.ManyToManyField(Post, related_name='saved_by', through='PostSave', blank=True)
 
     def __str__(self):
@@ -35,8 +37,16 @@ class Profile(models.Model):
             img.save(self.image.path)
 
 
-# this model is created for ordering purpose (Profile.objects.order_by('postsave')
-# without it saved posts are ordered by post's 'published' field and not by order in which they were saved
+# this model is created for ordering of m2m relationship (Profile.objects.order_by('postsave'))
+# without it saved posts are ordered randomly
 class PostSave(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+
+# the same as above
+# fields from_profile and to_profile create a through model with relationship to itself
+# with just one field an error is thrown
+class ProfileFollow(models.Model):
+    from_profile = models.ForeignKey(Profile, related_name='to_profile', on_delete=models.CASCADE)
+    to_profile = models.ForeignKey(Profile, related_name='from_profile', on_delete=models.CASCADE)

@@ -13,4 +13,5 @@ urlpatterns = [
     path('<int:pk>/like-list/', views.PostLikeListView.as_view(), name='post_like_list'),
     path('comment/<int:pk>/like/', views.CommentLikeView.as_view(), name='comment_like'),
     path('comment/<int:pk>/like-list/', views.CommentLikeListView.as_view(), name='comment_like_list'),
+    path('post-slider/', views.PostSlider.as_view(), name='post-slider')
 ]

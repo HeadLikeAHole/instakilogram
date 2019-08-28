@@ -128,12 +128,14 @@ class PostDetail extends React.Component {
             {id && <CommentForm post_id={id} />}
           </Row>
         </Col>
-        <UserListModal
-          show={this.state.showUserListModal}
-          title='публикацию лайкнули'
-          toggleModal={this.toggleModal}
-          id={id}
-        />
+        {id &&
+          <UserListModal
+            show={this.state.showUserListModal}
+            title='публикацию лайкнули'
+            toggleModal={this.toggleModal}
+            id={id}
+          />
+        }
       </Row>
     );
   }
