@@ -11,21 +11,29 @@ import { Link } from 'react-router-dom';
 
 import { loadProfile, updateProfile } from '../../actions/profile';
 import './profile-edit.css';
+import PasswordChangeModal from './PasswordChangeModal';
+import ProfileDeleteModal from './ProfileDeleteModal';
 
 
-class ProfileEdit extends React.Component {
+class ProfileEditDelete extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '', email: '', first_name: '', last_name: '', imageFile: '', imageUrl: '', info: ''
-    }
+      username: '', email: '', first_name: '', last_name: '', imageFile: '', imageUrl: '', info: '', showPasswordModal: false, showDeleteModal: false
+    };
+    this.imgField = React.createRef();
   }
 
   static propTypes = {
     authUser: PropTypes.object,
     profile: PropTypes.object.isRequired,
     loadProfile: PropTypes.func.isRequired,
+    updateProfile: PropTypes.func.isRequired
   };
+
+  togglePasswordModal = () => this.setState({showPasswordModal: !this.state.showPasswordModal});
+
+  toggleDeleteModal = () => this.setState({showDeleteModal: !this.state.showDeleteModal});
 
   handleChange = event => {
     if (event.target.name === 'image') {
@@ -85,11 +93,17 @@ class ProfileEdit extends React.Component {
       <Card className="p-3 mx-auto mt-5 my-container">
         <h2 className="text-center text-uppercase font-italic">Редактировать профиль</h2>
         <Form onSubmit={this.handleSubmit}>
-          <Form.Group>
-            <Image src={imageUrl} roundedCircle className="my-2 profile-edit-img" />
+          <Form.Group as={Row} className="align-items-center">
+            <Col sm={3}>
+              <Image src={imageUrl} roundedCircle className="my-2 profile-edit-img" onClick={() => this.imgField.current.click()} />
+            </Col>
+            <Col sm={9}>
+              <span className="blue-text" onClick={() => this.imgField.current.click()}>Сменить фото профиля</span>
+            </Col>
             {/* image field */}
             {/* "value = event.target.files[0]" doesn't work on file input field */}
-            <Form.Control type="file" name="image" onChange={this.handleChange} />
+            {/* This field is hidden and clicked by clicking profile picture or link using ref */}
+            <Form.Control type="file" name="image" className="d-none" onChange={this.handleChange} ref={this.imgField} />
           </Form.Group>
           {/* login field */}
           <Form.Group as={Row}>
@@ -103,6 +117,7 @@ class ProfileEdit extends React.Component {
             <Form.Label column sm={3}>Email:</Form.Label>
             <Col sm={9}>
               <Form.Control type="email" name="email" value={email} onChange={this.handleChange} />
+              <span className="below-email-text">(Не виден другим пользователям)</span>
             </Col>
           </Form.Group>
           {/* first_name field */}
@@ -126,12 +141,18 @@ class ProfileEdit extends React.Component {
               <Form.Control as="textarea" rows="5" name="info" value={info} onChange={this.handleChange} />
             </Col>
           </Form.Group>
-          <Form.Group className="mt-2">
+          <div className="float-right">
+            <p className="blue-text" onClick={this.togglePasswordModal}>Сменить пароль</p>
+            <p className="blue-text" onClick={this.toggleDeleteModal}>Удалить аккаунт</p>
+          </div>
+          <Form.Group className="mt-5 clear">
+            <Link to={`/profile/${this.props.profile.id}`}><Button variant="outline-dark" className="mr-2">Отмена</Button></Link>
             {/* form isn't submitted without type='submit' attribute */}
-            <Button type='submit' variant="outline-dark" className="mr-2">Сохранить</Button>
-            <Link to={`/profile/${this.props.profile.id}`}><Button variant="outline-dark">Отмена</Button></Link>
+            <Button type='submit' variant="outline-dark">Сохранить</Button>
           </Form.Group>
         </Form>
+        <PasswordChangeModal show={this.state.showPasswordModal} toggleModal={this.togglePasswordModal} />
+        <ProfileDeleteModal show={this.state.showDeleteModal} toggleModal={this.toggleDeleteModal} />
       </Card>
     )
   }
@@ -144,4 +165,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps, { loadProfile, updateProfile })(ProfileEdit);
+export default connect(mapStateToProps, { loadProfile, updateProfile })(ProfileEditDelete);

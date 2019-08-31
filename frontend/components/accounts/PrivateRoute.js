@@ -9,7 +9,7 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => {
   return (
     <Route {...rest} render={props => {
       if (auth.isLoading) {
-        return <Spinner animation="grow" className="mx-auto my-2" />
+        return <div className="my-5 text-center"><Spinner animation="grow" /></div>
       } else if (!auth.isAuthenticated) {
         return <Redirect to="/login" />
       } else {

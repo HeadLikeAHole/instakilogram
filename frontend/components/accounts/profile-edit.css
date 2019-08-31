@@ -1,4 +1,24 @@
 .profile-edit-img {
-    max-height: 50px;
-    max-width: 50px;
+    max-height: 100px;
+    max-width: 100px;
+}
+
+.profile-edit-img:hover {
+    cursor: pointer;
+}
+
+.blue-text {
+    color: dodgerblue;
+}
+
+.blue-text:hover {
+    cursor: pointer;
+}
+
+.clear {
+    clear: both;
+}
+
+.below-email-text {
+    font-size: 0.9rem;
 }

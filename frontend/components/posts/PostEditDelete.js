@@ -28,6 +28,8 @@ class PostEditDelete extends React.Component {
 
   toggleModal = () => this.setState({show: !this.state.show});
 
+  // if argument is toggleModal function then call it to close modal
+  // otherwise use history object to redirect to home page
   handleDelete = () => {
     if (this.props.location.pathname.includes('profile')) {
       this.props.deletePost(this.props.post.id, this.props.toggleModal)

@@ -155,3 +155,9 @@ REST_FRAMEWORK = {
         'knox.auth.TokenAuthentication',
     ),
 }
+
+
+# remove token expiration (default equals timedelta(hours=10))
+REST_KNOX = {
+  'TOKEN_TTL': None
+}

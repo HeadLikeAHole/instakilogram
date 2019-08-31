@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework import pagination
 from knox.models import AuthToken
@@ -6,12 +6,11 @@ from django.contrib.auth import get_user_model
 
 from .serializers import (
     UserSerializer,
-    UserUpdateSerializer,
     ProfileSerializer,
-    ProfileUpdateSerializer,
     RegisterSerializer,
     LoginSerializer,
-    FollowerSerializer
+    FollowerSerializer,
+    PasswordChangeSerializer
 )
 from .models import Profile
 from posts.models import Post
@@ -21,7 +20,7 @@ from posts.permissions import IsOwnerOrReadOnly
 User = get_user_model()
 
 
-class UserView(generics.RetrieveAPIView):
+class UserView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -29,20 +28,47 @@ class UserView(generics.RetrieveAPIView):
         return self.request.user
 
 
-class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = UserUpdateSerializer
-    queryset = User.objects.all()
+class ChangePasswordView(generics.UpdateAPIView):
+    serializer_class = PasswordChangeSerializer
+    model = User
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            # Check old password
+            if not user.check_password(serializer.data.get('old_password')):
+                return Response({'old_password': ['Неверный пароль.']}, status=status.HTTP_400_BAD_REQUEST)
+            # set_password also hashes the password that the user will get
+            user.set_password(serializer.data.get('new_password'))
+            user.save()
+
+            return Response({
+                # get_serializer_context() returns a dictionary containing any extra context
+                # that should be supplied to the serializer
+                'user': UserSerializer(user, context=self.get_serializer_context()).data,
+                # AuthToken.objects.create returns a tuple(instance, token). So in order to get token use the index 1
+                'token': AuthToken.objects.create(user)[1]
+            })
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ProfileView(generics.RetrieveAPIView):
+class ProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
     permission_classes = [IsOwnerOrReadOnly]
 
-
-class ProfileUpdateView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = ProfileUpdateSerializer
-    queryset = Profile.objects.all()
+    # allow partial update since ProfileSerializer contains nested user object
+    # which gets updated in a separate ajax call
+    def put(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
 
 class RegisterView(generics.GenericAPIView):

@@ -7,9 +7,11 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  PASSWORD_CHANGE_SUCCESS,
   USER_SAVE_POST,
   USER_FOLLOW,
-  USER_UPDATE
+  USER_UPDATE,
+  DELETE_PROFILE_SUCCESS
 } from '../actions/types';
 
 
@@ -38,6 +40,7 @@ export default function (state = initialState, action) {
       };
     case LOGIN_SUCCESS:
     case REGISTER_SUCCESS:
+    case PASSWORD_CHANGE_SUCCESS:
       localStorage.setItem('token', action.payload.token);
       return {
         ...state,
@@ -52,6 +55,7 @@ export default function (state = initialState, action) {
     // again in this case everything is set to default (cleared out)
     case LOGOUT_SUCCESS:
     case REGISTER_FAIL:
+    case DELETE_PROFILE_SUCCESS:
       localStorage.removeItem('token');
       return {
         ...state,

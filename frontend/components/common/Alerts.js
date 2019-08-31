@@ -31,6 +31,9 @@ class Alerts extends React.Component {
       if (message.postDeleted) alert.success(message.postDeleted);
       if (message.passwordsNotMatch) alert.error(message.passwordsNotMatch);
       if (message.commentAdded) alert.success(message.commentAdded);
+      if (message.passwordChanged) alert.success(message.passwordChanged);
+      if (message.profileUpdated) alert.success(message.profileUpdated);
+      if (message.profileDeleted) alert.success(message.profileDeleted);
     }
   }
 

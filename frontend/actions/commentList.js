@@ -115,7 +115,7 @@ export const addReply = (text, post_id, parent_id, addReplyInfo) => (dispatch, g
         type: ADD_REPLY,
         payload: data
       });
-      dispatch({type: POST_DETAIL_COMMENT_COUNT_ADD})
+      dispatch({type: POST_DETAIL_COMMENT_COUNT_ADD});
       // reset state after successful reply submission
       addReplyInfo({})
     }).catch(error => {

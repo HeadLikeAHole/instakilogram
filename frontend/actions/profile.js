@@ -1,4 +1,4 @@
-import { LOAD_PROFILE, USER_UPDATE, REMOVE_PROFILE } from './types';
+import { LOAD_PROFILE, USER_UPDATE, DELETE_PROFILE_SUCCESS, REMOVE_PROFILE, PASSWORD_CHANGE_SUCCESS } from './types';
 import { createMessage, returnErrors } from './messages';
 import { composeHeaders } from './auth';
 
@@ -32,7 +32,7 @@ export const updateProfile = (id, profile, history) => (dispatch, getState) => {
   profileData.append('info', profile.info);
 
   let payload;
-  fetch(`api/accounts/user/${id}/`, {method: 'PUT', body: userData, headers: composeHeaders(getState)})
+  fetch(`api/accounts/user/`, {method: 'PUT', body: userData, headers: composeHeaders(getState)})
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -43,7 +43,7 @@ export const updateProfile = (id, profile, history) => (dispatch, getState) => {
     .then(data => payload = data)
     // second argument "false" in composeHeaders function specifies that headers shouldn't
     // contain "{'Content-Type': 'application/json'}" key-value pair since posted data contains a file
-    .then(() => fetch(`api/accounts/profile/${id}/update/`, {method: 'PUT', body: profileData, headers: composeHeaders(getState, false)}))
+    .then(() => fetch(`api/accounts/profile/${id}/`, {method: 'PUT', body: profileData, headers: composeHeaders(getState, false)}))
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -56,11 +56,52 @@ export const updateProfile = (id, profile, history) => (dispatch, getState) => {
       dispatch({type: USER_UPDATE, payload: payload});
       // redirect to profile page after successful submission
       history.push(`${id}/`);
-      dispatch(createMessage({postUpdated: 'Профиль был обновлен'}))
+      dispatch(createMessage({profileUpdated: 'Профиль был обновлен'}))
     }).catch(error => console.log(error))
 };
 
 
+export const deleteProfile = history => (dispatch, getState) => {
+  fetch(`api/accounts/user/`, {method: 'DELETE', headers: composeHeaders(getState)})
+    .then(() => {
+      history.push('/');
+      dispatch(createMessage({profileDeleted: 'Профиль был удален'}));
+      dispatch({ type: DELETE_PROFILE_SUCCESS })
+    })
+};
+
+
+export const changePassword = (passwords, toggleModal) => (dispatch, getState) => {
+    // display error if one of the fields is empty
+  if (passwords.newPassword !== passwords.confirmNewPassword) {
+    return dispatch(returnErrors('Пароли не совпадают', 400));
+  }
+
+  const body = JSON.stringify({ old_password: passwords.oldPassword, new_password: passwords.newPassword });
+
+  fetch('api/accounts/user/change-password/', {method: 'PUT', body: body, headers: composeHeaders(getState)})
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    })
+    .then(data => {
+      dispatch({
+        type: PASSWORD_CHANGE_SUCCESS,
+        payload: data
+      });
+      dispatch(createMessage({passwordChanged: 'Пароль был изменен'}));
+      toggleModal();
+    }).catch(error => {
+      dispatch(returnErrors(error.statusText, error.status));
+  })
+};
+
+
+// remove profile from the redux store so when navigating from profile to profile
+// previous profile isn't visible momentarily in current profile while it's loading
 export const removeProfile = () => (
   {
     type: REMOVE_PROFILE

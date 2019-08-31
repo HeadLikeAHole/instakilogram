@@ -56,7 +56,7 @@ class Profile extends React.Component {
     this.setState({savedPosts: localStorage.getItem('savedPosts')})
   }
 
-  // change profiles when navigating from someone's profile to own profile
+  // reload profile when navigating from someone's profile to own profile
   componentDidUpdate(prevProps) {
     if (this.props.match.params.id !== prevProps.match.params.id) {
       this.props.loadProfile(this.props.match.params.id);
@@ -103,7 +103,7 @@ class Profile extends React.Component {
                 followButton}
             </Row>
             <Row className="mb-3 justify-content-around justify-content-sm-start">
-              <span className="mr-5"><span className="font-weight-bold">{profile.user_posts && profile.user_posts.length}</span> {pluralize('post', profile.user_posts && profile.user_posts.length)}</span>
+              <span className="mr-5"><span className="font-weight-bold">{profile.user_posts_count && profile.user_posts_count}</span> {pluralize('post', profile.user_posts_count && profile.user_posts_count)}</span>
               {/* "подписчики" are "followers" */}
               <span className="mr-5 cursor-pointer" onClick={() => this.toggleModal('подписчики')}><span className="font-weight-bold">{profile.id && profile.followers_count}</span> {pluralize('follower', profile.followers_count)}</span>
               <span className="cursor-pointer" onClick={() => this.toggleModal('подписки')}><span className="font-weight-bold">{profile.id && profile.following_count}</span> {pluralize('following', profile.following_count)}</span>

@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth.password_validation import validate_password
+from django.core import exceptions
 
 from .models import Profile
-from posts.serializers import PostSerializer
 
 
 # https://docs.djangoproject.com/en/2.2/topics/auth/customizing/#referencing-the-user-modelUser = get_user_model()
@@ -42,6 +43,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name', 'profile_image', 'saved_posts', 'following')
+        read_only_fields = ('profile_image', 'saved_posts', 'following')
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
@@ -64,22 +66,16 @@ class UserSerializer(serializers.ModelSerializer):
         return profile_ids
 
 
-class UserUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('username', 'email', 'first_name', 'last_name')
-
-
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     followers_count = serializers.SerializerMethodField()
     following_count = serializers.SerializerMethodField()
-    user_posts = serializers.SerializerMethodField()
-    saved_posts = serializers.SerializerMethodField()
+    user_posts_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = '__all__'
+        fields = ('id', 'user', 'image', 'info', 'followers_count', 'following_count', 'user_posts_count')
+        read_only_fields = ('user', 'followers_count', 'following_count', 'user_posts_count')
 
     def get_followers_count(self, obj):
         return obj.followers.count()
@@ -87,25 +83,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     def get_following_count(self, obj):
         return obj.following.count()
 
-    # return user's posts
-    def get_user_posts(self, obj):
-        query_set = obj.user.post_set.all()
-        # send request object to post serializer so current logged in user object can be accessed there
-        # to check if post was liked by him
-        # (transferred this feature to front end, on backend it doesn't work for some reason)
-        request = self.context['request']
-        return PostSerializer(query_set, many=True, context={'request': request}).data
-
-    # return user's saved posts
-    def get_saved_posts(self, obj):
-        query_set = obj.saved_posts.order_by('postsave')
-        return PostSerializer(query_set, many=True).data
-
-
-class ProfileUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ('image', 'info')
+    def get_user_posts_count(self, obj):
+        return obj.user.post_set.count()
 
 
 # profile's follower/following
@@ -115,3 +94,22 @@ class FollowerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('id', 'username', 'image')
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    def validate_new_password(self, value):
+        errors = dict()
+        try:
+            validate_password(value)
+            return value
+
+        except exceptions.ValidationError as e:
+            errors['password'] = list(e.messages)
+
+        if errors:
+            raise serializers.ValidationError(errors)
+
+        return value
