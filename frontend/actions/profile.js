@@ -71,13 +71,8 @@ export const deleteProfile = history => (dispatch, getState) => {
 };
 
 
-export const changePassword = (passwords, toggleModal) => (dispatch, getState) => {
-    // display error if one of the fields is empty
-  if (passwords.newPassword !== passwords.confirmNewPassword) {
-    return dispatch(returnErrors('Пароли не совпадают', 400));
-  }
-
-  const body = JSON.stringify({ old_password: passwords.oldPassword, new_password: passwords.newPassword });
+export const changePassword = (oldPassword, newPassword, toggleModal) => (dispatch, getState) => {
+  const body = JSON.stringify({ old_password: oldPassword, new_password: newPassword });
 
   fetch('api/accounts/user/change-password/', {method: 'PUT', body: body, headers: composeHeaders(getState)})
     .then(response => {

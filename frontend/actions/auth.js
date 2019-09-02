@@ -11,7 +11,7 @@ import {
   USER_FOLLOW,
   UPDATE_PROFILE
 } from '../actions/types';
-import { returnErrors } from './messages';
+import { createMessage, returnErrors } from './messages';
 
 
 // helper function which composes headers
@@ -181,4 +181,48 @@ export const follow = (authUser_id, profile_id, page) => (dispatch, getState) =>
       const status = error.status;
       error.json().then(msg => dispatch(returnErrors(msg, status)));
     })
+};
+
+
+// send your email address so server can send there instruction for password reset
+export const sendEmailAddress = (email, toggleModal) => dispatch => {
+  const body = JSON.stringify({ email }); // Object Property Value Shorthand
+  const headers = {'Content-Type': 'application/json'};
+  fetch('api/accounts/password-reset/', {method: 'POST', body: body, headers: headers})
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw response
+      }
+    })
+    // show modal which tells user that server sent e-mail to his e-mail address with password reset instructions
+    .then(() => toggleModal())
+    .catch(error => {
+      const status = error.status;
+      error.json().then(msg => dispatch(returnErrors(msg, status)));
+  })
+};
+
+
+export const sendNewPassword = (password, token, history) => dispatch => {
+  const body = JSON.stringify({ password, token }); // Object Property Value Shorthand
+  const headers = {'Content-Type': 'application/json'};
+  fetch('api/accounts/password-reset/confirm/', {method: 'POST', body: body, headers: headers})
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw response
+      }
+    })
+    // show modal which tells user that server sent e-mail to his e-mail address with password reset instructions
+    .then(() => {
+      history.push('/login');
+      dispatch(createMessage({passwordReset: 'Новый пароль был установлен'}));
+    })
+    .catch(error => {
+      const status = error.status;
+      error.json().then(msg => dispatch(returnErrors(msg, status)));
+  })
 };

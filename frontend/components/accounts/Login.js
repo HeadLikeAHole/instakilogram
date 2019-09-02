@@ -12,10 +12,10 @@ import '../posts/post.css';
 
 
 class Login extends React.Component {
-  state = {
-    username: '',
-    password: ''
-  };
+  constructor(props) {
+    super(props);
+    this.state = {username: '', password: ''}
+  }
 
   static propTypes = {
     login: PropTypes.func.isRequired,
@@ -67,6 +67,7 @@ class Login extends React.Component {
             <Button type='submit' variant="outline-dark">Вход</Button>
           </Form.Group>
         </Form>
+        <Link to="/password-reset"><p>Забыли пароль?</p></Link>
         <p>Нет аккаунта? <Link to="/register">Зарегистрироваться</Link></p>
       </Card>
     )

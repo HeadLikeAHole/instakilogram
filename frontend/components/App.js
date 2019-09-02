@@ -20,14 +20,16 @@ import Profile from './accounts/Profile';
 import ProfileEditDelete from './accounts/ProfileEditDelete';
 import PostAddForm from './posts/PostAddForm';
 import PostEditForm from './posts/PostEditForm';
-import Login from './accounts/login';
-import Register from './accounts/register';
+import Login from './accounts/Login';
+import Register from './accounts/Register';
+import PasswordReset from './accounts/PasswordReset';
+import PasswordResetConfirm from './accounts/PasswordResetConfirm';
 import PrivateRoute from './accounts/PrivateRoute';
 import { loadUser } from '../actions/auth';
 
 
 const alertOptions = {
-  timeout: 3000,
+  timeout: 5000,
   position: 'top center',
   containerStyle: {
   zIndex: 9999 // changed from default 100 to show alerts over bootstrap modals
@@ -61,6 +63,8 @@ class App extends React.Component {
                   <PrivateRoute exact path="/post-edit" component={PostEditForm} />
                   <Route exact path="/login" component={Login} />
                   <Route exact path="/register" component={Register} />
+                  <Route exact path="/password-reset" component={PasswordReset} />
+                  <Route exact path="/password-reset/:token" component={PasswordResetConfirm} />
                 </Switch>
               </div>
             </Container>

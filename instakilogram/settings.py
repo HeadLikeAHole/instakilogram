@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     # token based authentication for DRF
     # after installation run "python manage.py migrate" and add knox urls patterns
     'knox',
+    # password reset for django rest framework
+    'django_rest_passwordreset',
 
     # my apps
 
@@ -161,3 +163,11 @@ REST_FRAMEWORK = {
 REST_KNOX = {
   'TOKEN_TTL': None
 }
+
+
+# settings for sending emails
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('gmail_user')
+EMAIL_HOST_PASSWORD = os.environ.get('gmail_password')

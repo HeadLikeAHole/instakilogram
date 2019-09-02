@@ -117,7 +117,7 @@ class ProfileEditDelete extends React.Component {
             <Form.Label column sm={3}>Email:</Form.Label>
             <Col sm={9}>
               <Form.Control type="email" name="email" value={email} onChange={this.handleChange} />
-              <span className="below-email-text">(Не виден другим пользователям)</span>
+              <span className="below-form-field-text">(Не виден другим пользователям)</span>
             </Col>
           </Form.Group>
           {/* first_name field */}

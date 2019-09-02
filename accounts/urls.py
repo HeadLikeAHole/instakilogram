@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from knox import views as knox_views
 
 from . import views
@@ -11,6 +11,8 @@ urlpatterns = [
     path('logout/', knox_views.LogoutView.as_view(), name='logout'),
     path('user/', views.UserView.as_view(), name='user'),
     path('user/change-password/', views.ChangePasswordView.as_view(), name='change_password'),
+    # password reset views
+    path('password-reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     path('user/<int:pk>/follow/<int:id>/', views.FollowView.as_view(), name='follow'),
     path('profile/<int:pk>/', views.ProfileView.as_view(), name='profile'),
     # without profile pk in url PostSave view can't find and send necessary profile object in response

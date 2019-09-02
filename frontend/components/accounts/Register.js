@@ -12,15 +12,14 @@ import '../posts/post.css';
 
 
 class Register extends React.Component {
-  state = {
-    username: '',
-    email: '',
-    password: '',
-    password2: ''
-  };
+  constructor(props) {
+    super(props);
+    this.state = {username: '', email: '', password: '', password2: ''}
+  }
 
   static propTypes = {
     register: PropTypes.func.isRequired,
+    createMessage: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool
   };
 

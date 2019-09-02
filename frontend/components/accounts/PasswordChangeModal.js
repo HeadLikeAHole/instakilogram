@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 import { changePassword } from '../../actions/profile';
+import { createMessage } from '../../actions/messages';
 
 
 class PasswordChangeModal extends React.Component {
@@ -19,7 +20,8 @@ class PasswordChangeModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool.isRequired,
     toggleModal: PropTypes.func.isRequired,
-    changePassword: PropTypes.func.isRequired
+    changePassword: PropTypes.func.isRequired,
+    createMessage: PropTypes.func.isRequired
   };
 
   handleChange = event => this.setState({
@@ -29,8 +31,12 @@ class PasswordChangeModal extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    this.props.changePassword(this.state, this.props.toggleModal);
-    this.setState({oldPassword: '', newPassword: '', confirmNewPassword: ''})
+    if (this.state.newPassword !== this.state.confirmNewPassword) {
+      this.props.createMessage({ passwordsNotMatch: 'Пароли не совпадают' });
+    } else {
+      this.props.changePassword(this.state.oldPassword, this.state.newPassword, this.props.toggleModal);
+      this.setState({oldPassword: '', newPassword: '', confirmNewPassword: ''})
+    }
   };
 
   handleCancel = () => {
@@ -77,4 +83,4 @@ class PasswordChangeModal extends React.Component {
 }
 
 
-export default connect(null, { changePassword })(PasswordChangeModal);
+export default connect(null, { changePassword, createMessage })(PasswordChangeModal);
