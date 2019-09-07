@@ -41,14 +41,14 @@ class CommentList extends React.Component {
     }
 
     return (
-      <Row noGutters={true} className={`pt-1 ${commentsLoading && 'align-items-center'} p-d-border-bottom comments-child`}>
+      <div className={`pt-1 ${commentsLoading && 'align-items-center'} p-d-border-bottom comments-child`}>
         {/* loop through comments */}
         {comments.map(
           comment => <Comment key={comment.id} comment={comment} />
         )}
         {commentsLoading && <div className="w-100 text-center"><Spinner animation="grow" className="comment-spinner" /></div>}
-        {plus && <div className="w-100"><i className="fas fa-plus my-plus" onClick={this.handleLoadMore}></i></div>}
-      </Row>
+        {plus && <div className="w-100"><i className="fas fa-plus my-plus cursor-pointer" onClick={this.handleLoadMore}></i></div>}
+      </div>
     )
   }
 }

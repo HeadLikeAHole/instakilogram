@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 
 import { loadProfile, updateProfile } from '../../actions/profile';
-import './profile-edit.css';
+import './profile-edit-delete.css';
 import PasswordChangeModal from './PasswordChangeModal';
 import ProfileDeleteModal from './ProfileDeleteModal';
 
@@ -95,10 +95,10 @@ class ProfileEditDelete extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <Form.Group as={Row} className="align-items-center">
             <Col sm={3}>
-              <Image src={imageUrl} roundedCircle className="my-2 profile-edit-img" onClick={() => this.imgField.current.click()} />
+              <Image src={imageUrl} roundedCircle className="my-2 profile-edit-img cursor-pointer" onClick={() => this.imgField.current.click()} />
             </Col>
             <Col sm={9}>
-              <span className="blue-text" onClick={() => this.imgField.current.click()}>Сменить фото профиля</span>
+              <span className="blue-text cursor-pointer" onClick={() => this.imgField.current.click()}>Сменить фото профиля</span>
             </Col>
             {/* image field */}
             {/* "value = event.target.files[0]" doesn't work on file input field */}
@@ -142,8 +142,8 @@ class ProfileEditDelete extends React.Component {
             </Col>
           </Form.Group>
           <div className="float-right">
-            <p className="blue-text" onClick={this.togglePasswordModal}>Сменить пароль</p>
-            <p className="blue-text" onClick={this.toggleDeleteModal}>Удалить аккаунт</p>
+            <p className="blue-text cursor-pointer" onClick={this.togglePasswordModal}>Сменить пароль</p>
+            <p className="blue-text cursor-pointer" onClick={this.toggleDeleteModal}>Удалить аккаунт</p>
           </div>
           <Form.Group className="mt-5 clear">
             <Link to={`/profile/${this.props.profile.id}`}><Button variant="outline-dark" className="mr-2">Отмена</Button></Link>

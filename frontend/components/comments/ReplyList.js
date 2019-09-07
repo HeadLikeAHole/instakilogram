@@ -38,7 +38,7 @@ class ReplyList extends React.Component {
 
     const loadMoreButton = (
       <div className="w-100 text-center">
-        <span className="load-more" onClick={this.handleClick}>
+        <span className="load-more cursor-pointer" onClick={this.handleClick}>
           {loadMore && `----- Еще ответы (${replies_count - replies.length}) -----`}
         </span>
       </div>

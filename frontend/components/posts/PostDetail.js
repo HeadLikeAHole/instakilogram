@@ -84,7 +84,7 @@ class PostDetail extends React.Component {
       // display "p-d-border" class if post detail is accessed through post list and not profile page
       <Row noGutters={true} className={`mt-5 ${id || "p-d-border"}`}>
         {/* post image */}
-        <Col lg={7} className="align-self-center">
+        <Col lg={7} className="text-center">
           <Image src={image} className="w-100 p-d-image" />
         </Col>
         <Col className="bg-white">
@@ -94,7 +94,7 @@ class PostDetail extends React.Component {
               <Link to={`/profile/${user}`}>
                 <Image src={profile_image} roundedCircle fluid className="mr-2 p-d-profile-img" />
               </Link>
-              <Link to={`/profile/${user}`} className="post-username-link">{username}</Link>
+              <Link to={`/profile/${user}`} className="username-link">{username}</Link>
               {isOwner && <PostEditDelete post={post} />}
             </Col>
           </Row>
@@ -119,7 +119,7 @@ class PostDetail extends React.Component {
             <div className="w-100 my-1 likes-count">
               <span className="cursor-pointer" onClick={this.toggleModal}>{likes_count} {pluralize('like', likes_count)}</span>
             </div>
-            <div className="">
+            <div>
               {comments_count} {pluralize('comment', comments_count)}
             </div>
           </Row>

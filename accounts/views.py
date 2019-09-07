@@ -13,7 +13,6 @@ from .serializers import (
     PasswordChangeSerializer
 )
 from .models import Profile
-from posts.models import Post
 from posts.permissions import IsOwnerOrReadOnly
 
 
@@ -104,21 +103,6 @@ class LoginView(generics.GenericAPIView):
             # AuthToken.objects.create returns a tuple(instance, token). So in order to get token use the index 1
             'token': AuthToken.objects.create(user)[1]
         })
-
-
-class PostSaveView(generics.RetrieveAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
-
-    def get(self, request, *args, **kwargs):
-        post = Post.objects.get(pk=self.kwargs['id'])
-        profile = Profile.objects.get(user=request.user)
-
-        if post in profile.saved_posts.all():
-            profile.saved_posts.remove(post)
-        else:
-            profile.saved_posts.add(post)
-        return self.retrieve(request, *args, **kwargs)
 
 
 class FollowerListPagination(pagination.PageNumberPagination):

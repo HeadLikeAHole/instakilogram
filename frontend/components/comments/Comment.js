@@ -80,16 +80,16 @@ class Comment extends React.Component {
     }
 
     return (
-      <React.Fragment>
-        <Col xs={2} className="px-3 py-2 text-center align-self-start">
+      <Row noGutters={true}>
+        <Col xs={2} className="px-3 py-2 text-center">
           <Link to={`/profile/${comment.user}`}>
-            <Image src={comment.profile_image} roundedCircle fluid className="p-d-profile-img" />
+            <Image src={comment.profile_image} roundedCircle fluid className="comment-profile-img" />
           </Link>
         </Col>
         <Col xs={10} className="py-1">
           {/* comment's user avatar */}
           <div>
-            <Link to={`/profile/${comment.user}`} className="mr-1 post-username-link">{comment.username}</Link>
+            <Link to={`/profile/${comment.user}`} className="mr-1 username-link">{comment.username}</Link>
             <span className="text-break">{comment.text}</span>
           </div>
           <div className="my-2 text-muted comment-info" onMouseEnter={this.handleHover} onMouseLeave={this.handleHover}>
@@ -102,7 +102,7 @@ class Comment extends React.Component {
             {isOwner && <CommentEditDelete comment={comment} visible={this.state.editDeleteVisible} />}
           </div>
           <div className="mb-1">
-            <span className="replyShowHide" onClick={this.handleShowHideReplies}>
+            <span className="reply-show-hide cursor-pointer" onClick={this.handleShowHideReplies}>
               {comment.replies_count ? replyShowHide : ''}
             </span>
           </div>
@@ -116,7 +116,7 @@ class Comment extends React.Component {
           toggleModal={this.toggleModal}
           id={comment.id}
         />
-      </React.Fragment>
+      </Row>
     );
   }
 }

@@ -3,6 +3,7 @@ import {
   POST_LIST_LOADED,
   POST_LIST_MORE_LOADED,
   POST_LIST_ERROR,
+  REMOVE_POST_LIST,
   UPDATE_POST,
   UPDATE_POST_DETAIL,
   UPDATE_PROFILE_POSTS,
@@ -12,11 +13,12 @@ import { createMessage, returnErrors } from './messages';
 import { composeHeaders } from './auth';
 
 
-// fetch posts from the server and send them to postList reducer through dispatch function
-export const loadPostList = next => dispatch => {
+// fetch current logged in user's posts and posts by users this user follows
+export const loadPostListFeed = next => (dispatch, getState) => {
   dispatch({ type: POST_LIST_LOADING });
   // if "next" url is passed to this function then load it otherwise just load '/api/posts/'
-  fetch(`${next ? next : '/api/posts/'}`)
+  // composeHeaders function returns token and content type
+  fetch(`${next ? next : '/api/posts/'}`, {headers: composeHeaders(getState)})
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -25,6 +27,72 @@ export const loadPostList = next => dispatch => {
       }
     })
     .then(data => {
+      // if next then load more posts if no next just load initial posts
+      let type;
+      if (next) {
+        type = POST_LIST_MORE_LOADED
+      } else {
+        type = POST_LIST_LOADED
+      }
+      dispatch({type: type, payload: data})
+    }).catch(error => {
+      const status = error.status;
+      error.json().then(msg => {
+        dispatch(returnErrors(msg, status));
+        dispatch({ type: POST_LIST_ERROR });
+      });
+    })
+};
+
+
+// loadPostListAll fetches all posts in the database
+export const loadPostListAll = next => dispatch => {
+  dispatch({ type: POST_LIST_LOADING });
+  // if "next" url is passed to this function then load it otherwise just load '/api/posts/all/'
+  fetch(`${next ? next : '/api/posts/all/'}`)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+       throw response;
+      }
+    })
+    .then(data => {
+      // if next then load more posts if no next just load initial posts
+      let type;
+      if (next) {
+        type = POST_LIST_MORE_LOADED
+      } else {
+        type = POST_LIST_LOADED
+      }
+      dispatch({type: type, payload: data})
+    }).catch(error => {
+      const status = error.status;
+      error.json().then(msg => {
+        dispatch(returnErrors(msg, status));
+        dispatch({ type: POST_LIST_ERROR });
+      });
+    })
+};
+
+
+// loadAllPosts fetches all posts in the database or posts satisfying a search query
+export const loadPostListSearch = (next, query, history) => dispatch => {
+  dispatch({ type: POST_LIST_LOADING });
+  // if "next" url is passed to this function then load it otherwise just load '/api/posts/search/?query='
+  fetch(`${next ? `${next}&${query}` : `/api/posts/search/?query=${query}`}`)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+       throw response;
+      }
+    })
+    .then(data => {
+      // on successful search submission redirect to search page
+      if (history) {
+        history.push(`/search?query=${query}`)
+      }
       // if next load more posts if no next just load initial posts
       let type;
       if (next) {
@@ -41,6 +109,15 @@ export const loadPostList = next => dispatch => {
       });
     })
 };
+
+
+// remove post list from the redux store so when navigating from feed to all posts or back
+// previous post list doesn't get merged with current one
+export const removePostList = () => (
+  {
+    type: REMOVE_POST_LIST
+  }
+);
 
 
 // add post to the server and redirect to home page

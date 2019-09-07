@@ -4,7 +4,8 @@ import {
   POST_LIST_MORE_LOADED,
   UPDATE_POST,
   DELETE_POST,
-  POST_LIST_ERROR
+  POST_LIST_ERROR,
+  REMOVE_POST_LIST
 } from '../actions/types';
 
 
@@ -13,7 +14,7 @@ const initialState = {
   count: null,
   next: null,
   previous: null,
-  posts: []
+  posts: null
 };
 
 
@@ -50,6 +51,8 @@ export default function (state = initialState, action) {
     }
     case POST_LIST_ERROR:
       return {...state, isLoading: false};
+    case REMOVE_POST_LIST:
+      return initialState;
     default:
       return state
   }

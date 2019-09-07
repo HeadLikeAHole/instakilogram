@@ -14,7 +14,9 @@ import './app.css';
 import store from '../store';
 import Navigation from './common/Navigation';
 import Alerts from './common/Alerts';
-import PostList from './posts/PostList';
+import PostListFeed from './posts/PostListFeed';
+import PostListAll from './posts/PostListAll';
+import PostListSearch from './posts/PostListSearch';
 import PostDetail from './posts/PostDetail';
 import Profile from './accounts/Profile';
 import ProfileEditDelete from './accounts/ProfileEditDelete';
@@ -29,7 +31,7 @@ import { loadUser } from '../actions/auth';
 
 
 const alertOptions = {
-  timeout: 5000,
+  timeout: 4000,
   position: 'top center',
   containerStyle: {
   zIndex: 9999 // changed from default 100 to show alerts over bootstrap modals
@@ -55,7 +57,9 @@ class App extends React.Component {
             <Container>
               <div className="top">
                 <Switch>
-                  <Route exact path="/" component={PostList} />
+                  <Route exact path="/" component={PostListFeed} />
+                  <Route exact path="/all" component={PostListAll} />
+                  <Route exact path="/search" component={PostListSearch} />
                   <Route exact path="/posts/:id" component={PostDetail} />
                   <PrivateRoute exact path="/profile/edit" component={ProfileEditDelete} />
                   <Route exact path="/profile/:id" component={Profile} />

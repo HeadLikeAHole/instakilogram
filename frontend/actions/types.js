@@ -9,6 +9,8 @@ export const POST_LIST_MORE_LOADED = 'POST_LIST_MORE_LOADED';
 
 export const POST_LIST_ERROR = 'POST_LIST_ERROR';
 
+export const REMOVE_POST_LIST = 'REMOVE_POST_LIST';
+
 export const UPDATE_POST = 'UPDATE_POST';
 
 export const LOAD_POST_DETAIL = 'LOAD_POST_DETAIL';

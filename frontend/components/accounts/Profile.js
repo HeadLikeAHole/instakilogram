@@ -7,15 +7,16 @@ import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 
-import { loadProfile } from '../../actions/profile';
 import './profile.css';
 import PostGrid from '../posts/PostGrid';
 import PostDetailModal from '../posts/PostDetailModal';
-import { pluralize } from '../../helperFunctions';
 import UserListModal from '../common/UserListModal';
+import FollowButton from '../common/FollowButton';
+import LogoutIcon from './LogoutIcon';
+import { loadProfile } from '../../actions/profile';
 import { removeProfile } from '../../actions/profile';
 import { removeUserList } from '../../actions/userList';
-import FollowButton from '../common/FollowButton';
+import { pluralize } from '../../helperFunctions';
 
 
 class Profile extends React.Component {
@@ -96,10 +97,10 @@ class Profile extends React.Component {
         <Row noGutters={true} className="mx-2 my-3 my-sm-5">
           <Col sm={4}><Image src={profile.image} roundedCircle className="d-block mx-auto mb-2 w-50" /></Col>
           <Col sm={8}>
-            <Row className="mb-3 justify-content-around justify-content-sm-start">
-              <span className="font-italic mr-2 p-p-username">{profile.user && profile.user.username}</span>
+            <Row className="mb-3 justify-content-around justify-content-sm-start align-items-center">
+              <span className="mr-3 font-italic p-p-username">{profile.user && profile.user.username}</span>
               {authorized ?
-                <Link to="/profile/edit"><Button variant="light" className="font-weight-bold">Редактировать Профиль</Button></Link> :
+                <><Link to="/profile/edit"><Button variant="light" className="font-weight-bold">Редактировать Профиль</Button></Link> <LogoutIcon /></> :
                 followButton}
             </Row>
             <Row className="mb-3 justify-content-around justify-content-sm-start">

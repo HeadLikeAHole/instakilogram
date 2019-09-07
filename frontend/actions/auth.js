@@ -115,10 +115,13 @@ export const login = (username, password) => dispatch => {
 
 
 // logout user
-export const logout = () => (dispatch, getState) => {
+export const logout = history => (dispatch, getState) => {
   fetch('api/accounts/logout/', {method: 'POST', body: null, headers: composeHeaders(getState)})
-    .then(response => console.log(response))
-    .then(() => dispatch({type: LOGOUT_SUCCESS}))
+    .then(() => {
+      dispatch({type: LOGOUT_SUCCESS});
+      dispatch(createMessage({logout: 'Вы вышли из аккаунта'}));
+      history.push('/')
+    })
     .catch(error => {
       console.log(error);
   })
@@ -126,8 +129,8 @@ export const logout = () => (dispatch, getState) => {
 
 
 // save post
-export const savePost = (profile_id, post_id) => (dispatch, getState) => {
-  fetch(`api/accounts/profile/${profile_id}/post-save/${post_id}/`, {headers: composeHeaders(getState)})
+export const savePost = post_id => (dispatch, getState) => {
+  fetch(`api/posts/${post_id}/save/`, {headers: composeHeaders(getState)})
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -135,14 +138,8 @@ export const savePost = (profile_id, post_id) => (dispatch, getState) => {
        throw response;
       }
     })
-    .then(profile => {
-      // send only ids to reducer
-      const savedPostsIds = [];
-      profile.saved_posts.forEach(post => {
-        savedPostsIds.push(post.id)
-      });
-      dispatch({type: USER_SAVE_POST, payload: savedPostsIds})
-    }).catch(error => {
+    .then(savedPostsIds => dispatch({type: USER_SAVE_POST, payload: savedPostsIds}))
+    .catch(error => {
       const status = error.status;
       error.json().then(msg => dispatch(returnErrors(msg, status)));
     })

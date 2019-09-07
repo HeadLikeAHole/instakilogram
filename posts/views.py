@@ -1,20 +1,23 @@
 from rest_framework import generics
+from rest_framework import views
 from rest_framework import pagination
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer, ReplySerializer, LikerSerializer
 from .permissions import IsOwnerOrReadOnly
 from accounts.views import FollowerListPagination
+from accounts.models import Profile
 
 
 User = get_user_model()
 
 
 class PostListPagination(pagination.PageNumberPagination):
-    page_size = 10
+    page_size = 2
 
     # change default "results" key to "posts" key for convenience
     def get_paginated_response(self, data):
@@ -27,16 +30,46 @@ class PostListPagination(pagination.PageNumberPagination):
         return Response(context)
 
 
-# create post list and post create api view
+# post list feed and post create api view
+# returns only current logged in user's posts and posts by users this user follows
 class PostListCreateView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
-    queryset = Post.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = PostListPagination
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            query_set = Post.objects.filter(
+                Q(user=self.request.user) | Q(user__profile__followers=self.request.user.profile)
+            )
+        else:
+            query_set = Post.objects.all()
+        return query_set
 
     # add user object contained in request to post instance when creating it
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class PostListAll(generics.ListAPIView):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    pagination_class = PostListPagination
+
+
+class PostListSearch(generics.ListAPIView):
+    serializer_class = PostSerializer
+    pagination_class = PostListPagination
+
+    def get_queryset(self):
+        # search query
+        query = self.request.query_params.get('query')
+        query_set = Post.objects.filter(
+            Q(description__icontains=query) | Q(user__username__icontains=query) |
+            Q(user__first_name__icontains=query) | Q(user__last_name__icontains=query)
+        )
+
+        return query_set
 
 
 class PostDetailEditDeleteView(generics.RetrieveUpdateDestroyAPIView):
@@ -93,6 +126,24 @@ class CommentDetailEditDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
     permission_classes = [IsOwnerOrReadOnly]
+
+
+class PostSaveView(views.APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        profile = Profile.objects.get(user=request.user)
+
+        if post in profile.saved_posts.all():
+            profile.saved_posts.remove(post)
+        else:
+            profile.saved_posts.add(post)
+
+        # extract saved posts' ids to the saved_posts_ids variable and send in response
+        saved_posts_ids = [saved_post.id for saved_post in profile.saved_posts.all()]
+
+        return Response(saved_posts_ids)
 
 
 class PostLikeView(generics.RetrieveAPIView):

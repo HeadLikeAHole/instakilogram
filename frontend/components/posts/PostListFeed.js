@@ -1,18 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Spinner from 'react-bootstrap/Spinner'
+import Card from 'react-bootstrap/Card';
+import Spinner from 'react-bootstrap/Spinner';
 
-import { loadPostList, deletePost } from '../../actions/postList';
+
+import { loadPostListFeed, deletePost, removePostList } from '../../actions/postList';
 import Post from './Post';
+import './post.css';
 
 
-class PostList extends React.Component {
+class PostListFeed extends React.Component {
   // check if the right type of props is provided
   static propTypes = {
     postList: PropTypes.object.isRequired,
-    loadPostList: PropTypes.func.isRequired,
-    deletePost: PropTypes.func.isRequired
+    loadPostListFeed: PropTypes.func.isRequired,
+    deletePost: PropTypes.func.isRequired,
+    removePostList: PropTypes.func.isRequired
   };
 
   // infinite scroll
@@ -23,27 +27,43 @@ class PostList extends React.Component {
         document.documentElement.scrollHeight - document.documentElement.scrollTop ===
         document.documentElement.clientHeight
       ) {
-        this.props.loadPostList(next);
+        this.props.loadPostListFeed(next);
       }
   };
 
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
-    this.props.loadPostList();
+    this.props.loadPostListFeed();
   }
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
+    this.props.removePostList()
   }
 
   render() {
     const { posts, isLoading } = this.props.postList;
 
+    let noPostsYet = false;
+    if (posts && posts.length === 0) noPostsYet = true;
+
+    const card = (
+      <Card className="mx-auto mt-5 no-posts-yet my-container">
+        <Card.Body>
+          В вашей ленте пока ничего нет.
+          Добавьте фото или подпишитесь на чей-либо аккаунт, чтобы видеть их фотографии.
+          Чтобы найти интересующий вас аккаунт используейте поиск.
+        </Card.Body>
+      </Card>
+    );
+
     return (
       <>
+        {/* if no posts sent by server display card */}
+        {noPostsYet && card}
         <div>
           {/* loop through posts */}
-          {posts.map(
+          {posts && posts.map(
             post => <Post key={post.id} post={post} deletePost={this.props.deletePost} />
           )}
         </div>
@@ -61,4 +81,4 @@ const mapStateToProps = state => ({
 
 
 // connect React component to Redux store
-export default connect(mapStateToProps, { loadPostList, deletePost })(PostList)
+export default connect(mapStateToProps, { loadPostListFeed, deletePost, removePostList })(PostListFeed)

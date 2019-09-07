@@ -9,9 +9,7 @@ import { savePost } from '../../actions/auth';
 class PostSaveIcon extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      redirect: false
-    }
+    this.state = {redirect: false}
   }
 
   static propTypes = {
@@ -23,7 +21,7 @@ class PostSaveIcon extends React.Component {
   handleSave = () => {
     const { authUser, post_id } = this.props;
     if (authUser.isAuthenticated) {
-      this.props.savePost(authUser.user.id, post_id)
+      this.props.savePost(post_id)
     } else {
       this.setState({ redirect: true })
     }

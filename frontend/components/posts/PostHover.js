@@ -8,7 +8,7 @@ import './post-hover.css';
 // post thumbnail display in profile page
 const PostHover = props => {
   return (
-    <Row className="hover">
+    <Row className="hover cursor-pointer">
       <div>
         <i className="fas fa-heart"></i> {props.likes_count}
       </div>

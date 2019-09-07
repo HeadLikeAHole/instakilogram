@@ -35,6 +35,7 @@ class Alerts extends React.Component {
       if (message.passwordReset) alert.success(message.passwordReset);
       if (message.profileUpdated) alert.success(message.profileUpdated);
       if (message.profileDeleted) alert.success(message.profileDeleted);
+      if (message.logout) alert.success(message.logout);
     }
   }
 

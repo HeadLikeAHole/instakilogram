@@ -9,9 +9,7 @@ import { likePost } from '../../actions/postList';
 class PostLikeIcon extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      redirect: false
-    }
+    this.state = {redirect: false}
   }
 
   static propTypes = {

@@ -17,3 +17,14 @@
     max-height: 50px;
     max-width: 50px;
 }
+
+.nav-username {
+    line-height: 50px;
+    margin-left: 0.5rem;
+    margin-bottom: 0;
+}
+
+.nav-icons {
+    font-size: 2rem;
+    margin-right: 2rem;
+}

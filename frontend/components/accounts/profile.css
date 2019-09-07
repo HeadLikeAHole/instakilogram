@@ -16,6 +16,6 @@
     border-top: 1px solid black;
 }
 
-.cursor-pointer {
-    cursor: pointer;
+.logout-icon {
+    font-size: 2rem;
 }

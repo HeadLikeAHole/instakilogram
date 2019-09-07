@@ -64,16 +64,6 @@
     max-width: 40px;
 }
 
-.post-username-link {
-    color: black;
-    font-weight: 600;
-}
-
-.post-username-link:hover {
-    color: black;
-    text-decoration: none;
-}
-
 .post-image {
     max-height: 200vh;
 }
@@ -92,6 +82,10 @@
 
 .time-ago {
     color: rgb(150, 150, 150);
+}
+
+.no-posts-yet {
+    font-size: 1.1rem;
 }
 
 @media (min-width: 768px) {

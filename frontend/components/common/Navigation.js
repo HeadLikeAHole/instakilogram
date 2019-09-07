@@ -2,11 +2,8 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import Row from 'react-bootstrap/Row';
 import Image from 'react-bootstrap/Image';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
 // integration between React Router and React Bootstrap
 // makes links behave like bootstrap links when wrapping them
 // ordinary Link component breaks bootstrap styling
@@ -16,8 +13,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import './navigation.css';
-import { logout } from '../../actions/auth';
-
+import SearchBar from './SearchBar';
 
 const Navigation = props => {
   const scrollToTop = () => window.scrollTo(0, 0);
@@ -25,13 +21,14 @@ const Navigation = props => {
   const { isAuthenticated, user } = props.auth;
 
   const authenticatedLinks = (
-    <NavDropdown alignRight title={user && user.username} id="collasible-nav-dropdown" className="mr-1">
-      <LinkContainer to="/post-add">
-        <NavDropdown.Item>Добавить фото</NavDropdown.Item>
-      </LinkContainer>
-      <LinkContainer to={`/profile/${user && user.id}`}><NavDropdown.Item>Профиль</NavDropdown.Item></LinkContainer>
-      <NavDropdown.Item onClick={props.logout}>Выйти</NavDropdown.Item>
-    </NavDropdown>
+    <Row className="align-items-center">
+      <LinkContainer to="/post-add"><i title="Добавить новое фото" className="far fa-plus-square nav-icons cursor-pointer"></i></LinkContainer>
+      <LinkContainer to="/all"><i title="Фотографии всех пользователей" className="far fa-images nav-icons cursor-pointer"></i></LinkContainer>
+      <div>
+        <Link to={`/profile/${user.id}`}><Image src={user.profile_image} roundedCircle className="profile-img cursor-pointer"/></Link>
+        <Link to={`/profile/${user.id}`} className="nav-username username-link">{user.username}</Link>
+      </div>
+    </Row>
   );
 
   const guestLink = <Link to="/login">Войти</Link>;
@@ -52,15 +49,9 @@ const Navigation = props => {
         <Navbar.Toggle aria-controls="burgerize" />
         <Navbar.Collapse id="burgerize" className="float-right">
           <Nav className="mx-auto">
-            <Form inline>
-              <FormControl type="text" placeholder="Поиск" className="form-control-sm mr-sm-2 search-color" />
-              {/* class my-3 creates margin top and bottom equal to 3 */}
-              <Button variant="outline-dark" size="sm" className="my-3">Поиск</Button>
-            </Form>
+            <SearchBar />
           </Nav>
           <Nav className="float-lg-right">
-            {/* if user is logged-in display profile image */}
-            <Image src={user && user.profile_image} roundedCircle className="profile-img" />
             {isAuthenticated ? authenticatedLinks : guestLink}
           </Nav>
         </Navbar.Collapse>
@@ -71,8 +62,7 @@ const Navigation = props => {
 
 
 Navigation.propTypes = {
-  auth: PropTypes.object.isRequired,
-  logout: PropTypes.func.isRequired
+  auth: PropTypes.object.isRequired
 };
 
 
@@ -81,4 +71,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps, { logout })(Navigation);
+export default connect(mapStateToProps)(Navigation);

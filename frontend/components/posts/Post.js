@@ -55,7 +55,7 @@ class Post extends React.Component {
             <Col>
               {/* user's profile picture and username are wrapped in links where {user} is user's id which is the same as user's profile id */}
               <Link to={`/profile/${user}`}><Image src={profile_image} roundedCircle className="mr-2 post-profile-img" /></Link>
-              <Link to={`/profile/${user}`} className="post-username-link">{username}</Link>
+              <Link to={`/profile/${user}`} className="username-link">{username}</Link>
               {/* if user is owner of the post display dropdown menu */}
               {isOwner && <PostEditDelete post={post} />}
             </Col>
