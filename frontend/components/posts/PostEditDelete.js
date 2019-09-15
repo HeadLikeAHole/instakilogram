@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import { deletePost } from '../../actions/postList';
+// post detail modal
 import { toggleModal } from '../../actions/modal';
 
 
@@ -26,6 +27,7 @@ class PostEditDelete extends React.Component {
     toggleModal: PropTypes.func.isRequired
   };
 
+  // delete confirmation modal
   toggleModal = () => this.setState({show: !this.state.show});
 
   // if argument is toggleModal function then call it to close modal

@@ -2,15 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Row from 'react-bootstrap/Row';
-import Image from 'react-bootstrap/Image';
 import FollowButton from './FollowButton';
+import { Link } from 'react-router-dom';
 
+import ProfileImage from './ProfileImage';
 
 
 const User = props => {
   return (
     <Row noGutters={true} className="mb-2 justify-content-between">
-      <span><Image src={props.user.image} roundedCircle className="profile-img" /> {props.user.username}</span>
+      <Row noGutters={true} className="align-items-center">
+        <Link to={`/profile/${props.user.id}`}><ProfileImage src={props.user.image} className="mr-2 profile-img cursor-pointer" /></Link>
+        <Link to={`/profile/${props.user.id}`} className="cursor-pointer username-link">{props.user.username}</Link>
+      </Row>
       {/* profile and user ids are the same*/}
       <FollowButton profile_id={props.user.id} followers={props.user.followers} page={props.page} />
     </Row>

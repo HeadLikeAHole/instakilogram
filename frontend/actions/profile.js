@@ -1,19 +1,37 @@
-import { LOAD_PROFILE, USER_UPDATE, DELETE_PROFILE_SUCCESS, REMOVE_PROFILE, PASSWORD_CHANGE_SUCCESS } from './types';
+import {
+  PROFILE_LOADING,
+  PROFILE_LOADED,
+  PROFILE_ERROR,
+  USER_UPDATE,
+  DELETE_PROFILE,
+  REMOVE_PROFILE,
+  PASSWORD_CHANGE_SUCCESS
+} from './types';
 import { createMessage, returnErrors } from './messages';
 import { composeHeaders } from './auth';
 
 
 // load profile from the server and send it to profile reducer through dispatch function
 export const loadProfile = (id, prefillForm) => dispatch => {  // dispatch action
+  dispatch({ type: PROFILE_LOADING });
   fetch(`/api/accounts/profile/${id}`)
-    .then(response => response.json())
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+       throw response;
+      }
+    })
     .then(data => {
-      dispatch({type: LOAD_PROFILE, payload: data});
+      dispatch({type: PROFILE_LOADED, payload: data});
       // prefillForm function is passed down from profile edit component to prefill form fields
       if (prefillForm) prefillForm(data)
     }).catch(error => {
       const status = error.status;
-      error.json().then(msg => dispatch(returnErrors(msg, status)));
+      error.json().then(msg => {
+        dispatch(returnErrors(msg, status));
+        dispatch({ type: PROFILE_ERROR })
+      });
   })
 };
 
@@ -28,7 +46,9 @@ export const updateProfile = (id, profile, history) => (dispatch, getState) => {
       });
 
   const profileData = new FormData();
-  profileData.append('image', profile.imageFile, profile.imageFile.name);
+  if (profile.imageFile) {
+    profileData.append('image', profile.imageFile, profile.imageFile.name);
+  }
   profileData.append('info', profile.info);
 
   let payload;
@@ -57,16 +77,22 @@ export const updateProfile = (id, profile, history) => (dispatch, getState) => {
       // redirect to profile page after successful submission
       history.push(`${id}/`);
       dispatch(createMessage({profileUpdated: 'Профиль был обновлен'}))
-    }).catch(error => console.log(error))
+    }).catch(error => {
+      const status = error.status;
+      error.json().then(msg => dispatch(returnErrors(msg, status)));
+    })
 };
 
 
 export const deleteProfile = history => (dispatch, getState) => {
   fetch(`api/accounts/user/`, {method: 'DELETE', headers: composeHeaders(getState)})
     .then(() => {
-      history.push('/');
       dispatch(createMessage({profileDeleted: 'Профиль был удален'}));
-      dispatch({ type: DELETE_PROFILE_SUCCESS })
+      dispatch({ type: DELETE_PROFILE });
+      history.push('/');
+    }).catch(error => {
+      const status = error.status;
+      error.json().then(msg => dispatch(returnErrors(msg, status)));
     })
 };
 

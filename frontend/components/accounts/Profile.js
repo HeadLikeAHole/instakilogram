@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 
@@ -13,6 +12,7 @@ import PostDetailModal from '../posts/PostDetailModal';
 import UserListModal from '../common/UserListModal';
 import FollowButton from '../common/FollowButton';
 import LogoutIcon from './LogoutIcon';
+import ProfileImage from '../common/ProfileImage';
 import { loadProfile } from '../../actions/profile';
 import { removeProfile } from '../../actions/profile';
 import { removeUserList } from '../../actions/userList';
@@ -95,22 +95,22 @@ class Profile extends React.Component {
     return (
       <React.Fragment>
         <Row noGutters={true} className="mx-2 my-3 my-sm-5">
-          <Col sm={4}><Image src={profile.image} roundedCircle className="d-block mx-auto mb-2 w-50" /></Col>
-          <Col sm={8}>
-            <Row className="mb-3 justify-content-around justify-content-sm-start align-items-center">
+          <Col sm={3}><ProfileImage src={profile.image} className="mx-auto mb-2 w-75" /></Col>
+          <Col sm={9}>
+            <Row noGutters={true} className="mb-3 justify-content-around justify-content-sm-start align-items-center">
               <span className="mr-3 font-italic p-p-username">{profile.user && profile.user.username}</span>
               {authorized ?
                 <><Link to="/profile/edit"><Button variant="light" className="font-weight-bold">Редактировать Профиль</Button></Link> <LogoutIcon /></> :
                 followButton}
             </Row>
-            <Row className="mb-3 justify-content-around justify-content-sm-start">
+            <div className="mb-3 justify-content-around justify-content-sm-start">
               <span className="mr-5"><span className="font-weight-bold">{profile.user_posts_count && profile.user_posts_count}</span> {pluralize('post', profile.user_posts_count && profile.user_posts_count)}</span>
               {/* "подписчики" are "followers" */}
-              <span className="mr-5 cursor-pointer" onClick={() => this.toggleModal('подписчики')}><span className="font-weight-bold">{profile.id && profile.followers_count}</span> {pluralize('follower', profile.followers_count)}</span>
-              <span className="cursor-pointer" onClick={() => this.toggleModal('подписки')}><span className="font-weight-bold">{profile.id && profile.following_count}</span> {pluralize('following', profile.following_count)}</span>
-            </Row>
-            <Row className="mb-1 font-weight-bold">{profile.user && profile.user.first_name} {profile.user && profile.user.last_name}</Row>
-            <Row>{profile.info}</Row>
+              <span className="mr-5 cursor-pointer" onClick={() => this.toggleModal('Подписчики:')}><span className="font-weight-bold">{profile.id && profile.followers_count}</span> {pluralize('follower', profile.followers_count)}</span>
+              <span className="cursor-pointer" onClick={() => this.toggleModal('Подписки:')}><span className="font-weight-bold">{profile.id && profile.following_count}</span> {pluralize('following', profile.following_count)}</span>
+            </div>
+            <div className="mb-1 font-weight-bold">{profile.user && profile.user.first_name} {profile.user && profile.user.last_name}</div>
+            <div>{profile.info}</div>
           </Col>
         </Row>
         <hr className="mb-0" />
@@ -139,7 +139,7 @@ class Profile extends React.Component {
 // make state available to Profile component though props
 const mapStateToProps = state => ({
   authUser: state.auth.user,
-  profile: state.profile,
+  profile: state.profile.profileData,
   modalOpen: state.modal.modalOpen
 });
 

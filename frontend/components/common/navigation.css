@@ -4,18 +4,13 @@
     z-index: 99;
 }
 
-.search-color {
-    background-color: rgb(250, 250, 255);
-}
-
 .logo {
     font-family: 'Special Elite', cursive;
     font-size: 25px;
 }
 
-.profile-img {
-    max-height: 50px;
-    max-width: 50px;
+.search-color {
+    background-color: rgb(250, 250, 255);
 }
 
 .nav-username {

@@ -1,20 +1,31 @@
-import { LOAD_PROFILE, UPDATE_PROFILE, UPDATE_PROFILE_POSTS, REMOVE_PROFILE } from '../actions/types';
+import {
+  PROFILE_LOADING,
+  PROFILE_LOADED,
+  UPDATE_PROFILE,
+  PROFILE_ERROR,
+  REMOVE_PROFILE
+} from '../actions/types';
 
 
-export default function (state = {}, action) {
+const initialState = {
+  isLoading: false,
+  profileData: {}
+};
+
+
+export default function (state = initialState, action) {
   switch (action.type) {
-    case LOAD_PROFILE:
-      return action.payload;
+    case PROFILE_LOADING:
+      return {...state, isLoading: true};
+    case PROFILE_LOADED:
+      return {isLoading: false, profileData: action.payload};
     // update profile' followers count when following and unfollowing this profile
     case UPDATE_PROFILE:
-      return {...state, followers_count: action.payload.followers_count, following_count: action.payload.following_count};
-    // update user's post in profile page when post is deleted in post detail modal
-    case UPDATE_PROFILE_POSTS:
-      const postIndex = state.user_posts.findIndex(post => post.id === action.payload);
-      const newUserPosts = state.user_posts.filter((element, index) => index !== postIndex);
-      return {...state, user_posts: newUserPosts};
+      return {...state, profileData: {...state.profileData, followers_count: action.payload.followers_count, following_count: action.payload.following_count}};
+    case PROFILE_ERROR:
+      return {...state, isLoading: false};
     case REMOVE_PROFILE:
-      return {};
+      return initialState;
     default:
       return state
   }

@@ -1,10 +1,9 @@
-.profile-edit-img {
-    max-height: 100px;
-    max-width: 100px;
-}
-
 .blue-text {
     color: dodgerblue;
+}
+
+.blue-text:active {
+    color: #967ddb;
 }
 
 .clear {

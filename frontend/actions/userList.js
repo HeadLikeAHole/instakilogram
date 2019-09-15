@@ -7,20 +7,21 @@ export const loadUserList = (title, id, next) => dispatch => {
   // select necessary url for api call
   let url;
   switch (title) {
-    case 'подписчики':
+    case 'Подписчики:':
       url = `api/accounts/profile/${id}/followers/`;
       break;
-    case 'подписки':
+    case 'Подписки:':
       url = `api/accounts/profile/${id}/following/`;
       break;
-    case 'публикацию лайкнули':
+    case 'Публикацию лайкнули:':
       url = `api/posts/${id}/like-list/`;
       break;
-    case 'комментарий лайкнули':
+    case 'Комментарий лайкнули:':
       url = `api/posts/comment/${id}/like-list/`;
       break;
   }
   // if "next" url is passed to this function then load it otherwise just load /api/posts/${post_id}/comments/ url
+  console.log(url);
   fetch(`${next ? next : url}`)
     .then(response => {
       if (response.ok) {

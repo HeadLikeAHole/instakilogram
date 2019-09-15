@@ -5,6 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner'
 
 import PostTile from './PostTile';
+import NoPostsYet from './NoPostsYet';
 import { loadPostSlider, removePostSlider } from '../../actions/postSlider';
 
 
@@ -51,14 +52,18 @@ class PostGrid extends React.Component {
 
   render() {
     const { isLoading, posts} = this.props.postSlider;
+
     return (
-      <Row>
-        {/* loop through posts */}
-        {posts.map(
-          post => <PostTile key={post.id} post={post} />
-        )}
-        {isLoading && <div className="w-100 my-3 text-center"><Spinner animation="grow" className="comment-spinner" /></div>}
-      </Row>
+      <>
+        {posts.length === 0 && !isLoading && <NoPostsYet savedPosts={this.props.savedPosts} />}
+        <Row>
+          {/* loop through posts */}
+          {posts.map(
+            post => <PostTile key={post.id} post={post} />
+          )}
+          {isLoading && <div className="w-100 my-3 text-center"><Spinner animation="grow" className="comment-spinner" /></div>}
+        </Row>
+      </>
     )
   }
 }

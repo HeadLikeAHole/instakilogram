@@ -3,12 +3,14 @@ import {
   POST_SLIDER_LOADING,
   POST_SLIDER_LOADED,
   POST_SLIDER_MORE_LOADED,
+  DELETE_SLIDER_POST,
   POST_SLIDER_ERROR,
   REMOVE_POST_SLIDER
 } from '../actions/types';
 
 
 const initialState = {
+  // id is the current post's id displayed in the post slider
   id: null,
   isLoading: false,
   count: null,
@@ -40,6 +42,10 @@ export default function (state = initialState, action) {
         previous: action.payload.previous,
         posts: [...state.posts, ...action.payload.posts]
       };
+    case DELETE_SLIDER_POST:
+      // filter out deleted post id of which is sent in payload
+      const updatedPosts =  state.posts.filter(post => post.id !== action.payload);
+      return {...state, posts: [...updatedPosts]};
     case POST_SLIDER_ERROR:
       return {...state, isLoading: false};
     case REMOVE_POST_SLIDER:

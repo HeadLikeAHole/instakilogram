@@ -44,9 +44,6 @@ class PostListFeed extends React.Component {
   render() {
     const { posts, isLoading } = this.props.postList;
 
-    let noPostsYet = false;
-    if (posts && posts.length === 0) noPostsYet = true;
-
     const card = (
       <Card className="mx-auto mt-5 no-posts-yet my-container">
         <Card.Body>
@@ -60,7 +57,7 @@ class PostListFeed extends React.Component {
     return (
       <>
         {/* if no posts sent by server display card */}
-        {noPostsYet && card}
+        {posts.length === 0 && !isLoading && card}
         <div>
           {/* loop through posts */}
           {posts && posts.map(

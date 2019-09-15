@@ -14,7 +14,7 @@ const initialState = {
   count: null,
   next: null,
   previous: null,
-  posts: null
+  posts: []
 };
 
 

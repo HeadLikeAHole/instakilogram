@@ -21,7 +21,7 @@
 
 /* override bootstrap class to move dropdown menu a little bit down */
 .dropdown-menu {
-    margin-top: 0.5rem;
+    margin-top: 1.5rem;
 }
 
 /* remove arrow after dropdown title */
@@ -59,9 +59,8 @@
     color: rgba(0, 0, 0, 1);
 }
 
-.post-profile-img {
-    max-height: 40px;
-    max-width: 40px;
+.post-username {
+    line-height: 40px;
 }
 
 .post-image {

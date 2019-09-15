@@ -18,6 +18,7 @@ class UserListModal extends React.Component {
 
   static propTypes = {
     show: PropTypes.bool.isRequired,
+    // url in loadUserList function depends on title
     title: PropTypes.string,
     toggleModal: PropTypes.func.isRequired,
     id: PropTypes.number.isRequired,

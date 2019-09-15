@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
+from django.conf import settings
 
 from .models import Profile
 
@@ -85,6 +86,13 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_user_posts_count(self, obj):
         return obj.user.post_set.count()
+
+    def update(self, instance, validated_data):
+        # if user deletes profile image then image isn't sent in api request and default profile image is set
+        instance.image = validated_data.get('image', 'profile_default.png')
+        instance.info = validated_data.get('info', instance.info)
+        instance.save()
+        return instance
 
 
 # profile's follower/following

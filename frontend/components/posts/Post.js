@@ -1,8 +1,6 @@
 import React from 'react';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
-import Image from 'react-bootstrap/Image';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -16,6 +14,7 @@ import PostLikeIcon from './PostLikeIcon';
 import PostSaveIcon from './PostSaveIcon';
 import { pluralize } from '../../helperFunctions';
 import UserListModal from '../common/UserListModal';
+import ProfileImage from '../common/ProfileImage';
 
 
 // select Russian language in timestamp
@@ -51,14 +50,16 @@ class Post extends React.Component {
     return (
       <Card className="mx-auto my-5 my-container">
         <Card.Body className="p-3">
-          <Row>
-            <Col>
-              {/* user's profile picture and username are wrapped in links where {user} is user's id which is the same as user's profile id */}
-              <Link to={`/profile/${user}`}><Image src={profile_image} roundedCircle className="mr-2 post-profile-img" /></Link>
-              <Link to={`/profile/${user}`} className="username-link">{username}</Link>
-              {/* if user is owner of the post display dropdown menu */}
-              {isOwner && <PostEditDelete post={post} />}
-            </Col>
+          <Row noGutters={true} className="justify-content-between">
+            {/* user's profile picture and username are wrapped in links where {user} is user's id which is the same as user's profile id */}
+            <Row noGutters={true}>
+              <Link to={`/profile/${user}`}>
+                <ProfileImage src={profile_image} className="mr-2 profile-img" />
+              </Link>
+              <Link to={`/profile/${user}`} className="username-link post-username">{username}</Link>
+            </Row>
+            {/* if user is owner of the post display dropdown menu */}
+            {isOwner && <PostEditDelete post={post} />}
           </Row>
         </Card.Body>
         <Card.Img variant="top" src={image} className="post-image" />
@@ -82,7 +83,7 @@ class Post extends React.Component {
         </Card.Body>
         <UserListModal
           show={this.state.showUserListModal}
-          title='публикацию лайкнули'
+          title='Публикацию лайкнули:'
           toggleModal={this.toggleModal}
           id={id}
         />

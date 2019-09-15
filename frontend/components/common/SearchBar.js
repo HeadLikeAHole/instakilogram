@@ -42,7 +42,7 @@ class SearchBar extends React.Component {
         <FormControl
           type="text"
           placeholder="Поиск"
-          className="form-control-sm mr-sm-2 search-color"
+          className="form-control-sm mr-sm-2 mt-4 mt-sm-0 search-color"
           value={this.state.query}
           onChange={this.handleChange}
         />

@@ -5,8 +5,13 @@
 }
 
 .p-d-profile-img {
-    max-height: 50px;
-    max-width: 50px;
+    height: 50px;
+    width: 50px;
+}
+
+.p-d-username {
+    position: relative;
+    top: -5px;
 }
 
 .p-d-border {
@@ -20,9 +25,17 @@
 .p-d-textarea {
     border: none;
     resize: none;
-    height: 1.8rem;
-    width: 90%;
+    width: 100%;
+    height: 5rem;
+    background-color: rgb(245, 245, 245);
+    border-radius: 5px;
+    padding: 0.5rem;
     margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.p-d-textarea:focus {
+    background-color: rgb(250, 250, 255);
 }
 
 /* comments-parent and comments-child classes are for hiding scrollbar */

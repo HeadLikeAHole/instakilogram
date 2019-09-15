@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Image from 'react-bootstrap/Image';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
@@ -13,13 +12,23 @@ import { loadProfile, updateProfile } from '../../actions/profile';
 import './profile-edit-delete.css';
 import PasswordChangeModal from './PasswordChangeModal';
 import ProfileDeleteModal from './ProfileDeleteModal';
+import ProfileImage from '../common/ProfileImage';
 
 
 class ProfileEditDelete extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '', email: '', first_name: '', last_name: '', imageFile: '', imageUrl: '', info: '', showPasswordModal: false, showDeleteModal: false
+      username: '',
+      email: '',
+      first_name: '',
+      last_name: '',
+      imageFile: '',
+      imageUrl: '',
+      info: '',
+      showPasswordModal: false,
+      showDeleteModal: false,
+      deletedImageUrl: ''
     };
     this.imgField = React.createRef();
   }
@@ -48,7 +57,7 @@ class ProfileEditDelete extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     // send profile id, post state and history method to update function
-    this.props.updateProfile(this.props.profile.id, this.state, this.props.history)
+    this.props.updateProfile(this.props.profile.profileData.id, this.state, this.props.history)
   };
 
   prefillForm = profile => {
@@ -71,6 +80,10 @@ class ProfileEditDelete extends React.Component {
       });
   };
 
+  deleteProfileImage = () => this.setState({imageFile: '', imageUrl: '', deletedImageUrl: this.state.imageUrl});
+
+  cancelDeleteProfileImage = () => this.setState({imageUrl: this.state.deletedImageUrl, deletedImageUrl: ''});
+
   componentDidMount() {
     if (this.props.authUser) {
       this.props.loadProfile(this.props.authUser.id, this.prefillForm);
@@ -87,7 +100,19 @@ class ProfileEditDelete extends React.Component {
   }
 
   render() {
-    const { username, email, first_name, last_name, imageUrl, info } = this.state;
+    const { username, email, first_name, last_name, imageUrl, deletedImageUrl, info } = this.state;
+    const { isLoading } = this.props.profile;
+
+    const deleteImgLink = <div className="mt-3 blue-text cursor-pointer" onClick={this.deleteProfileImage}>Удалить фотографию</div>;
+    const cancelDeleteImgLink = <div className="mt-3 blue-text cursor-pointer" onClick={this.cancelDeleteProfileImage}>Отменить удаление</div>;
+    let linkToDisplay;
+    if (!imageUrl.endsWith('profile_default.png') && !isLoading) {
+      if(deletedImageUrl) {
+        linkToDisplay = cancelDeleteImgLink
+      } else {
+        linkToDisplay = deleteImgLink
+      }
+    }
 
     return (
       <Card className="p-3 mx-auto mt-5 my-container">
@@ -95,10 +120,11 @@ class ProfileEditDelete extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <Form.Group as={Row} className="align-items-center">
             <Col sm={3}>
-              <Image src={imageUrl} roundedCircle className="my-2 profile-edit-img cursor-pointer" onClick={() => this.imgField.current.click()} />
+              <ProfileImage src={imageUrl} className={`my-2 w-75 text-center ${imageUrl && "cursor-pointer"}`} onClick={() => this.imgField.current.click()} />
             </Col>
             <Col sm={9}>
-              <span className="blue-text cursor-pointer" onClick={() => this.imgField.current.click()}>Сменить фото профиля</span>
+              <div className="blue-text cursor-pointer" onClick={() => this.imgField.current.click()}>Сменить фотографию</div>
+              {linkToDisplay}
             </Col>
             {/* image field */}
             {/* "value = event.target.files[0]" doesn't work on file input field */}
@@ -142,11 +168,11 @@ class ProfileEditDelete extends React.Component {
             </Col>
           </Form.Group>
           <div className="float-right">
-            <p className="blue-text cursor-pointer" onClick={this.togglePasswordModal}>Сменить пароль</p>
-            <p className="blue-text cursor-pointer" onClick={this.toggleDeleteModal}>Удалить аккаунт</p>
+            <div className="my-3 blue-text cursor-pointer" onClick={this.togglePasswordModal}>Сменить пароль</div>
+            <div className="mb-5 blue-text cursor-pointer" onClick={this.toggleDeleteModal}>Удалить профиль</div>
           </div>
           <Form.Group className="mt-5 clear">
-            <Link to={`/profile/${this.props.profile.id}`}><Button variant="outline-dark" className="mr-2">Отмена</Button></Link>
+            <Link to={`/profile/${this.props.profile.profileData.id}`}><Button variant="outline-dark" className="mr-2">Отмена</Button></Link>
             {/* form isn't submitted without type='submit' attribute */}
             <Button type='submit' variant="outline-dark">Сохранить</Button>
           </Form.Group>

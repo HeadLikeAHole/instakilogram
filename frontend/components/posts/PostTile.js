@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Col from 'react-bootstrap/Col';
 
 import PostHover from './PostHover';
-import './post-tile.css';
 import { currentPostId } from '../../actions/postSlider';
 import { toggleModal } from '../../actions/modal';
 
@@ -23,8 +22,10 @@ class PostTile extends React.Component {
     toggleModal: PropTypes.func.isRequired
   };
 
-  // find out what mode the image in (landscape or portrait)
-  // to apply appropriate css class
+  // find out what mode the image is in (landscape or portrait) to apply appropriate css class
+  // this method doesn't work properly inside componentDidMount method since componentDidMount doesn't wait
+  // for images to load and thus some image's width and height equal to zero on rendering
+  // instead it should be called by image event "onLoad"
   landscapeOrPortrait = () => {
     const width = this.imgElement.current.naturalWidth;
     const height = this.imgElement.current.naturalHeight;
@@ -44,12 +45,8 @@ class PostTile extends React.Component {
     this.props.toggleModal()
   };
 
-  componentDidMount() {
-    this.landscapeOrPortrait();
-  }
-
   render() {
-    const { likes_count, comments_count } = this.props.post
+    const { likes_count, comments_count } = this.props.post;
     return (
       <Col sm={6} md={4} className="my-3">
         <div
@@ -58,7 +55,12 @@ class PostTile extends React.Component {
           onMouseLeave={this.handleHover}
           onClick={this.handleClick}
         >
-          <img src={this.props.post.image} className={`${this.state.mode}`} ref={this.imgElement} />
+          <img
+            src={this.props.post.image}
+            className={this.state.mode}
+            ref={this.imgElement}
+            onLoad={this.landscapeOrPortrait}
+          />
           {this.state.postHover && <PostHover likes_count={likes_count} comments_count={comments_count} />}
         </div>
       </Col>

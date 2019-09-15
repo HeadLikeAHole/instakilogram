@@ -1,15 +1,18 @@
 import React from 'react';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom'
+import Button from 'react-bootstrap/Button';
+
 import { addComment, addReply, editComment } from '../../actions/commentList';
 import { addCommentFormInfo } from '../../actions/commentFormInfo';
-import { connect } from 'react-redux';
 
 
 class CommentForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: ''
+      text: '', disabled: true, redirect: false
     };
     this.textArea = React.createRef();
   }
@@ -18,35 +21,57 @@ class CommentForm extends React.Component {
     addComment: PropTypes.func.isRequired,
     addReply: PropTypes.func.isRequired,
     editComment: PropTypes.func.isRequired,
-    addCommentFormInfo: PropTypes.func.isRequired
+    addCommentFormInfo: PropTypes.func.isRequired,
+    post_id: PropTypes.number.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
+    commentFormInfo: PropTypes.object.isRequired
   };
 
-  handleChange = event => {
-    this.setState({text: event.target.value});
+  // OK button is disabled if textarea doesn't contain any characters
+  toggleDisableAttribute = () => {
+    if (this.state.text) {
+      this.setState({disabled: false})
+    } else {
+      this.setState({disabled: true})
+    }
   };
 
-  clearForm = () => this.setState({ text: '' });
+  handleChange = event => this.setState({text: event.target.value}, () => this.toggleDisableAttribute());
+
+  clearForm = () => this.setState({text: '', disabled: true});
 
   // submit comment
   handleSubmit = event => {
     event.preventDefault();
-    // if commentFormInfo doesn't contain text comment is added otherwise updated
-    if (!this.props.commentFormInfo.text) {
-      // if commentFormInfo doesn't contain parent_id comment is added otherwise reply is added
-      if (!this.props.commentFormInfo.parent_id) {
-        this.props.addComment(this.state.text, this.props.post_id);
+    if (this.props.isAuthenticated) {
+      // if commentFormInfo doesn't contain text then comment is added otherwise updated
+      if (!this.props.commentFormInfo.text) {
+        // if commentFormInfo doesn't contain parent_id comment is added otherwise reply is added
+        if (!this.props.commentFormInfo.parent_id) {
+          this.props.addComment(this.state.text, this.props.post_id);
+        } else {
+          this.props.addReply(
+            this.state.text,
+            this.props.post_id,
+            this.props.commentFormInfo.parent_id,
+            this.props.addCommentFormInfo // resets state after successful reply submission
+          );
+        }
       } else {
-        this.props.addReply(
-          this.state.text,
-          this.props.post_id,
-          this.props.commentFormInfo.parent_id,
-          this.props.addCommentFormInfo // resets state after successful reply submission
-        );
+        this.props.editComment(this.state.text, this.props.commentFormInfo.comment_id, this.props.commentFormInfo.parent_id);
       }
+      this.clearForm();
     } else {
-      this.props.editComment(this.state.text, this.props.commentFormInfo.comment_id, this.props.commentFormInfo.parent_id);
+      this.setState({ redirect: true })
     }
-    this.clearForm()
+  };
+
+  // clear form, disable "OK" button and empty "CommentFormInfo" object in the redux state so if you start
+  // replying to a comment and click "Отмена" and then want to add a regular comment you don't reply
+  // to the comment saved in "CommentFormInfo" object
+  handleCancel = () => {
+    this.clearForm();
+    this.props.addCommentFormInfo({})
   };
 
   // if "Ответить" link is clicked @<username> is added to textarea and textarea is focused
@@ -66,15 +91,16 @@ class CommentForm extends React.Component {
     }
   }
 
-  // empty "CommentFormInfo" state when navigating to a different page
+  // empty "CommentFormInfo" object in the redux state when navigating to a different page
   // so when you return to post detail and add a comment you don't reply to a comment saved in "CommentFormInfo"
+  // after replying to it before
   componentWillUnmount() {
     this.props.addCommentFormInfo({})
   }
 
   render() {
-    return (
-      <React.Fragment>
+    const commentForm =
+      <>
         {/* textarea for comment text */}
         <textarea
           placeholder="Добавить комментарий..."
@@ -83,15 +109,21 @@ class CommentForm extends React.Component {
           onChange={this.handleChange}
           ref={this.textArea}
         ></textarea>
-        {/* link which submits comment*/}
-        <a href="" className="pr-0 nav-link" onClick={this.handleSubmit}>OK</a>
-      </React.Fragment>
+        <Button variant="outline-dark" size="sm" className="my-2" onClick={this.handleCancel}>Отмена</Button>
+        <Button variant="outline-dark" size="sm" className="ml-2 my-2" disabled={this.state.disabled} onClick={this.handleSubmit}>OK</Button>
+      </>;
+
+    return (
+      <>
+        {!this.state.redirect ? commentForm : <Redirect to="/login" />}
+      </>
     )
   }
 }
 
 
 const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
   commentFormInfo: state.commentFormInfo
 });
 

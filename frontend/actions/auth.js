@@ -123,8 +123,9 @@ export const logout = history => (dispatch, getState) => {
       history.push('/')
     })
     .catch(error => {
-      console.log(error);
-  })
+      const status = error.status;
+      error.json().then(msg => dispatch(returnErrors(msg, status)));
+    })
 };
 
 

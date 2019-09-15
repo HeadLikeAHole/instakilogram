@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
-import Image from 'react-bootstrap/Image';
+import Spinner from 'react-bootstrap/Spinner';
 // integration between React Router and React Bootstrap
 // makes links behave like bootstrap links when wrapping them
 // ordinary Link component breaks bootstrap styling
@@ -14,24 +14,27 @@ import PropTypes from 'prop-types';
 
 import './navigation.css';
 import SearchBar from './SearchBar';
+import ProfileImage from './ProfileImage';
+
 
 const Navigation = props => {
   const scrollToTop = () => window.scrollTo(0, 0);
 
-  const { isAuthenticated, user } = props.auth;
+  const { isAuthenticated, isLoading, user } = props.auth;
 
   const authenticatedLinks = (
-    <Row className="align-items-center">
+    <Row noGutters={true} className="justify-content-between justify-content-sm-start align-items-center">
       <LinkContainer to="/post-add"><i title="Добавить новое фото" className="far fa-plus-square nav-icons cursor-pointer"></i></LinkContainer>
       <LinkContainer to="/all"><i title="Фотографии всех пользователей" className="far fa-images nav-icons cursor-pointer"></i></LinkContainer>
-      <div>
-        <Link to={`/profile/${user.id}`}><Image src={user.profile_image} roundedCircle className="profile-img cursor-pointer"/></Link>
+      <Row noGutters={true} className="align-items-center">
+        <Link to={`/profile/${user.id}`}><ProfileImage src={user.profile_image} className="profile-img cursor-pointer"/></Link>
         <Link to={`/profile/${user.id}`} className="nav-username username-link">{user.username}</Link>
-      </div>
+      </Row>
     </Row>
   );
 
-  const guestLink = <Link to="/login">Войти</Link>;
+  // hide link while loading user
+  const guestLink = () => isLoading ? <Spinner animation="grow" /> : <Link to="/login">Войти</Link>;
 
   return (
     <Navbar fixed="top" expand="lg" className="custom-nav">
@@ -52,7 +55,7 @@ const Navigation = props => {
             <SearchBar />
           </Nav>
           <Nav className="float-lg-right">
-            {isAuthenticated ? authenticatedLinks : guestLink}
+            {isAuthenticated ? authenticatedLinks : guestLink()}
           </Nav>
         </Navbar.Collapse>
       </Container>

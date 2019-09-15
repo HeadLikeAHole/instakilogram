@@ -8,6 +8,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { loadPostListSearch, deletePost, removePostList } from '../../actions/postList';
 import Post from './Post';
 import './post.css';
+import { pluralize } from '../../helperFunctions';
 
 
 class PostListSearch extends React.Component {
@@ -47,16 +48,10 @@ class PostListSearch extends React.Component {
     const { posts, count, isLoading } = this.props.postList;
     const query = this.props.location.search.slice(7);
 
-    let match = false;
-    if (posts && posts.length > 0) match = true;
-
-    let noMatch = false;
-    if (posts && posts.length === 0) noMatch = true;
-
     const card1 = (
       <Card className="mx-auto mt-5 no-posts-yet my-container">
         <Card.Body>
-          По запросу "{query}" найдено <span className="font-weight-bold">{posts && count}</span> фото
+          По запросу <span className="font-weight-bold">"{query}"</span> найдено {posts && count} {pluralize('post', count)}.
         </Card.Body>
       </Card>
     );
@@ -64,20 +59,26 @@ class PostListSearch extends React.Component {
     const card2 = (
       <Card className="mx-auto mt-5 no-posts-yet my-container">
         <Card.Body>
-          По запросу "{query}" ничего не найдено
+          По запросу <span className="font-weight-bold">"{query}"</span> ничего не найдено.
         </Card.Body>
       </Card>
     );
 
+    let cardToDisplay;
+    if (posts.length > 0) {
+      cardToDisplay = card1
+    } else {
+      cardToDisplay = card2
+    }
+
     return (
       <>
-        {/* if there is a match display card1 */}
-        {match && card1}
-        {/* if no posts match query display card2 */}
-        {noMatch && card2}
+        {/* don't show card before search is complete */}
+        {!isLoading && cardToDisplay}
+
         <div>
           {/* loop through posts */}
-          {posts && posts.map(
+          {posts.map(
             post => <Post key={post.id} post={post} deletePost={this.props.deletePost} />
           )}
         </div>

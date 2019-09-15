@@ -21,6 +21,11 @@ body {
     color: rgb(130, 130, 130);
 }
 
+.profile-img {
+    height: 40px;
+    width: 40px;
+}
+
 .username-link {
     color: black;
     font-weight: 600;
@@ -34,3 +39,37 @@ body {
 .cursor-pointer {
     cursor: pointer;
 }
+
+/* ------------------------------- */
+/* make image a responsive square  */
+.square {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 100%;
+}
+
+/* turn image from square to circle  */
+.square-to-circle {
+    border-radius: 50%;
+}
+
+/* crop and center image */
+.square img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+/* if image's width is greater than height */
+.landscape {
+    width: auto;
+    height: 100%;
+}
+
+/* if image's height is greater than width */
+.portrait {
+    width: 100%;
+    height: auto;
+}
+/* ------------------------------- */

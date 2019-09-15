@@ -6,7 +6,7 @@ import {
   REMOVE_POST_LIST,
   UPDATE_POST,
   UPDATE_POST_DETAIL,
-  UPDATE_PROFILE_POSTS,
+  DELETE_SLIDER_POST,
   DELETE_POST
 } from './types';
 import { createMessage, returnErrors } from './messages';
@@ -197,7 +197,7 @@ export const deletePost = (id, arg) => (dispatch, getState) => {  // dispatch ac
       if (typeof arg === "function") {
         // update user's post in profile page when post is deleted in post detail modal
         dispatch({
-          type: UPDATE_PROFILE_POSTS,
+          type: DELETE_SLIDER_POST,
           payload: id
         });
         arg();
@@ -210,7 +210,7 @@ export const deletePost = (id, arg) => (dispatch, getState) => {  // dispatch ac
         type: DELETE_POST,
         payload: id
       })
-    }).catch(err => console.log(err))
+    }).catch(error => console.log(error))
 };
 
 

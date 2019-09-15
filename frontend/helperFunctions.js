@@ -1,6 +1,13 @@
 // add correct ending to plural russian noun
 export const pluralize = (noun, number) => {
-  if (number === 1) {
+  // match a number that is just one digit "1" or a number that ends in "1" excluding numbers ending in "11"
+  const re1 = /\b1\b|[^1]1$/;
+
+  // match a number that is just one digit from "2" to "4"
+  // or a number that ends in digits from "2" to "4" excluding numbers ending in "12", "13", "14"
+  const re2 = /\b[2-4]\b|[^1][2-4]$/;
+
+  if (re1.test(number)) {
     switch (noun) {
       case 'like':
         return 'лайк';
@@ -15,22 +22,7 @@ export const pluralize = (noun, number) => {
       case 'following':
         return 'подписка';
     }
-  } else if (number === 0 || number > 4) {
-    switch (noun) {
-      case 'like':
-        return 'лайков';
-      case 'comment':
-        return 'комментариев';
-      case 'reply':
-        return 'ответов';
-      case 'post':
-        return 'публикаций';
-      case 'follower':
-        return 'подписчиков';
-      case 'following':
-        return 'подписок';
-    }
-  } else if (number > 1 || number < 5) {
+  } else if (re2.test(number)) {
     switch (noun) {
       case 'like':
         return 'лайка';
@@ -46,6 +38,19 @@ export const pluralize = (noun, number) => {
         return 'подписки';
     }
   } else {
-    return ''
+    switch (noun) {
+      case 'like':
+        return 'лайков';
+      case 'comment':
+        return 'комментариев';
+      case 'reply':
+        return 'ответов';
+      case 'post':
+        return 'публикаций';
+      case 'follower':
+        return 'подписчиков';
+      case 'following':
+        return 'подписок';
+    }
   }
 };

@@ -19,6 +19,7 @@ import PostLikeIcon from './PostLikeIcon';
 import PostSaveIcon from './PostSaveIcon';
 import { pluralize } from '../../helperFunctions';
 import UserListModal from '../common/UserListModal';
+import ProfileImage from '../common/ProfileImage';
 
 
 // select Russian language in timestamp
@@ -89,14 +90,14 @@ class PostDetail extends React.Component {
         </Col>
         <Col className="bg-white">
           {/* post author */}
-          <Row noGutters={true} className="p-3 align-items-center p-d-border-bottom">
-            <Col>
+          <Row noGutters={true} className="p-3 justify-content-between p-d-border-bottom">
+            <Row noGutters={true} className="align-items-center">
               <Link to={`/profile/${user}`}>
-                <Image src={profile_image} roundedCircle fluid className="mr-2 p-d-profile-img" />
+                <ProfileImage src={profile_image} className="mr-2 p-d-profile-img" />
               </Link>
-              <Link to={`/profile/${user}`} className="username-link">{username}</Link>
-              {isOwner && <PostEditDelete post={post} />}
-            </Col>
+              <Link to={`/profile/${user}`} className="username-link p-d-username">{username}</Link>
+            </Row>
+            {isOwner && <PostEditDelete post={post} />}
           </Row>
           {/* post description */}
           <Row noGutters={true} className="p-3 p-d-border-bottom">
@@ -110,13 +111,12 @@ class PostDetail extends React.Component {
           <Row noGutters={true} className="p-3 justify-content-between align-content-center p-d-border-bottom">
             <div>
               {id && <PostLikeIcon post_id={id} likes={likes} postDetail={true} />}
-              <i className="far fa-comment my-icon"></i>
               {id && <PostSaveIcon post_id={id} />}
             </div>
             <div className="float-right time-ago">
               <TimeAgo date={post.published} formatter={formatter} />
             </div>
-            <div className="w-100 my-1 likes-count">
+            <div className="w-100 my-2 likes-count">
               <span className="cursor-pointer" onClick={this.toggleModal}>{likes_count} {pluralize('like', likes_count)}</span>
             </div>
             <div>
@@ -124,14 +124,14 @@ class PostDetail extends React.Component {
             </div>
           </Row>
           {/* add comment field */}
-          <Row noGutters={true} className="px-3 py-2 justify-content-between align-content-center p-d-border-bottom">
+          <Row noGutters={true} className="px-3 py-2 justify-content-end p-d-border-bottom">
             {id && <CommentForm post_id={id} />}
           </Row>
         </Col>
         {id &&
           <UserListModal
             show={this.state.showUserListModal}
-            title='публикацию лайкнули'
+            title='Публикацию лайкнули:'
             toggleModal={this.toggleModal}
             id={id}
           />

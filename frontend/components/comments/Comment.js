@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Image from "react-bootstrap/Image";
 import { Link } from 'react-router-dom';
 import TimeAgo from 'react-timeago';
 import russianStrings from 'react-timeago/lib/language-strings/ru';
@@ -16,6 +15,8 @@ import CommentEditDelete from './CommentEditDelete';
 import CommentLike from './CommentLike';
 import { pluralize } from '../../helperFunctions';
 import UserListModal from "../common/UserListModal";
+import ProfileImage from "../common/ProfileImage";
+
 
 // select Russian language in timestamp
 const formatter = buildFormatter(russianStrings);
@@ -83,7 +84,7 @@ class Comment extends React.Component {
       <Row noGutters={true}>
         <Col xs={2} className="px-3 py-2 text-center">
           <Link to={`/profile/${comment.user}`}>
-            <Image src={comment.profile_image} roundedCircle fluid className="comment-profile-img" />
+            <ProfileImage src={comment.profile_image} className="profile-img" />
           </Link>
         </Col>
         <Col xs={10} className="py-1">
@@ -112,7 +113,7 @@ class Comment extends React.Component {
         </Col>
         <UserListModal
           show={this.state.showUserListModal}
-          title='комментарий лайкнули'
+          title='Комментарий лайкнули:'
           toggleModal={this.toggleModal}
           id={comment.id}
         />
