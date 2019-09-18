@@ -58,7 +58,7 @@ class PostDetailModal extends React.Component {
       <div className="my-modal">
         <span className="cross">&times;</span>
         <Container ref={this.slide}>
-          <Row className="align-items-center">
+          <Row>
             <Col sm={1} className="d-sm-block arrow" onClick={() => this.slidePost(-1)}>&#10094;</Col>
             <Col sm={10}><PostDetail /></Col>
             <Col sm={1} className="d-sm-block arrow" onClick={() => this.slidePost(1)}>&#10095;</Col>

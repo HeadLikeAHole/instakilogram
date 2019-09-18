@@ -1,12 +1,7 @@
 /* "p-d" stands for post detail */
 
 .p-d-image {
-    max-height: 200vh;
-}
-
-.p-d-profile-img {
-    height: 50px;
-    width: 50px;
+    max-height: 80rem;
 }
 
 .p-d-username {
@@ -18,6 +13,10 @@
     border: 1px solid rgb(230, 230, 230);
 }
 
+.p-d-border-left {
+    border-left: 1px solid rgb(230, 230, 230);
+}
+
 .p-d-border-bottom {
     border-bottom: 1px solid rgb(235, 235, 235);
 }
@@ -26,7 +25,7 @@
     border: none;
     resize: none;
     width: 100%;
-    height: 5rem;
+    height: 4rem;
     background-color: rgb(245, 245, 245);
     border-radius: 5px;
     padding: 0.5rem;
@@ -41,7 +40,7 @@
 /* comments-parent and comments-child classes are for hiding scrollbar */
 .comments-parent {
     width: 100%;
-    height: 25rem;
+    height: 21.5rem;
     overflow: hidden;
     position: relative;
 }

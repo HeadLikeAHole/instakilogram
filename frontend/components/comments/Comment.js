@@ -66,11 +66,18 @@ class Comment extends React.Component {
       if (authUser.id === comment.user) {
         isOwner = true
       }
+      // check if user has already liked the comment
       if (comment.likes) {
         if (comment.likes.includes(authUser.id)) {
           isLiked = true
         }
       }
+    }
+
+    // if comment has been edited then display (ред.) after time published
+    let edited = false;
+    if (comment.published !== comment.updated) {
+      edited = true
     }
 
     let replyShowHide;
@@ -94,7 +101,7 @@ class Comment extends React.Component {
             <span className="text-break">{comment.text}</span>
           </div>
           <div className="my-2 text-muted comment-info" onMouseEnter={this.handleHover} onMouseLeave={this.handleHover}>
-            <TimeAgo date={comment.published} formatter={formatter} />
+            <TimeAgo date={comment.published} formatter={formatter} /> {edited && <span className="comment-updated">(ред.)</span>}
             <span className="mx-3 cursor-pointer" onClick={this.toggleModal}>{comment.likes_count} {pluralize('like', comment.likes_count)}</span>
             {/* reply link */}
             <a href="" className="text-muted" onClick={this.handleReply}>Ответить</a>

@@ -1,4 +1,5 @@
-from rest_framework import generics, permissions, status
+from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import pagination
 from knox.models import AuthToken
@@ -21,7 +22,7 @@ User = get_user_model()
 
 class UserView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         return self.request.user
@@ -30,7 +31,7 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
 class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = PasswordChangeSerializer
     model = User
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
 
     def get_object(self, queryset=None):
         obj = self.request.user
@@ -121,6 +122,7 @@ class FollowerListPagination(pagination.PageNumberPagination):
 class FollowView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         # get current logged in user's profile
@@ -135,6 +137,7 @@ class FollowView(generics.RetrieveAPIView):
         return self.retrieve(request, *args, **kwargs)
 
 
+# list of user's followers
 class FollowersView(generics.ListAPIView):
     serializer_class = FollowerSerializer
     pagination_class = FollowerListPagination
@@ -144,6 +147,7 @@ class FollowersView(generics.ListAPIView):
         return profile.followers.order_by('-from_profile__id')
 
 
+# list of user's following
 class FollowingView(generics.ListAPIView):
     # the same serializer class is used here as in FollowersView
     serializer_class = FollowerSerializer

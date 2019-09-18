@@ -32,3 +32,16 @@
 .load-more {
     font-size: 0.9rem;
 }
+
+.no-comments {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.comment-updated {
+    font-size: 0.8rem;
+    margin-left: 3px;
+}

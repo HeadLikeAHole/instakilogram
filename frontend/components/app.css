@@ -5,6 +5,8 @@
     box-sizing: border-box;
     /* remove dotted outline around links */
     outline: none;
+    /* prevent long words from overflowing */
+    word-break: break-all;
 }
 
 body {

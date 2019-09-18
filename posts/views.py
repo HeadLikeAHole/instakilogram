@@ -17,7 +17,7 @@ User = get_user_model()
 
 
 class PostListPagination(pagination.PageNumberPagination):
-    page_size = 2
+    page_size = 20
 
     # change default "results" key to "posts" key for convenience
     def get_paginated_response(self, data):
@@ -96,6 +96,7 @@ class CommentListPagination(pagination.PageNumberPagination):
 class CommentListCreateView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
     pagination_class = CommentListPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         # self.kwargs['pk'] extracts post id from url
@@ -113,6 +114,7 @@ class CommentListCreateView(generics.ListCreateAPIView):
 # create reply api view
 class ReplyCreateView(generics.CreateAPIView):
     serializer_class = ReplySerializer
+    permission_classes = [IsAuthenticated]
 
     # add user, post and parent objects to comment instance when creating it
     def perform_create(self, serializer):
@@ -149,6 +151,7 @@ class PostSaveView(views.APIView):
 class PostLikeView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         post = Post.objects.get(pk=self.kwargs['pk'])
@@ -164,6 +167,7 @@ class PostLikeView(generics.RetrieveAPIView):
 class CommentLikeView(generics.RetrieveAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         comment = Comment.objects.get(pk=self.kwargs['pk'])
@@ -176,6 +180,7 @@ class CommentLikeView(generics.RetrieveAPIView):
         return self.retrieve(request, *args, **kwargs)
 
 
+# list of users who like the post
 class PostLikeListView(generics.ListAPIView):
     serializer_class = LikerSerializer
     pagination_class = FollowerListPagination
@@ -186,6 +191,7 @@ class PostLikeListView(generics.ListAPIView):
         return post.likes.order_by('-postlike')
 
 
+# list of users who like the comment
 class CommentLikeListView(generics.ListAPIView):
     serializer_class = LikerSerializer
     pagination_class = FollowerListPagination

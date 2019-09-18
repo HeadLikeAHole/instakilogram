@@ -18,6 +18,7 @@ class CommentLike extends React.Component {
     likeComment: PropTypes.func.isRequired,
     comment_id: PropTypes.number.isRequired,
     isLiked: PropTypes.bool.isRequired,
+    reply: PropTypes.bool.isRequired,
     isAuthenticated: PropTypes.bool.isRequired
   };
 

@@ -37,7 +37,7 @@ class Post extends React.Component {
   render() {
     const { authUser, post } = this.props;
     // user variable is post author's user's id
-    const { id, username, profile_image, user, image, description, comments_count, likes, likes_count } = this.props.post;
+    const { id, username, profile_image, user, image, description, published, updated, comments_count, likes, likes_count } = this.props.post;
 
     // check if current logged in user is post owner
     let isOwner = false;
@@ -45,6 +45,12 @@ class Post extends React.Component {
       if (authUser.id === user) {
         isOwner = true
       }
+    }
+
+    // if post has been edited then display time of the edit in parenthesis after time it was first published
+    let edited = false;
+    if (published !== updated) {
+      edited = true
     }
 
     return (
@@ -69,7 +75,10 @@ class Post extends React.Component {
             <Link to={`/posts/${id}`}><i className="far fa-comment my-icon"></i></Link>
             {/* user id and profile id are the same number */}
             {id && <PostSaveIcon post_id={id} />}
-            <span className="float-right time-ago"><TimeAgo date={post.published} formatter={formatter} /></span>
+            <span className="float-right time-ago">
+              <TimeAgo date={published} formatter={formatter} />
+              {edited && <span className="ml-1 post-updated">(ред. <TimeAgo date={updated} formatter={formatter} />)</span>}
+            </span>
           </div>
           <div className="mt-1 mb-3 likes-count">
             <span className="cursor-pointer" onClick={this.toggleModal}>{likes_count} {pluralize('like', likes_count)}</span>

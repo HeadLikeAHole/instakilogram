@@ -64,7 +64,7 @@
 }
 
 .post-image {
-    max-height: 200vh;
+    max-height: 80rem;
 }
 
 .likes-count {
@@ -81,6 +81,10 @@
 
 .time-ago {
     color: rgb(150, 150, 150);
+}
+
+.post-updated {
+    font-size: 0.9rem;
 }
 
 .no-posts-yet {

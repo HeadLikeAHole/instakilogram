@@ -6,6 +6,7 @@ import Spinner from 'react-bootstrap/Spinner'
 
 import Comment from './Comment';
 import { loadCommentList, removeCommentList } from '../../actions/commentList';
+import NoPostsYet from "../posts/NoPostsYet";
 
 
 class CommentList extends React.Component {
@@ -40,8 +41,18 @@ class CommentList extends React.Component {
       plus = false
     }
 
+    const noCommentsYet = (
+      <div className="no-comments">
+        <i className="far fa-comment my-2 icon-large"></i>
+        <p>
+          Еще никто не оставлял комментарии.
+        </p>
+      </div>
+    );
+
     return (
       <div className={`pt-1 ${commentsLoading && 'align-items-center'} p-d-border-bottom comments-child`}>
+        {comments.length === 0 && !commentsLoading && noCommentsYet}
         {/* loop through comments */}
         {comments.map(
           comment => <Comment key={comment.id} comment={comment} />

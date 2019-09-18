@@ -29,7 +29,7 @@ const formatter = buildFormatter(russianStrings);
 class PostDetail extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {showUserListModal: false}
+    this.state = {showUserListModal: false};
   }
 
   static propTypes = {
@@ -69,7 +69,7 @@ class PostDetail extends React.Component {
 
   render() {
     const { authUser, post } = this.props;
-    const { id, username, profile_image, user, image, description, comments_count, likes, likes_count } = this.props.post;
+    const { id, username, profile_image, user, image, description, published, updated, comments_count, likes, likes_count } = this.props.post;
 
     // check if current logged in user is post owner
     let isOwner = false;
@@ -79,21 +79,27 @@ class PostDetail extends React.Component {
       }
     }
 
+    // if post has been edited then display time of the edit in parenthesis after time it was first published
+    let edited = false;
+    if (published !== updated) {
+      edited = true
+    }
+
     return (
       // "p-d" in class names stands for post detail
       // "noGutters={true}" removes the gutter spacing between Cols as well as any added negative margins
-      // display "p-d-border" class if post detail is accessed through post list and not profile page
-      <Row noGutters={true} className={`mt-5 ${id || "p-d-border"}`}>
+      // display "p-d-border" class if post detail is accessed through post list and not profile page slider
+      <Row noGutters={true} className={`my-5 align-items-start bg-white ${this.props.match && "p-d-border"}`}>
         {/* post image */}
-        <Col lg={7} className="text-center">
+        <Col lg={7} className="align-self-center">
           <Image src={image} className="w-100 p-d-image" />
         </Col>
-        <Col className="bg-white">
+        <Col className="p-d-border-left" id="right-col">
           {/* post author */}
           <Row noGutters={true} className="p-3 justify-content-between p-d-border-bottom">
-            <Row noGutters={true} className="align-items-center">
+            <Row noGutters={true} className="align-items-center ">
               <Link to={`/profile/${user}`}>
-                <ProfileImage src={profile_image} className="mr-2 p-d-profile-img" />
+                <ProfileImage src={profile_image} className="mr-2 profile-img" />
               </Link>
               <Link to={`/profile/${user}`} className="username-link p-d-username">{username}</Link>
             </Row>
@@ -114,17 +120,17 @@ class PostDetail extends React.Component {
               {id && <PostSaveIcon post_id={id} />}
             </div>
             <div className="float-right time-ago">
-              <TimeAgo date={post.published} formatter={formatter} />
+              <TimeAgo date={published} formatter={formatter} />
+              {edited && <span className="ml-1 post-updated">(ред. <TimeAgo date={updated} formatter={formatter} />)</span>}
             </div>
-            <div className="w-100 my-2 likes-count">
+            <div className="my-2 w-100">
               <span className="cursor-pointer" onClick={this.toggleModal}>{likes_count} {pluralize('like', likes_count)}</span>
-            </div>
-            <div>
-              {comments_count} {pluralize('comment', comments_count)}
+              <span className="mx-2">|</span>
+              <span>{comments_count} {pluralize('comment', comments_count)}</span>
             </div>
           </Row>
           {/* add comment field */}
-          <Row noGutters={true} className="px-3 py-2 justify-content-end p-d-border-bottom">
+          <Row noGutters={true} className="px-3 py-2 justify-content-end">
             {id && <CommentForm post_id={id} />}
           </Row>
         </Col>
