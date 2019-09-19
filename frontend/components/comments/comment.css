@@ -6,14 +6,13 @@
     text-decoration: none;
 }
 
-.reply-show-hide {
-    font-size: 0.9rem;
+.comment-like {
+    margin-left: 0.8rem;
+    margin-right: 2rem;
 }
 
-.comment-like {
-    float: right;
-    margin-right: 2rem;
-    margin-top: 0.4rem;
+.reply-show-hide {
+    font-size: 0.9rem;
 }
 
 .my-plus {

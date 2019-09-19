@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Card from 'react-bootstrap/Card';
 import Spinner from 'react-bootstrap/Spinner';
 
-
 import { loadPostListSearch, deletePost, removePostList } from '../../actions/postList';
 import Post from './Post';
 import './post.css';
@@ -51,7 +50,7 @@ class PostListSearch extends React.Component {
     const card1 = (
       <Card className="mx-auto mt-5 no-posts-yet my-container">
         <Card.Body>
-          По запросу <span className="font-weight-bold">"{query}"</span> найдено {posts && count} {pluralize('post', count)}.
+          По запросу <span className="font-weight-bold">"{query}"</span> найдено {count} {pluralize('post', count)}.
         </Card.Body>
       </Card>
     );
@@ -78,7 +77,7 @@ class PostListSearch extends React.Component {
 
         <div>
           {/* loop through posts */}
-          {posts.map(
+          {posts.length > 0 && posts.map(
             post => <Post key={post.id} post={post} deletePost={this.props.deletePost} />
           )}
         </div>

@@ -21,7 +21,6 @@ export const loadUserList = (title, id, next) => dispatch => {
       break;
   }
   // if "next" url is passed to this function then load it otherwise just load /api/posts/${post_id}/comments/ url
-  console.log(url);
   fetch(`${next ? next : url}`)
     .then(response => {
       if (response.ok) {

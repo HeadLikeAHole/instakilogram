@@ -54,7 +54,7 @@ class CommentList extends React.Component {
       <div className={`pt-1 ${commentsLoading && 'align-items-center'} p-d-border-bottom comments-child`}>
         {comments.length === 0 && !commentsLoading && noCommentsYet}
         {/* loop through comments */}
-        {comments.map(
+        {Object.keys(comments).length > 0 && comments.map(
           comment => <Comment key={comment.id} comment={comment} />
         )}
         {commentsLoading && <div className="w-100 text-center"><Spinner animation="grow" className="comment-spinner" /></div>}

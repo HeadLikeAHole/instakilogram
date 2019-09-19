@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Row from 'react-bootstrap/Row';
 import FollowButton from './FollowButton';
 import { Link } from 'react-router-dom';
@@ -23,17 +22,10 @@ const User = props => {
 
 
 User.propTypes = {
-  // authenticated user
-  authUser: PropTypes.object.isRequired,
   // user which is a follower or following or liker
   user: PropTypes.object.isRequired,
   page: PropTypes.string
 };
 
 
-const mapStateToProps = state => ({
-  authUser: state.auth.user
-});
-
-
-export default connect(mapStateToProps)(User);
+export default User;

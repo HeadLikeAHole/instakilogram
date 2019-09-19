@@ -59,7 +59,7 @@ class UserListModal extends React.Component {
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="user-modal" onScroll={this.handleScroll} ref={this.userModal}>
-          <UserList users={users} page={page} />
+          {Object.keys(users).length > 0 && <UserList users={users} page={page} />}
           {isLoading && <div className="w-100 text-center"><Spinner animation="grow" className="comment-spinner" /></div>}
         </Modal.Body>
       </Modal>

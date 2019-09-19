@@ -84,23 +84,12 @@ class PostEditForm extends React.Component {
             <Form.Label>Фото:</Form.Label>
             {/* image field */}
             {/* "value = event.target.files[0]" doesn't work on file input field */}
-            <Form.Control
-              type="file"
-              name="image"
-              ref={this.imageField}
-              onChange={this.handleChange}
-            />
+            <Form.Control type="file" name="image" ref={this.imageField} onChange={this.handleChange} />
           </Form.Group>
           <Form.Group>
             <Form.Label>Описание:</Form.Label>
             {/* textarea */}
-            <Form.Control
-              as="textarea"
-              rows="3"
-              name="description"
-              value={this.state.description}
-              onChange={this.handleChange}
-            />
+            <Form.Control as="textarea" rows="3" name="description" value={this.state.description} onChange={this.handleChange} />
           </Form.Group>
           <Form.Group>
             {/* form isn't submitted without type='submit' attribute */}

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 
 const NoPostsYet = props => {
-
   const noSavedPostsYet = (
     <div className="text-center">
       <i className="far fa-bookmark my-2 icon-large"></i>

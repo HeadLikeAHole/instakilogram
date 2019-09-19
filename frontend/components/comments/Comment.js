@@ -36,8 +36,14 @@ class Comment extends React.Component {
     addCommentFormInfo: PropTypes.func.isRequired
   };
 
-  // make 3 dots visible on hover
-  handleHover = () => this.setState({editDeleteVisible: !this.state.editDeleteVisible});
+  // make 3 dots visible on mouse enter
+  showDots = () => this.setState({editDeleteVisible: true});
+
+  // make 3 dots invisible on mouse leave
+  hideDots = () => this.setState({editDeleteVisible: false});
+
+  // show and hide dots on touch (for mobile devices)
+  handleTouch = () => this.setState({editDeleteVisible: !this.state.editDeleteVisible});
 
   handleShowHideReplies = () => this.setState({showReplies: !this.state.showReplies});
 
@@ -59,22 +65,22 @@ class Comment extends React.Component {
   render() {
     const { authUser, comment } = this.props;
 
-    // check if current logged in user is comment owner
     let isOwner = false;
     let isLiked = false;
-    if (authUser) {
+
+    if (Object.keys(this.props.authUser).length > 0) {
+      // check if current logged in user is comment owner
       if (authUser.id === comment.user) {
         isOwner = true
       }
       // check if user has already liked the comment
-      if (comment.likes) {
-        if (comment.likes.includes(authUser.id)) {
-          isLiked = true
-        }
+      if (comment.likes.includes(authUser.id)) {
+        isLiked = true
       }
+
     }
 
-    // if comment has been edited then display (ред.) after time published
+    // check if comment has been edited, if it has then display (ред.) after time published
     let edited = false;
     if (comment.published !== comment.updated) {
       edited = true
@@ -88,26 +94,30 @@ class Comment extends React.Component {
     }
 
     return (
-      <Row noGutters={true}>
-        <Col xs={2} className="px-3 py-2 text-center">
+      <Row noGutters={true} className="justify-content-start">
+        <Col xs="auto" className="px-3 py-2">
           <Link to={`/profile/${comment.user}`}>
             <ProfileImage src={comment.profile_image} className="profile-img" />
           </Link>
         </Col>
-        <Col xs={10} className="py-1">
+        <Col className="py-1">
           {/* comment's user avatar */}
-          <div>
-            <Link to={`/profile/${comment.user}`} className="mr-1 username-link">{comment.username}</Link>
-            <span className="text-break">{comment.text}</span>
-          </div>
-          <div className="my-2 text-muted comment-info" onMouseEnter={this.handleHover} onMouseLeave={this.handleHover}>
+          <Row noGutters={true} className="justify-content-between">
+            <Col onMouseEnter={this.showDots} onMouseLeave={this.hideDots} onTouchStart={this.handleTouch}>
+              <Link to={`/profile/${comment.user}`} className="mr-2 username-link">{comment.username}</Link>
+              <span className="text-break">{comment.text}</span>
+            </Col>
+            <Col xs="auto" onMouseEnter={this.showDots} onMouseLeave={this.hideDots} onTouchStart={this.handleTouch}>
+              {/* heart icon (like button) */}
+              {isOwner && <CommentEditDelete comment={comment} visible={this.state.editDeleteVisible} />}
+              <CommentLike comment_id={comment.id} isLiked={isLiked} reply={!!comment.parent} />
+            </Col>
+          </Row>
+          <div className="my-2 text-muted comment-info">
             <TimeAgo date={comment.published} formatter={formatter} /> {edited && <span className="comment-updated">(ред.)</span>}
-            <span className="mx-3 cursor-pointer" onClick={this.toggleModal}>{comment.likes_count} {pluralize('like', comment.likes_count)}</span>
+            <span className="mx-2 cursor-pointer" onClick={this.toggleModal}>{comment.likes_count} {pluralize('like', comment.likes_count)}</span>
             {/* reply link */}
             <a href="" className="text-muted" onClick={this.handleReply}>Ответить</a>
-            {/* heart icon (like button) */}
-            {comment.id && <CommentLike comment_id={comment.id} isLiked={isLiked} reply={!!comment.parent} />}
-            {isOwner && <CommentEditDelete comment={comment} visible={this.state.editDeleteVisible} />}
           </div>
           <div className="mb-1">
             <span className="reply-show-hide cursor-pointer" onClick={this.handleShowHideReplies}>

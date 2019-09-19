@@ -35,14 +35,14 @@ class FollowButton extends React.Component {
     const { authUser, profile_id } = this.props;
 
     let isFollowing = false;
+    let ownProfile = false;
+    // wait for user object to load
     if (Object.keys(authUser.user).length > 0) {
+      // check if user follows profile
       if (authUser.user.following.includes(profile_id)) {
         isFollowing = true;
       }
-    }
-
-    let ownProfile = false;
-    if (Object.keys(authUser.user).length > 0) {
+      // check if it's user's profile
       if (authUser.user.id === profile_id) {
         ownProfile = true;
       }

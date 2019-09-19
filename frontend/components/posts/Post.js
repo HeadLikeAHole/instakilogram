@@ -39,9 +39,10 @@ class Post extends React.Component {
     // user variable is post author's user's id
     const { id, username, profile_image, user, image, description, published, updated, comments_count, likes, likes_count } = this.props.post;
 
-    // check if current logged in user is post owner
     let isOwner = false;
-    if (authUser) {
+    // check if user object has loaded
+    if (Object.keys(authUser).length > 0) {
+      // check if current logged in user is post owner
       if (authUser.id === user) {
         isOwner = true
       }
@@ -71,10 +72,10 @@ class Post extends React.Component {
         <Card.Img variant="top" src={image} className="post-image" />
         <Card.Body className="p-3">
           <div className="my-1">
-            {id && <PostLikeIcon post_id={id} likes={likes} postDetail={false} />}
+            <PostLikeIcon post_id={id} likes={likes} postDetail={false} />
             <Link to={`/posts/${id}`}><i className="far fa-comment my-icon"></i></Link>
             {/* user id and profile id are the same number */}
-            {id && <PostSaveIcon post_id={id} />}
+            <PostSaveIcon post_id={id} />
             <span className="float-right time-ago">
               <TimeAgo date={published} formatter={formatter} />
               {edited && <span className="ml-1 post-updated">(ред. <TimeAgo date={updated} formatter={formatter} />)</span>}

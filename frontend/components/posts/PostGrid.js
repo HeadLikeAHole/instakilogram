@@ -58,7 +58,7 @@ class PostGrid extends React.Component {
         {posts.length === 0 && !isLoading && <NoPostsYet savedPosts={this.props.savedPosts} />}
         <Row>
           {/* loop through posts */}
-          {posts.map(
+          {posts.length > 0 && posts.map(
             post => <PostTile key={post.id} post={post} />
           )}
           {isLoading && <div className="w-100 my-3 text-center"><Spinner animation="grow" className="comment-spinner" /></div>}

@@ -46,7 +46,7 @@ class PostTile extends React.Component {
   };
 
   render() {
-    const { likes_count, comments_count } = this.props.post;
+    const { image, likes_count, comments_count } = this.props.post;
     return (
       <Col sm={6} md={4} className="my-3">
         <div
@@ -56,7 +56,7 @@ class PostTile extends React.Component {
           onClick={this.handleClick}
         >
           <img
-            src={this.props.post.image}
+            src={image}
             className={this.state.mode}
             ref={this.imgElement}
             onLoad={this.landscapeOrPortrait}

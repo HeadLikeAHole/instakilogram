@@ -28,7 +28,7 @@ class ReplyList extends React.Component {
   render() {
     const { replies, replies_count } = this.props.comment;
     let loadMore = false;
-    if (replies_count && replies_count > replies.length) {
+    if (replies_count > replies.length) {
       loadMore = true
     }
 

@@ -52,42 +52,22 @@ class Register extends React.Component {
           <Form.Group>
             <Form.Label>Логин:</Form.Label>
             {/* text field */}
-            <Form.Control
-              type="text"
-              name="username"
-              value={this.state.username}
-              onChange={this.handleChange}
-            />
+            <Form.Control type="text" name="username" value={this.state.username} onChange={this.handleChange} />
           </Form.Group>
           <Form.Group>
             <Form.Label>E-mail:</Form.Label>
             {/* text field */}
-            <Form.Control
-              type="text"
-              name="email"
-              value={this.state.email}
-              onChange={this.handleChange}
-            />
+            <Form.Control type="text" name="email" value={this.state.email} onChange={this.handleChange} />
           </Form.Group>
           <Form.Group>
             <Form.Label>Пароль:</Form.Label>
             {/* password field */}
-            <Form.Control
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleChange}
-            />
+            <Form.Control type="password" name="password" value={this.state.password} onChange={this.handleChange} />
           </Form.Group>
           <Form.Group>
             <Form.Label>Подтвердите пароль:</Form.Label>
             {/* password field */}
-            <Form.Control
-              type="password"
-              name="password2"
-              value={this.state.password2}
-              onChange={this.handleChange}
-            />
+            <Form.Control type="password" name="password2" value={this.state.password2} onChange={this.handleChange} />
           </Form.Group>
           <Form.Group>
             {/* form isn't submitted without type='submit' attribute */}

@@ -76,21 +76,23 @@ class Profile extends React.Component {
   render() {
     const { authUser, profile } = this.props;
 
+    // check if profile has loaded
+    let profileLoaded = false;
+    if (Object.keys(this.props.profile).length > 0) {
+      profileLoaded = true
+    }
+
     // check if current logged in user is profile's owner
     let authorized = false;
     let page = '';
-    if (authUser && profile.user) {
+    if (Object.keys(this.props.authUser).length > 0 && profileLoaded) {
       if (authUser.id === profile.user.id) {
         authorized = true;
         page = 'own';
       }
     }
 
-    // check if followers has loaded so they can be passed as props
-    let followButton;
-    if (Object.keys(profile).length > 0) {
-      followButton = <FollowButton profile_id={profile.id} page='profile' />
-    }
+    const followButton = <FollowButton profile_id={parseInt(this.props.match.params.id, 10)} page='profile' />;
 
     return (
       <React.Fragment>
@@ -98,19 +100,29 @@ class Profile extends React.Component {
           <Col sm={3}><ProfileImage src={profile.image} className="mx-auto mb-2 w-75" /></Col>
           <Col sm={9}>
             <Row noGutters={true} className="mb-3 justify-content-around justify-content-sm-start align-items-center">
-              <span className="mr-3 font-italic p-p-username">{profile.user && profile.user.username}</span>
+              <span className="mr-3 font-italic p-p-username">{profileLoaded && profile.user.username}</span>
               {authorized ?
                 <><Link to="/profile/edit"><Button variant="light" className="font-weight-bold">Редактировать Профиль</Button></Link> <LogoutIcon /></> :
                 followButton}
             </Row>
             <div className="mb-3 justify-content-around justify-content-sm-start">
-              <span className="mr-5"><span className="font-weight-bold">{profile.user_posts_count && profile.user_posts_count}</span> {pluralize('post', profile.user_posts_count && profile.user_posts_count)}</span>
+              <span className="mr-5">
+                <span className="font-weight-bold">{profileLoaded && profile.user_posts_count}</span> {pluralize('post', profileLoaded && profile.user_posts_count)}
+              </span>
               {/* "подписчики" are "followers" */}
-              <span className="mr-5 cursor-pointer" onClick={() => this.toggleModal('Подписчики:')}><span className="font-weight-bold">{profile.id && profile.followers_count}</span> {pluralize('follower', profile.followers_count)}</span>
-              <span className="cursor-pointer" onClick={() => this.toggleModal('Подписки:')}><span className="font-weight-bold">{profile.id && profile.following_count}</span> {pluralize('following', profile.following_count)}</span>
+              <span
+                className="mr-5 cursor-pointer"
+                onClick={() => this.toggleModal('Подписчики:')}>
+                <span className="font-weight-bold">{profileLoaded && profile.followers_count}</span> {pluralize('follower', profileLoaded && profile.followers_count)}
+              </span>
+              <span
+                className="cursor-pointer"
+                onClick={() => this.toggleModal('Подписки:')}>
+                <span className="font-weight-bold">{profileLoaded && profile.following_count}</span> {pluralize('following', profileLoaded && profile.following_count)}
+              </span>
             </div>
-            <div className="mb-1 font-weight-bold">{profile.user && profile.user.first_name} {profile.user && profile.user.last_name}</div>
-            <div>{profile.info}</div>
+            <div className="mb-1 font-weight-bold">{profileLoaded && profile.user.first_name} {profileLoaded && profile.user.last_name}</div>
+            <div>{profileLoaded && profile.info}</div>
           </Col>
         </Row>
         <hr className="mb-0" />

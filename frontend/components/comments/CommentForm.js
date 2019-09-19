@@ -76,10 +76,10 @@ class CommentForm extends React.Component {
 
   // if "Ответить" link is clicked @<username> is added to textarea and textarea is focused
   // if "Редактировать" link is clicked then edited comment text is added to textarea
-  // "&& Object.getOwnPropertyNames(this.props.commentFormInfo).length !== 0 checks if object isn't empty because after successful reply submission
+  // "&& Object.keys(this.props.commentFormInfo).length !== 0 checks if object isn't empty because after successful reply submission
   // commentFormInfo is reset to empty object which triggers componentDidUpdate method and in this case it's not needed
   componentDidUpdate(prevProps) {
-    if (this.props.commentFormInfo !== prevProps.commentFormInfo && Object.getOwnPropertyNames(this.props.commentFormInfo).length !== 0) {
+    if (this.props.commentFormInfo !== prevProps.commentFormInfo && Object.keys(this.props.commentFormInfo).length !== 0) {
       let text;
       if (this.props.commentFormInfo.text) {
         text = this.props.commentFormInfo.text

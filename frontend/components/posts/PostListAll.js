@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Card from 'react-bootstrap/Card';
 import Spinner from 'react-bootstrap/Spinner';
 
-
 import { loadPostListAll, deletePost, removePostList } from '../../actions/postList';
 import Post from './Post';
 import './post.css';
@@ -58,7 +57,7 @@ class PostListAll extends React.Component {
         {posts.length === 0 && !isLoading && card}
         <div>
           {/* loop through posts */}
-          {posts && posts.map(
+          {posts.length > 0 && posts.map(
             post => <Post key={post.id} post={post} deletePost={this.props.deletePost} />
           )}
         </div>

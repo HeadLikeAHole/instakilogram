@@ -11,7 +11,7 @@ import {
   USER_SAVE_POST,
   USER_FOLLOW,
   USER_UPDATE,
-  DELETE_PROFILE_SUCCESS
+  DELETE_PROFILE
 } from '../actions/types';
 
 
@@ -55,7 +55,7 @@ export default function (state = initialState, action) {
     // again in this case everything is set to default (cleared out)
     case LOGOUT_SUCCESS:
     case REGISTER_FAIL:
-    case DELETE_PROFILE_SUCCESS:
+    case DELETE_PROFILE:
       localStorage.removeItem('token');
       return {
         ...state,

@@ -22,13 +22,27 @@ const Navigation = props => {
 
   const { isAuthenticated, isLoading, user } = props.auth;
 
+  // check if user object has loaded
+  let userLoaded = false;
+  if (Object.keys(user).length > 0) {
+    userLoaded = true
+  }
+
   const authenticatedLinks = (
     <Row noGutters={true} className="justify-content-between justify-content-sm-start align-items-center">
-      <LinkContainer to="/post-add"><i title="Добавить новое фото" className="far fa-plus-square nav-icons cursor-pointer"></i></LinkContainer>
-      <LinkContainer to="/all"><i title="Фотографии всех пользователей" className="far fa-images nav-icons cursor-pointer"></i></LinkContainer>
+      <LinkContainer to="/post-add">
+        <i title="Добавить новое фото" className="far fa-plus-square nav-icons cursor-pointer"></i>
+      </LinkContainer>
+      <LinkContainer to="/all">
+        <i title="Фотографии всех пользователей" className="far fa-images nav-icons cursor-pointer"></i>
+      </LinkContainer>
       <Row noGutters={true} className="align-items-center">
-        <Link to={`/profile/${user.id}`}><ProfileImage src={user.profile_image} className="profile-img cursor-pointer"/></Link>
-        <Link to={`/profile/${user.id}`} className="nav-username username-link">{user.username}</Link>
+        <Link to={`/profile/${userLoaded && user.id}`}>
+          <ProfileImage src={user.profile_image} className="profile-img cursor-pointer"/>
+        </Link>
+        <Link to={`/profile/${userLoaded && user.id}`} className="nav-username username-link">
+          {userLoaded && user.username}
+        </Link>
       </Row>
     </Row>
   );

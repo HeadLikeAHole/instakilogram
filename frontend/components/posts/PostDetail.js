@@ -71,9 +71,16 @@ class PostDetail extends React.Component {
     const { authUser, post } = this.props;
     const { id, username, profile_image, user, image, description, published, updated, comments_count, likes, likes_count } = this.props.post;
 
-    // check if current logged in user is post owner
+    // check if post object has loaded
+    let postLoaded = false;
+    if (Object.keys(post).length > 0) {
+      postLoaded = true
+    }
+
     let isOwner = false;
+    // check if user object has loaded
     if (Object.keys(authUser).length > 0) {
+      // check if current logged in user is post owner
       if (authUser.id === user) {
         isOwner = true
       }
@@ -98,43 +105,43 @@ class PostDetail extends React.Component {
           {/* post author */}
           <Row noGutters={true} className="p-3 justify-content-between p-d-border-bottom">
             <Row noGutters={true} className="align-items-center ">
-              <Link to={`/profile/${user}`}>
+              <Link to={`/profile/${postLoaded && user}`}>
                 <ProfileImage src={profile_image} className="mr-2 profile-img" />
               </Link>
-              <Link to={`/profile/${user}`} className="username-link p-d-username">{username}</Link>
+              <Link to={`/profile/${postLoaded && user}`} className="username-link p-d-username">{postLoaded && username}</Link>
             </Row>
-            {isOwner && <PostEditDelete post={post} />}
+            {postLoaded && isOwner && <PostEditDelete post={post} />}
           </Row>
           {/* post description */}
           <Row noGutters={true} className="p-3 p-d-border-bottom">
-            {description}
+            {postLoaded && description}
           </Row>
           {/* comments */}
           <div className="comments-parent">
-            {id && <CommentList post_id={id} />}
+            {postLoaded && <CommentList post_id={id} />}
           </div>
           {/* icons */}
           <Row noGutters={true} className="p-3 justify-content-between align-content-center p-d-border-bottom">
             <div>
-              {id && <PostLikeIcon post_id={id} likes={likes} postDetail={true} />}
-              {id && <PostSaveIcon post_id={id} />}
+              {postLoaded && <PostLikeIcon post_id={id} likes={likes} postDetail={true} />}
+              {postLoaded && <PostSaveIcon post_id={id} />}
             </div>
             <div className="float-right time-ago">
-              <TimeAgo date={published} formatter={formatter} />
-              {edited && <span className="ml-1 post-updated">(ред. <TimeAgo date={updated} formatter={formatter} />)</span>}
+              {postLoaded && <TimeAgo date={published} formatter={formatter} />}
+              {postLoaded && edited && <span className="ml-1 post-updated">(ред. <TimeAgo date={updated} formatter={formatter} />)</span>}
             </div>
             <div className="my-2 w-100">
-              <span className="cursor-pointer" onClick={this.toggleModal}>{likes_count} {pluralize('like', likes_count)}</span>
+              <span className="cursor-pointer" onClick={this.toggleModal}>{postLoaded && likes_count} {pluralize('like', postLoaded && likes_count)}</span>
               <span className="mx-2">|</span>
-              <span>{comments_count} {pluralize('comment', comments_count)}</span>
+              <span>{postLoaded && comments_count} {pluralize('comment', postLoaded && comments_count)}</span>
             </div>
           </Row>
           {/* add comment field */}
           <Row noGutters={true} className="px-3 py-2 justify-content-end">
-            {id && <CommentForm post_id={id} />}
+            {postLoaded && <CommentForm post_id={id} />}
           </Row>
         </Col>
-        {id &&
+        {postLoaded &&
           <UserListModal
             show={this.state.showUserListModal}
             title='Публикацию лайкнули:'
