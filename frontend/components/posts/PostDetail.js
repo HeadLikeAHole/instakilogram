@@ -104,11 +104,11 @@ class PostDetail extends React.Component {
         <Col className="p-d-border-left" id="right-col">
           {/* post author */}
           <Row noGutters={true} className="p-3 justify-content-between p-d-border-bottom">
-            <Row noGutters={true} className="align-items-center ">
+            <Row noGutters={true} className="align-items-center">
               <Link to={`/profile/${postLoaded && user}`}>
                 <ProfileImage src={profile_image} className="mr-2 profile-img" />
               </Link>
-              <Link to={`/profile/${postLoaded && user}`} className="username-link p-d-username">{postLoaded && username}</Link>
+              <Link to={`/profile/${postLoaded && user}`} title={postLoaded && username} className="truncate-username username-link p-d-username">{postLoaded && username}</Link>
             </Row>
             {postLoaded && isOwner && <PostEditDelete post={post} />}
           </Row>

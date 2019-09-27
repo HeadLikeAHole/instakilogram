@@ -1,5 +1,6 @@
 import React from 'react';
 import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -63,7 +64,7 @@ class Post extends React.Component {
               <Link to={`/profile/${user}`}>
                 <ProfileImage src={profile_image} className="mr-2 profile-img" />
               </Link>
-              <Link to={`/profile/${user}`} className="username-link post-username">{username}</Link>
+              <Link to={`/profile/${user}`} title={username} className="truncate-username username-link post-username">{username}</Link>
             </Row>
             {/* if user is owner of the post display dropdown menu */}
             {isOwner && <PostEditDelete post={post} />}

@@ -47,6 +47,7 @@ class Login extends React.Component {
             {/* text field */}
             <Form.Control
               type="text"
+              maxLength="30"
               name="username"
               value={this.state.username}
               onChange={this.handleChange}

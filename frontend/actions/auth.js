@@ -76,7 +76,8 @@ export const register = ({ username, password, email }) => dispatch => {
       dispatch({
         type: REGISTER_SUCCESS,
         payload: data
-      })
+      });
+      dispatch(createMessage({register: 'Аккаунт был создан'}));
     }).catch(error => {
       const status = error.status;
       error.json().then(msg => dispatch(returnErrors(msg, status)));

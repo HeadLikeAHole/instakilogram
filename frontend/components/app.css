@@ -1,3 +1,20 @@
+/* bootstrap breakpoints */
+
+/* Extra small devices (portrait phones, less than 576px) */
+/* No media query for `xs` since this is the default in Bootstrap */
+
+/* Small devices (landscape phones, 576px and up) */
+/* @media (min-width: 576px) { ... } */
+
+/* Medium devices (tablets, 768px and up) */
+/* @media (min-width: 768px) { ... } */
+
+/* Large devices (desktops, 992px and up) */
+/*@media (min-width: 992px) { ... }*/
+
+/* Extra large devices (large desktops, 1200px and up) */
+/*@media (min-width: 1200px) { ... }*/
+
 * {
     /* first three rules override browser defaults */
     padding: 0;
@@ -31,11 +48,25 @@ body {
 .username-link {
     color: black;
     font-weight: 600;
+    max-width: 1000px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .username-link:hover {
     color: black;
     text-decoration: none;
+}
+
+.truncate-username {
+    /* turn "a" element into a block-level element so width can be set */
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* specifies how white-space inside an element is handled */
+    /* nowrap: sequences of whitespace will collapse into a single whitespace.
+    Text will never wrap to the next line. The text continues on the same line until a <br> tag is encountered */
+    white-space: nowrap;
 }
 
 .cursor-pointer {

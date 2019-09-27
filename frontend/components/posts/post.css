@@ -96,3 +96,9 @@
         width: 600px;
     }
 }
+
+@media (max-width: 440px) {
+    .post-username {
+        width: 200px;
+    }
+}

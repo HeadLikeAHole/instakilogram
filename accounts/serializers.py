@@ -20,6 +20,20 @@ class RegisterSerializer(serializers.ModelSerializer):
             'password': {'write_only': True},
         }
 
+    def validate_password(self, value):
+        errors = []
+        try:
+            validate_password(value)
+            return value
+
+        except exceptions.ValidationError as e:
+            errors = list(e.messages)
+
+        if errors:
+            raise serializers.ValidationError(errors)
+
+        return value
+
     # create user using validated data
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
@@ -109,13 +123,13 @@ class PasswordChangeSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
 
     def validate_new_password(self, value):
-        errors = dict()
+        errors = []
         try:
             validate_password(value)
             return value
 
         except exceptions.ValidationError as e:
-            errors['password'] = list(e.messages)
+            errors = list(e.messages)
 
         if errors:
             raise serializers.ValidationError(errors)

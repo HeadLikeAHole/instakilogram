@@ -135,14 +135,14 @@ class ProfileEditDelete extends React.Component {
           <Form.Group as={Row}>
             <Form.Label column sm={3}>Логин:</Form.Label>
             <Col sm={9}>
-              <Form.Control type="text" name="username" value={username} onChange={this.handleChange} />
+              <Form.Control type="text" maxLength="30" name="username" value={username} onChange={this.handleChange} />
             </Col>
           </Form.Group>
           {/* email field */}
           <Form.Group as={Row}>
             <Form.Label column sm={3}>Email:</Form.Label>
             <Col sm={9}>
-              <Form.Control type="email" name="email" value={email} onChange={this.handleChange} />
+              <Form.Control type="email" maxLength="254" name="email" value={email} onChange={this.handleChange} />
               <span className="below-form-field-text">(Не виден другим пользователям)</span>
             </Col>
           </Form.Group>
@@ -150,21 +150,21 @@ class ProfileEditDelete extends React.Component {
           <Form.Group as={Row}>
             <Form.Label column sm={3}>Имя:</Form.Label>
             <Col sm={9}>
-              <Form.Control type="text" name="first_name" value={first_name} onChange={this.handleChange} />
+              <Form.Control type="text" maxLength="30" name="first_name" value={first_name} onChange={this.handleChange} />
             </Col>
           </Form.Group>
           {/* last_name field */}
           <Form.Group as={Row}>
             <Form.Label column sm={3}>Фамилия:</Form.Label>
             <Col sm={9}>
-              <Form.Control type="text" name="last_name" value={last_name} onChange={this.handleChange} />
+              <Form.Control type="text" maxLength="150" name="last_name" value={last_name} onChange={this.handleChange} />
             </Col>
           </Form.Group>
           {/* info field */}
           <Form.Group as={Row}>
             <Form.Label column sm={3}>О себе:</Form.Label>
             <Col sm={9}>
-              <Form.Control as="textarea" rows="5" name="info" value={info} onChange={this.handleChange} />
+              <Form.Control as="textarea" rows="5" maxLength="300" name="info" value={info} onChange={this.handleChange} />
             </Col>
           </Form.Group>
           <div className="float-right">

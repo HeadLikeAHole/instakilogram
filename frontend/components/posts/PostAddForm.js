@@ -15,7 +15,7 @@ class PostAddForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      imageFile: '', imageUrl: '', description: ''
+      imageFile: '', imageUrl: '', description: '', disabled: true
     };
     this.imageField = React.createRef();
   }
@@ -24,13 +24,23 @@ class PostAddForm extends React.Component {
     addPost: PropTypes.func.isRequired
   };
 
+  // "Сохранить" button is disabled if image field and textarea are empty
+  toggleDisableAttribute = () => {
+    if (this.state.imageFile && this.state.description) {
+      this.setState({disabled: false})
+    } else {
+      this.setState({disabled: true})
+    }
+  };
+
+
   handleChange = event => {
     if (event.target.name === 'image') {
       const imageFile = event.target.files[0];
       const imageUrl = URL.createObjectURL(imageFile);
-      this.setState({imageFile: imageFile, imageUrl: imageUrl})
+      this.setState({imageFile: imageFile, imageUrl: imageUrl}, () => this.toggleDisableAttribute())
     } else {
-      this.setState({description: event.target.value});
+      this.setState({description: event.target.value}, () => this.toggleDisableAttribute());
     }
   };
 
@@ -59,12 +69,12 @@ class PostAddForm extends React.Component {
           <Form.Group>
             <Form.Label>Описание:</Form.Label>
             {/* textarea */}
-            <Form.Control as="textarea" rows="3" name="description" value={this.state.description} onChange={this.handleChange} />
+            <Form.Control as="textarea" rows="3" maxLength="300" name="description" value={this.state.description} onChange={this.handleChange} />
           </Form.Group>
           <Form.Group>
             {/* form isn't submitted without type='submit' attribute */}
-            <Button type='submit' variant="outline-dark" className="mr-2">Сохранить</Button>
-            <Link to="/"><Button variant="outline-dark">Отмена</Button></Link>
+            <Link to="/"><Button variant="outline-dark" className="mr-2">Отмена</Button></Link>
+            <Button type="submit" variant="outline-dark" disabled={this.state.disabled}>Сохранить</Button>
           </Form.Group>
         </Form>
       </Card>

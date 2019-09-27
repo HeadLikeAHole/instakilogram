@@ -104,7 +104,7 @@ class Comment extends React.Component {
           {/* comment's user avatar */}
           <Row noGutters={true} className="justify-content-between">
             <Col onMouseEnter={this.showDots} onMouseLeave={this.hideDots} onTouchStart={this.handleTouch}>
-              <Link to={`/profile/${comment.user}`} className="mr-2 username-link">{comment.username}</Link>
+              <Link to={`/profile/${comment.user}`} title={comment.username} className="mr-2 username-link">{comment.username}</Link>
               <span className="text-break">{comment.text}</span>
             </Col>
             <Col xs="auto" onMouseEnter={this.showDots} onMouseLeave={this.hideDots} onTouchStart={this.handleTouch}>

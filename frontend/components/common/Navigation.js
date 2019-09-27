@@ -40,7 +40,7 @@ const Navigation = props => {
         <Link to={`/profile/${userLoaded && user.id}`}>
           <ProfileImage src={user.profile_image} className="profile-img cursor-pointer"/>
         </Link>
-        <Link to={`/profile/${userLoaded && user.id}`} className="nav-username username-link">
+        <Link to={`/profile/${userLoaded && user.id}`} title={userLoaded && user.username} className="truncate-username nav-username username-link">
           {userLoaded && user.username}
         </Link>
       </Row>

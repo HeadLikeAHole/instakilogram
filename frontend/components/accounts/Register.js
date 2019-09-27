@@ -52,17 +52,23 @@ class Register extends React.Component {
           <Form.Group>
             <Form.Label>Логин:</Form.Label>
             {/* text field */}
-            <Form.Control type="text" name="username" value={this.state.username} onChange={this.handleChange} />
+            <Form.Control type="text" maxLength="30" name="username" value={this.state.username} onChange={this.handleChange} />
           </Form.Group>
           <Form.Group>
             <Form.Label>E-mail:</Form.Label>
             {/* text field */}
-            <Form.Control type="text" name="email" value={this.state.email} onChange={this.handleChange} />
+            <Form.Control type="email" maxLength="254" name="email" value={this.state.email} onChange={this.handleChange} />
           </Form.Group>
           <Form.Group>
             <Form.Label>Пароль:</Form.Label>
             {/* password field */}
             <Form.Control type="password" name="password" value={this.state.password} onChange={this.handleChange} />
+            <ul className="ml-3 below-form-field-text">
+              <li>Ваш пароль не должен быть слишком похожим на другую вашу личную информацию</li>
+              <li>Ваш пароль должен содержать не менее 8 символов</li>
+              <li>Ваш пароль не должен быть одним из часто используемых ("12345678", "password" и т.д.)</li>
+              <li>Ваш пароль не должен состоять полностью из цифр</li>
+            </ul>
           </Form.Group>
           <Form.Group>
             <Form.Label>Подтвердите пароль:</Form.Label>

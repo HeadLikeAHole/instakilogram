@@ -8,7 +8,7 @@ class Post(models.Model):
     # settings.AUTH_USER_MODEL is custom user model
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='post_images')
-    description = models.TextField(max_length=150)
+    description = models.TextField(max_length=300)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='post_likes', through='PostLike', blank=True)
     published = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

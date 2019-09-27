@@ -11,7 +11,8 @@ class ProfileImage extends React.Component {
 
   static propTypes = {
     src: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
+    onClick: PropTypes.func
   };
 
   // find out what mode the image is in (landscape or portrait) to apply appropriate css class
@@ -29,11 +30,10 @@ class ProfileImage extends React.Component {
   };
 
   render() {
-    const { src, className } = this.props;
-
+    const { src, className, onClick } = this.props;
     return (
       // outer container
-      <div className={className}>
+      <div className={className} onClick={onClick ? onClick : undefined}>
         {/* inner container */}
         <div className="square square-to-circle">
           <img src={src} className={this.state.mode} ref={this.imgElement} onLoad={this.landscapeOrPortrait} />

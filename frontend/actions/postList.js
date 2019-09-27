@@ -122,15 +122,6 @@ export const removePostList = () => (
 
 // add post to the server and redirect to home page
 export const addPost = (post, history) => (dispatch, getState) => {
-  // display error if one of the fields is empty
-  if (!post.imageFile && !post.description) {
-    return dispatch(returnErrors('Добавьте фото и описание', 400));
-  } else if (post.imageFile && !post.description) {
-    return dispatch(returnErrors('Добавьте описание', 400));
-  } else if (!post.imageFile && post.description) {
-    return dispatch(returnErrors('Добавьте фото', 400));
-  }
-
   const formData = new FormData();
   // populate form object
   formData.append('image', post.imageFile, post.imageFile.name);
@@ -158,11 +149,6 @@ export const addPost = (post, history) => (dispatch, getState) => {
 
 // update post
 export const updatePost = (id, post, history) => (dispatch, getState) => {
-  // display error if one of the fields is empty
-  if (!post.description) {
-    return dispatch(returnErrors('Добавьте описание', 400));
-  }
-
   const formData = new FormData();
   // populate form object
   formData.append('image', post.imageFile, post.imageFile.name);

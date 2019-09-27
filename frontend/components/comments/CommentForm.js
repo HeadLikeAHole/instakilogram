@@ -105,6 +105,7 @@ class CommentForm extends React.Component {
         <textarea
           placeholder="Добавить комментарий..."
           className="p-d-textarea"
+          maxLength="500"
           value={this.state.text}
           onChange={this.handleChange}
           ref={this.textArea}

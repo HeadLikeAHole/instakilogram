@@ -1,7 +1,9 @@
 import React from 'react';
 import { withAlert } from 'react-alert';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+
+import { translate } from '../../helperFunctions';
 
 
 // just display an error message without rendering anything
@@ -12,17 +14,13 @@ class Alerts extends React.Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { error, alert, message } = this.props;
+    const { alert, error, message } = this.props;
 
     if (error !== prevProps.error) {
-      // check for a field error and then join an array of this field errors
-      if (error.msg.image) alert.error(`Image: ${error.msg.image.join()}`);
-      if (error.msg.description) alert.error(`Description: ${error.msg.description.join()}`);
-      if (error.msg.non_field_errors) alert.error(error.msg.non_field_errors.join());
-      if (error.msg.username) alert.error(error.msg.username.join());
-      if (error.msg.password) alert.error(error.msg.password.join());
-      if (error.msg) alert.error(error.msg);
-      if (error.msg.text) alert.error(error.msg.text.join());
+      if (error.msg.username) alert.error(`логин: ${translate(error.msg.username).join(' --- ')}`);
+      if (error.msg.email) alert.error(`email: ${translate(error.msg.email).join(' --- ')}`);
+      if (error.msg.password) alert.error(`пароль: ${translate(error.msg.password).join(' --- ')}`);
+      if (error.msg.non_field_errors) alert.error(translate(error.msg.non_field_errors).join(' --- '));
     }
 
     if (message !== prevProps.message) {
@@ -35,6 +33,7 @@ class Alerts extends React.Component {
       if (message.passwordReset) alert.success(message.passwordReset);
       if (message.profileUpdated) alert.success(message.profileUpdated);
       if (message.profileDeleted) alert.success(message.profileDeleted);
+      if (message.register) alert.success(message.register);
       if (message.logout) alert.success(message.logout);
     }
   }
