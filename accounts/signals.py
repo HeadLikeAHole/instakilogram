@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -15,6 +15,39 @@ from .models import Profile
 def create_profile(sender, **kwargs):
     if kwargs['created']:
         Profile.objects.create(user=kwargs['instance'])
+
+
+# delete image file after deleting image object (it isn't done automatically by django)
+# should be registered in apps.py
+# instance.image ensures that only the current file is affected
+# Passing "False" to instance.image.delete ensures that ImageField does not save the model
+# Unlike pre_delete, post_delete signal is sent at the end of a model’s delete() method
+# and a queryset’s delete() method.
+# This is safer as it does not execute unless the parent object is successfully deleted.
+@receiver(post_delete, sender=Profile)
+def delete_image_file_on_delete(sender, **kwargs):
+    kwargs['instance'].image.delete(False)
+
+
+@receiver(pre_save, sender=Profile)
+def delete_image_file_on_update(sender, instance, **kwargs):
+    """
+    Deletes old image when updating model instance
+    """
+    try:
+        old_image = sender.objects.get(pk=instance.pk).image
+    except sender.DoesNotExist:
+        return False
+
+    # if old image is the default profile image then it shouldn't be deleted otherwise delete old image
+    if not old_image.url.endswith('/media/profile_default.png'):
+        sender.objects.get(pk=instance.pk).image.delete(False)
+
+    # if old and new images are default profile images
+    # then make new image be equal to old image so new copy of the default profile image isn't created
+    new_image = instance.image
+    if old_image == new_image:
+        instance.image = old_image
 
 
 # https://github.com/anx-ckreuzberger/django-rest-passwordreset

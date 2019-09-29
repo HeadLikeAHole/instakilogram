@@ -37,7 +37,7 @@ class CommentLike extends React.Component {
         {!this.state.redirect ?
           // if post has been liked heart icon turns solid red if clicked again it turns back to outlined gray
           <i className={`${this.props.isLiked ? 'fas liked' : 'far'} fa-heart comment-like cursor-pointer`} onClick={this.handleLike}></i> :
-          <Redirect to="/login" />}
+          <Redirect push to="/login" />}
       </React.Fragment>
     )
   }

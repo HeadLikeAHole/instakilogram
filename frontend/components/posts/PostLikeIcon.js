@@ -44,7 +44,7 @@ class PostLikeIcon extends React.Component {
         {!this.state.redirect ?
           // if post has been liked then heart icon turns solid red if clicked again it turns back to outlined gray
           <i className={`${isLiked ? 'fas liked' : 'far'} fa-heart my-icon`} onClick={this.handleLike}></i> :
-          <Redirect to="/login" />}
+          <Redirect push to="/login" />}
       </React.Fragment>
     )
   }

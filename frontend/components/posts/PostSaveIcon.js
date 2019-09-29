@@ -43,7 +43,7 @@ class PostSaveIcon extends React.Component {
         {!this.state.redirect ?
           // if post has been saved then bookmark icon turns solid if clicked again it turns back to outlined gray
           <i className={`${isSaved ? 'fas saved' : 'far'} fa-bookmark my-icon`} onClick={this.handleSave}></i> :
-          <Redirect to="/login" />}
+          <Redirect push to="/login" />}
       </React.Fragment>
     )
   }

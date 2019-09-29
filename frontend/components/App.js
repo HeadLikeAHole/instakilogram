@@ -26,6 +26,7 @@ import Login from './accounts/Login';
 import Register from './accounts/Register';
 import PasswordReset from './accounts/PasswordReset';
 import PasswordResetConfirm from './accounts/PasswordResetConfirm';
+import PageNotFound from './common/PageNotFound';
 import PrivateRoute from './accounts/PrivateRoute';
 import { loadUser } from '../actions/auth';
 
@@ -69,6 +70,7 @@ class App extends React.Component {
                   <Route exact path="/register" component={Register} />
                   <Route exact path="/password-reset" component={PasswordReset} />
                   <Route exact path="/password-reset/:token" component={PasswordResetConfirm} />
+                  <Route component={PageNotFound}></Route>
                 </Switch>
               </div>
             </Container>

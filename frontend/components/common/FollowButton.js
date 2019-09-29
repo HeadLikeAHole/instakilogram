@@ -56,7 +56,7 @@ class FollowButton extends React.Component {
 
     return (
       <React.Fragment>
-        {!this.state.redirect ? followButton : <Redirect to="/login" />}
+        {!this.state.redirect ? followButton : <Redirect push to="/login" />}
       </React.Fragment>
     )
   }

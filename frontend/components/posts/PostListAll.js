@@ -44,9 +44,9 @@ class PostListAll extends React.Component {
     const { posts, isLoading } = this.props.postList;
 
     const card = (
-      <Card className="mx-auto mt-5 no-posts-yet my-container">
+      <Card className="mx-auto mt-5 text-center no-posts-yet my-container">
         <Card.Body>
-          Пока никто не добавил фотографий
+          Пока никто не добавлял фотографии
         </Card.Body>
       </Card>
     );

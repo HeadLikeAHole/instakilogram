@@ -116,7 +116,7 @@ class CommentForm extends React.Component {
 
     return (
       <>
-        {!this.state.redirect ? commentForm : <Redirect to="/login" />}
+        {!this.state.redirect ? commentForm : <Redirect push to="/login" />}
       </>
     )
   }

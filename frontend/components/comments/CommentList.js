@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner'
 
 import Comment from './Comment';
 import { loadCommentList, removeCommentList } from '../../actions/commentList';
-import NoPostsYet from "../posts/NoPostsYet";
 
 
 class CommentList extends React.Component {

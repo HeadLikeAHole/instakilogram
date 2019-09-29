@@ -121,7 +121,9 @@ export const logout = history => (dispatch, getState) => {
     .then(() => {
       dispatch({type: LOGOUT_SUCCESS});
       dispatch(createMessage({logout: 'Вы вышли из аккаунта'}));
-      history.push('/')
+      // this function should be after dispatching LOGOUT_SUCCESS action
+      // so logged out user doesn't see empty feed of authenticated user
+      history.push('/');
     })
     .catch(error => {
       const status = error.status;

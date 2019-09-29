@@ -17,10 +17,12 @@ class Alerts extends React.Component {
     const { alert, error, message } = this.props;
 
     if (error !== prevProps.error) {
-      if (error.msg.username) alert.error(`логин: ${translate(error.msg.username).join(' --- ')}`);
-      if (error.msg.email) alert.error(`email: ${translate(error.msg.email).join(' --- ')}`);
-      if (error.msg.password) alert.error(`пароль: ${translate(error.msg.password).join(' --- ')}`);
-      if (error.msg.non_field_errors) alert.error(translate(error.msg.non_field_errors).join(' --- '));
+      if (error.msg) {
+        if (error.msg.username) alert.error(`логин: ${translate(error.msg.username).join(' --- ')}`);
+        if (error.msg.email) alert.error(`email: ${translate(error.msg.email).join(' --- ')}`);
+        if (error.msg.password) alert.error(`пароль: ${translate(error.msg.password).join(' --- ')}`);
+        if (error.msg.non_field_errors) alert.error(translate(error.msg.non_field_errors).join(' --- '));
+      }
     }
 
     if (message !== prevProps.message) {

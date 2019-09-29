@@ -62,7 +62,7 @@ const dictionary = {
   "Unauthorized": "нет доступа",
   "Incorrect Credentials": "неверный логин или пароль",
   "A user with that username already exists.": "пользователь с таким логином уже существует",
-  "user with this email already exists.": "пользователь с таким адресом электронной почты уже существует",
+  "user with this email address already exists.": "пользователь с таким адресом электронной почты уже существует",
   "This field may not be blank.": "это поле не может быть пустым",
   "This password is too short. It must contain at least 8 characters.": "этот пароль слишком короткий. он должен содержать не менее 8 символов",
   "This password is too common.": "этот пароль слишком часто используется",
