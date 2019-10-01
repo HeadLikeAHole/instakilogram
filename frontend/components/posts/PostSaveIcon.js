@@ -31,7 +31,7 @@ class PostSaveIcon extends React.Component {
     const { authUser, post_id } = this.props;
 
     let isSaved = false;
-    if (Object.keys(authUser.user).length > 0) {
+    if (Object.keys(authUser.user).length) {
       if (authUser.user.saved_posts.includes(post_id)) {
         isSaved = true;
       }

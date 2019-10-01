@@ -32,7 +32,7 @@ class PostLikeIcon extends React.Component {
     const { authUser, likes } = this.props;
 
     let isLiked = false;
-    if (Object.keys(authUser.user).length > 0) {
+    if (Object.keys(authUser.user).length) {
       if (likes.includes(authUser.user.id)) {
         isLiked = true;
       }

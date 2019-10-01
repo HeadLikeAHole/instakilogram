@@ -78,14 +78,14 @@ class Profile extends React.Component {
 
     // check if profile has loaded
     let profileLoaded = false;
-    if (Object.keys(this.props.profile).length > 0) {
+    if (Object.keys(this.props.profile).length) {
       profileLoaded = true
     }
 
     // check if current logged in user is profile's owner
     let authorized = false;
     let page = '';
-    if (Object.keys(this.props.authUser).length > 0 && profileLoaded) {
+    if (Object.keys(this.props.authUser).length && profileLoaded) {
       if (authUser.id === profile.user.id) {
         authorized = true;
         page = 'own';

@@ -85,7 +85,7 @@ class ProfileEditDelete extends React.Component {
   cancelDeleteProfileImage = () => this.setState({imageUrl: this.state.deletedImageUrl, deletedImageUrl: ''});
 
   componentDidMount() {
-    if (Object.keys(this.props.authUser).length > 0) {
+    if (Object.keys(this.props.authUser).length) {
       this.props.loadProfile(this.props.authUser.id, this.prefillForm);
     }
   }

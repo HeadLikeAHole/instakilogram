@@ -24,7 +24,7 @@ const Navigation = props => {
 
   // check if user object has loaded
   let userLoaded = false;
-  if (Object.keys(user).length > 0) {
+  if (Object.keys(user).length) {
     userLoaded = true
   }
 

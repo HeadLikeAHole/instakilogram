@@ -64,7 +64,7 @@ class PostListSearch extends React.Component {
     );
 
     let cardToDisplay;
-    if (posts.length > 0) {
+    if (posts.length) {
       cardToDisplay = card1
     } else {
       cardToDisplay = card2

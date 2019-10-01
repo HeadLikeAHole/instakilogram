@@ -68,7 +68,7 @@ class Comment extends React.Component {
     let isOwner = false;
     let isLiked = false;
 
-    if (Object.keys(this.props.authUser).length > 0) {
+    if (Object.keys(this.props.authUser).length) {
       // check if current logged in user is comment owner
       if (authUser.id === comment.user) {
         isOwner = true

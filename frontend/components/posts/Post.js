@@ -41,7 +41,7 @@ class Post extends React.Component {
 
     let isOwner = false;
     // check if user object has loaded
-    if (Object.keys(authUser).length > 0) {
+    if (Object.keys(authUser).length) {
       // check if current logged in user is post owner
       if (authUser.id === user) {
         isOwner = true
