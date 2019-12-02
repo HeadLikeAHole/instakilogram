@@ -80,9 +80,10 @@ class Comment extends React.Component {
 
     }
 
-    // check if comment has been edited, if it has then display (ред.) after time published
+    // if comment has been edited later than 60s after first publishing
+    // then display time of the edit in parentheses after time it was first published
     let edited = false;
-    if (comment.published !== comment.updated) {
+    if (new Date(comment.updated).getTime() - new Date(comment.published).getTime() > 60000) {
       edited = true
     }
 

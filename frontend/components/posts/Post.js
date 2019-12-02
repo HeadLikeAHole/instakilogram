@@ -48,9 +48,10 @@ class Post extends React.Component {
       }
     }
 
-    // if post has been edited then display time of the edit in parenthesis after time it was first published
+    // if post has been edited later than 60s after first publishing
+    // then display time of the edit in parentheses after time it was first published
     let edited = false;
-    if (published !== updated) {
+    if (new Date(updated).getTime() - new Date(published).getTime() > 60000) {
       edited = true
     }
 
